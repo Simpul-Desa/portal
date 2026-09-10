@@ -6,7 +6,7 @@ lensa fitur di atas layanan backend terpisah. Nilai yang tampil di panel dan
 di peta adalah nilai yang dikirim backend apa adanya — repo ini tidak
 menghitung ulang angka domain apa pun.
 
-Repo ini adalah satu dari empat sistem SIMPUL DESA (DATATHON 2026 — Sistem
+Repo ini adalah modul Portal, satu dari empat modul SIMPUL DESA (DATATHON 2026 — Sistem
 Intelijen Potensi dan Kesiapan Ekonomi Desa):
 
 | Modul | Repo | Peran |
@@ -116,6 +116,15 @@ Urutan dan nama persis seperti di rail navigasi:
    pada desa kembar yang dipilih.
 5. **Citra Potensi Desa** — panel: pemilih sel subsektor/komoditas dan
    daftar skor desa dalam sel itu. Peta: choropleth desa diwarnai skor 0–100.
+
+## Empat fitur tambahan
+
+Di luar lima lensa dasbor (fitur utama), empat fitur tambahan terintegrasi di Portal:
+
+1. **Asisten Desa** — antarmuka percakapan yang menjawab hanya dari data SIMPUL DESA, dan menolak topik di luar itu (panel sisi kanan dasbor).
+2. **Berita Desa** — berita per desa hasil panen otomatis, tersimpan per `iddesa`, tampil di Kartu Ekonomi Desa.
+3. **Laporan Desa** — dokumen PDF per desa yang memuat sekurangnya Peta Peran dan Kartu Ekonomi Desa (tombol unduh PDF).
+4. **Halaman Admin** — kelola penyegaran berita, daftar pengguna, kenaikan peran, dan status sistem (halaman khusus di rute `/admin`).
 
 ## Arsitektur
 
