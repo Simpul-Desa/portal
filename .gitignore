@@ -1,0 +1,59 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Artefak proses kerja Claude — lokal saja, sengaja tidak ikut repo publik.
+# Keempat path ini TETAP ADA di disk dan tetap dibaca sesi berikutnya; yang
+# dicegah hanya masuknya ke repo yang di-push. Pola yang sama dipakai
+# `api/.gitignore` dan `data/.gitignore`. Dokumen publik (README.md, DESIGN.md)
+# menyebutnya sebagai teks, bukan tautan, supaya tidak ada tautan mati di
+# GitHub — sudah diperiksa: nol tautan dari keduanya ke keempat path ini.
+#
+# `/.claude/` sekaligus menelan `settings.local.json` (setelan pribadi mesin)
+# dan seluruh `PRPs/` (rencana, laporan, tinjauan), jadi baris khusus untuk
+# setelan itu tidak lagi diperlukan. DESIGN.md SENGAJA tetap terlacak: ia
+# otoritas visual produk, bukan artefak proses, dan pembaca repo publik justru
+# membutuhkannya.
+/CLAUDE.md
+/PRD.md
+/TRACK.md
+/.claude/

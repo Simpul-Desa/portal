@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+@theme {
+  /* Surfaces — the five-level gray ladder from DESIGN.md. No pure white. */
+  --color-canvas: #dcdcdc;
+  --color-rail: #ededed;
+  --color-surface: #f5f5f5;
+  --color-float: #f7f7f7;
+  --color-inset: #fcfcfc;
+  --color-deep: #323232;
+
+  /* Lines */
+  --color-hairline: #ececec;
+  --color-line: #e4e4e4;
+  --color-line-strong: #c3c3c3;
+
+  /* Text */
+  --color-ink: #323232;
+  --color-body: #595959;
+  /* Diretune #767676 → #6b6b6b, 10 September 2026 (tinjauan pra-commit
+     temuan A1). Nilai lama diukur terhadap putih murni, yang sistem ini
+     TIDAK punya (DESIGN.md § Colors: "no pure white surfaces"), jadi ia
+     gagal WCAG AA di kelima permukaan yang benar-benar dipakai: 4,43 di
+     `inset`, 4,24 di `float`, 4,17 di `surface`, 3,88 di `rail`, 3,31 di
+     `canvas`. Nilai baru lolos di keempat permukaan KARTU — 5,19 · 4,97 ·
+     4,89 · 4,55 — tetapi masih 3,89 di `canvas`.
+
+     Karena itu satu aturan menyertainya (DESIGN.md § Colors): teks `muted`
+     tidak pernah duduk langsung di `canvas`. Di luar kartu, pakai `body`
+     (#595959 — 5,11 di `canvas`, aman di mana pun). */
+  --color-muted: #6b6b6b;
+  --color-muted-sampled: #909090;
+  --color-faint: #b0b0b0;
+  /* Teks sekunder DI ATAS blok gelap (DESIGN.md § Text, 9 September 2026).
+     `muted` hanya lolos kontras di atas surface terang; di atas `deep` ia
+     nyaris tidak terbaca. */
+  --color-on-dark-muted: rgb(255 255 255 / 0.7);
+
+  /* Action */
+  --color-primary: #ff7300;
+  --color-primary-active: #e46700;
+  --color-primary-soft: #ffe4cc;
+
+  /* Status */
+  --color-positive: #31a863;
+  --color-positive-deep: #2c905a;
+  --color-caution: #e8b348;
+  --color-critical: #e05048;
+
+  /* Data ramp */
+  --color-ramp-1: #e15848;
+  --color-ramp-2: #e26a48;
+  --color-ramp-3: #ebb568;
+  --color-ramp-4: #7ed19f;
+  --color-ramp-5: #2c905a;
+  --color-chart-fill: #dde9e2;
+  --color-chart-warm: #f4efe5;
+
+  /* Zone choropleth — Peta Peran, added 9 September 2026 (DESIGN.md § Map
+     Overlays "Zone choropleth (Peta Peran)"). Swatch use only (chip dots,
+     legend) — MapLibre cannot read CSS custom properties, so the layer
+     paint itself uses the same five hex values as literals in
+     `lib/map/zona.ts`. Change both places together. */
+  --color-map-zona-pemerintah: #d6338f;
+  --color-map-zona-mitra: #7d5ae0;
+  --color-map-zona-poros: #00a9bf;
+  --color-map-zona-bantuan: #8d9aab;
+  --color-map-zona-belum: rgb(255 255 255 / 0.75);
+
+  /* Interaction accents — added 8 September 2026 (DESIGN.md). Focus ring on
+     every focusable element + inline link color. Teal is interaction, never
+     status: `primary` orange stays the only action color. */
+  --color-focus: #0d8a7e;
+  --color-link: #0c7d72;
+
+  /* Overlay — satu-satunya scrim di sistem ini (DESIGN.md § Dialog,
+     9 September 2026). Turunan `surface-dark`, bukan warna baru. */
+  --color-scrim: rgb(50 50 50 / 0.32);
+
+  /* Type scale — the eleven sizes. No inline pixel values anywhere else. */
+  --text-metric-xl: 44px;
+  --text-metric-xl--line-height: 1.05;
+  --text-metric-xl--letter-spacing: -0.8px;
+  --text-metric-xl--font-weight: 500;
+  --text-metric-lg: 32px;
+  --text-metric-lg--line-height: 1.1;
+  --text-metric-lg--letter-spacing: -0.5px;
+  --text-metric-lg--font-weight: 500;
+  --text-metric-md: 24px;
+  --text-metric-md--line-height: 1.2;
+  --text-metric-md--letter-spacing: -0.3px;
+  --text-metric-md--font-weight: 500;
+  --text-metric-unit: 22px;
+  --text-metric-unit--line-height: 1;
+  --text-metric-unit--font-weight: 500;
+  --text-title-lg: 20px;
+  --text-title-lg--line-height: 1.3;
+  --text-title-lg--letter-spacing: -0.2px;
+  --text-title-lg--font-weight: 500;
+  --text-title-md: 16px;
+  --text-title-md--line-height: 1.4;
+  --text-title-md--font-weight: 500;
+  --text-title-sm: 15px;
+  --text-title-sm--line-height: 1.4;
+  --text-title-sm--font-weight: 500;
+  --text-body-md: 14px;
+  --text-body-md--line-height: 1.5;
+  --text-label: 13px;
+  --text-label--line-height: 1.4;
+  --text-micro: 12px;
+  --text-micro--line-height: 1.35;
+  --text-badge: 11px;
+  --text-badge--line-height: 1;
+  --text-badge--font-weight: 500;
+  --text-button-md: 14px;
+  --text-button-md--line-height: 1;
+  --text-button-md--font-weight: 500;
+
+  /* Shape */
+  --radius-card: 16px;
+  --radius-inset: 12px;
+  --radius-control: 10px;
+  --radius-xs: 6px;
+
+  --shadow-float: 0 4px 16px rgb(0 0 0 / 0.12);
+  --shadow-float-strong: 0 8px 28px rgb(0 0 0 / 0.18);
+
+  /* Layout — panel kiri resizable (Task 17/19; DESIGN.md `layout.panel-*`).
+     Sumber sah nilai clamp drag di `shared/components/shell/left-panel.tsx`. */
+  --spacing-panel-min: 400px;
+  --spacing-panel: 480px;
+  --spacing-panel-max: 640px;
+  /* Panel kanan Asisten Desa (DESIGN.md `layout.assistant-width`, § Layout
+     "Four columns"). Nilainya sama dengan maxWidth `card-float` — satu
+     tingkat lebar untuk dua objek yang sama-sama melayang di atas peta. */
+  --spacing-asisten: 380px;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Hormati "Reduce motion" sistem (tinjauan pra-commit temuan A10, 10
+   September 2026). Satu blok global, bukan varian `motion-reduce:` per
+   komponen: `animate-pulse` adalah loop opasitas TAK BERHINGGA dan dipakai
+   di 20 titik kerangka muat, jadi menambal per titik pasti tertinggal
+   begitu ada kerangka baru. WCAG 2.2.2 menuntut mekanisme berhenti untuk
+   animasi yang berjalan lebih dari lima detik — dan aplikasi ini berbicara
+   dengan backend Railway serta asisten ber-Gemini, jadi permintaan yang
+   menggantung adalah mode gagal yang diharapkan, bukan yang eksotis.
+
+   Durasi 0,01ms alih-alih `none`: animasi tetap "berjalan" sehingga event
+   `animationend` yang mungkin ditunggu kode tetap menyala, tetapi tidak ada
+   gerakan yang terlihat. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
