@@ -59,7 +59,7 @@ export function joinSkorCitra(
  * `["get","skor100"]` bernilai `null`; `interpolate` atas masukan
  * non-numerik adalah galat ekspresi MapLibre, dan galat itu ditelan
  * listener `map.on("error", …)` di `map-stage.tsx` — layer diam tanpa satu
- * baris konsol (`app/CLAUDE.md` §10).
+ * baris konsol (`app/CLAUDE.md` (lokal saja) §10).
  *
  * Skala 0–100 dipakai APA ADANYA (Task 17 GOTCHA 4) — `skor100_dlm_kab`
  * SUDAH dinormalkan dalam kabupaten oleh `data/`; jangan menormalkan ulang

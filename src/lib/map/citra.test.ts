@@ -55,7 +55,7 @@ describe("joinSkorCitra", () => {
 /**
  * Evaluator kecil untuk subset ekspresi MapLibre (`case`/`has`) dipakai
  * ekspresi ini — mengikuti pola `zona.test.ts` (bukan implementasi spek
- * ekspresi MapLibre penuh, `app/CLAUDE.md` §2).
+ * ekspresi MapLibre penuh, `app/CLAUDE.md` (lokal saja) §2).
  */
 type Ekspresi = readonly unknown[];
 

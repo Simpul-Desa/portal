@@ -100,7 +100,7 @@ function layerDesaLine(id: string, warna: string, lebar: number) {
  * opsional dan bawaannya adalah perilaku lensa Kartu apa adanya (geo mentah,
  * warna idle). Seam ketiga (`interaksi`, layer tambahan yang ikut diperiksa
  * klik/hover) DIBUANG (review M9) — dibangun spekulatif tanpa konsumen,
- * dilarang `app/CLAUDE.md` §2 ("no abstractions for single-use code").
+ * dilarang `app/CLAUDE.md` (lokal saja) §2 ("no abstractions for single-use code").
  * Tambahkan kembali hanya saat ada lensa yang benar-benar butuh menangkap
  * klik pada layer miliknya sendiri.
  *

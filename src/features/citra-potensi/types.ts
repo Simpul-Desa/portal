@@ -5,7 +5,7 @@
  * DITULIS TANGAN dari bentuk artefak nyata (`api/data-salinan/`
  * 9 September 2026) — pola dan alasannya persis `features/kartu/types.ts`.
  * Rincian bentuk lengkap ada di rencana
- * `.claude/PRPs/plans/fase-5-desa-kembar-citra-potensi.plan.md`
+ * `.claude/PRPs/plans/fase-5-desa-kembar-citra-potensi.plan.md` (lokal saja)
  * § "Bentuk artefak dan respons nyata".
  */
 

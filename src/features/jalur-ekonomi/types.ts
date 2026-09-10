@@ -3,7 +3,7 @@
  * seluruh rute Jalur Ekonomi `dict[str, Any]` / `list[dict[str, Any]]` — pola
  * dan alasannya sama seperti `features/kartu/types.ts` dan
  * `features/peta-peran/types.ts`. Rincian lima bentuk grup detail satu jalur
- * ada di rencana `.claude/PRPs/plans/fase-3-4-peta-peran-jalur-ekonomi.plan.md`
+ * ada di rencana `.claude/PRPs/plans/fase-3-4-peta-peran-jalur-ekonomi.plan.md` (lokal saja)
  * § "Bentuk artefak dan respons nyata".
  *
  * Fungsi `normalisasiJalur` yang meratakan lima bentuk grup ke

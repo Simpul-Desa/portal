@@ -48,7 +48,7 @@ type UseCitraDataHasil = {
  * `useCitraData`. Memanggilnya di badan hook membangun ARRAY BARU tiap
  * render; array baru itu adalah dependency BARU bagi efek 3 `useMapBase`,
  * yang memicu `setData` seluruh kabupaten + `fitBounds` ULANG pada setiap
- * render shell, melempar kamera user kembali ke bbox kabupaten (`app/CLAUDE.md`
+ * render shell, melempar kamera user kembali ke bbox kabupaten (`app/CLAUDE.md` (lokal saja)
  * §10, cacat yang sudah pernah lolos keempat gerbang di fase 3).
  */
 const WARNA_FILL_CITRA = ekspresiWarnaCitra();

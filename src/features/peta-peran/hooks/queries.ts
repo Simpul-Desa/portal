@@ -25,7 +25,7 @@ const BATAS_DAFTAR = 50;
 /** Ukuran halaman dataset choropleth — sama dengan `BATAS_MAKS` `api/`, cukup
  * untuk kabupaten terbesar yang ada hari ini dengan margin aman. Cacah desa
  * per kabupaten yang nyata ada di keluaran `data/`, bukan diulang di sini
- * (`app/CLAUDE.md` §9: baca angka dari artefak, jangan direstate di kode). */
+ * (`app/CLAUDE.md` (lokal saja) §9: baca angka dari artefak, jangan direstate di kode). */
 const BATAS_PETA = 500;
 /** Batas aman putaran pengambilan dataset choropleth (Task 18 GOTCHA 1) —
  * asuransi terhadap kabupaten yang melewati `BATAS_PETA` pada build data

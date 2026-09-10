@@ -131,7 +131,7 @@ describe("ekspresiWarnaZona", () => {
  * ronde 3 #1) — `["all", …]`, `["has", …]`, dan `["!=", …]` dengan operand
  * `["get", …]` atau literal. Bukan implementasi spek filter MapLibre penuh:
  * cukup untuk menegakkan bentuk ekspresi modul ini, sengaja tidak
- * digeneralisasi lebih jauh (`app/CLAUDE.md` §2).
+ * digeneralisasi lebih jauh (`app/CLAUDE.md` (lokal saja) §2).
  */
 type Ekspresi = readonly unknown[];
 

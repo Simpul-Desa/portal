@@ -1,6 +1,6 @@
 /**
  * Perataan LIMA bentuk grup `GET /api/model/jalur-ekonomi/{varian}/{id_jalur}`
- * (rencana `.claude/PRPs/plans/fase-3-4-peta-peran-jalur-ekonomi.plan.md`
+ * (rencana `.claude/PRPs/plans/fase-3-4-peta-peran-jalur-ekonomi.plan.md` (lokal saja)
  * § "Bentuk artefak dan respons nyata") ke satu kontrak `JalurTernormalisasi`
  * (`../types.ts`) dipakai `lib/map/jalur.ts` dan `detail-jalur.tsx`.
  *

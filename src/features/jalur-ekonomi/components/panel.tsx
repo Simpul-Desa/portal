@@ -130,7 +130,7 @@ function BadanJalurEkonomi({
   // ini (tidak semua varian berjalan di semua kabupaten, mis. `wisata`).
   // Keadaan kosong berketerangan, BUKAN kartu galat. Cacah kabupaten per
   // varian TIDAK ditulis di sini — itu angka artefak `data/`, lihat
-  // `CLAUDE.md` §9.
+  // `CLAUDE.md` (lokal saja) §9.
   if (primer.isError && primer.error.kode === "WILAYAH_TIDAK_ADA") {
     return (
       <section className="rounded-card bg-surface p-5">

@@ -151,7 +151,7 @@ export async function ambil<T>(
  * Kirim satu permintaan POST beramplop dan kembalikan `{data, meta}` bila
  * sukses — dipakai rute yang menulis, mulai dari `POST /api/chat`. Tidak
  * menerima `params` query string: rute yang memakainya belum ada, dan jalur
- * yang tak terpakai menyalahi CLAUDE.md §2.
+ * yang tak terpakai menyalahi CLAUDE.md (lokal saja) §2.
  */
 export async function kirim<T, B>(
   path: string,

@@ -3,7 +3,7 @@
  * Peran `dict[str, Any]` / `list[dict[str, Any]]`, jadi tipe di sini DITULIS
  * TANGAN dari bentuk artefak nyata (`api/data-salinan/` 9 September 2026) —
  * pola dan alasannya persis `features/kartu/types.ts`. Rincian bentuk lengkap
- * ada di rencana `.claude/PRPs/plans/fase-3-4-peta-peran-jalur-ekonomi.plan.md`
+ * ada di rencana `.claude/PRPs/plans/fase-3-4-peta-peran-jalur-ekonomi.plan.md` (lokal saja)
  * § "Bentuk artefak dan respons nyata".
  */
 

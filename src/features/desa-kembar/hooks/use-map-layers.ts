@@ -46,7 +46,7 @@ type UseKembarLayersOpsi = {
  *
  * BONGKAR LEWAT CLEANUP, BUKAN CABANG "TIDAK AKTIF" (Task 10 GOTCHA 1,
  * CRITICAL — jebakan yang sama persis mengapa garis zona Peta Peran gagal di
- * fase 3-4, `app/CLAUDE.md` §10): kedua layer di sini hidup di `SUMBER_DESA`
+ * fase 3-4, `app/CLAUDE.md` (lokal saja) §10): kedua layer di sini hidup di `SUMBER_DESA`
  * milik base, BUKAN sumber milik hook ini sendiri. `removeSource` maplibre-gl
  * 6.8.0 menolak DIAM-DIAM (fire `ErrorEvent`, TIDAK melempar) selama masih
  * ada layer yang merujuk sumbernya, dan listener `map.on("error", …)` di
