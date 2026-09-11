@@ -7,7 +7,13 @@ import { QueryClient, QueryClientProvider, environmentManager } from "@tanstack/
 
 import { bolehUlang } from "@/lib/api/retry";
 
+import { useOnboardingGuard } from "@/features/onboarding/hooks/use-onboarding-guard";
 import { SesiProvider } from "./sesi";
+
+function OnboardingGuard() {
+  useOnboardingGuard();
+  return null;
+}
 
 function makeQueryClient() {
   return new QueryClient({
@@ -34,12 +40,19 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
+import { TooltipProvider } from "@/shared/components/ui/tooltip";
+
 export function Providers({ children }: { children: ReactNode }) {
   const queryClient = getQueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SesiProvider>{children}</SesiProvider>
+      <TooltipProvider delayDuration={300}>
+        <SesiProvider>
+          <OnboardingGuard />
+          {children}
+        </SesiProvider>
+      </TooltipProvider>
     </QueryClientProvider>
   );
 }

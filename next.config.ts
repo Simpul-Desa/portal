@@ -73,8 +73,9 @@ const CSP = [
   // tombol Keluar dan `<select>` peran), `base-uri 'none'`, `object-src
   // 'none'`, dan `connect-src` yang membatasi ke mana token Bearer bisa
   // dikirim. Menaikkannya ke nonce adalah pekerjaan tersendiri, bersama
-  // keputusan apakah rute statis boleh dilepas.
-  "script-src 'self' 'unsafe-inline'",
+  process.env.NODE_ENV === "production"
+    ? "script-src 'self' 'unsafe-inline'"
+    : "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
   // GOTCHA yang hampir mematikan peta (temuan review gelombang 1): tile
   // raster DAN glyph MapLibre dimuat lewat `getArrayBuffer`, yaitu `fetch` —
   // lihat `maplibre-gl-dev.mjs:1342` (tile) dan `:1626` (glyph). Jadi ketiga

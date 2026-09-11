@@ -5,11 +5,16 @@ import { useEffect, useRef, type ReactNode, type Ref } from "react";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
+import Image from "next/image";
+import { HelpCircle } from "lucide-react";
+
 import { ID_PANEL_ASISTEN } from "@/features/asisten/components/panel-asisten";
 import { buatStyleEsri, buatStyleOsm, CAKUPAN_BBOX, FIT_OPTIONS } from "@/lib/map/basemap";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 
-import { LocateIcon, LockBadge, SparkIcon, ZoomInIcon, ZoomOutIcon } from "../icons";
+import { LocateIcon, LockBadge, ZoomInIcon, ZoomOutIcon } from "../icons";
+
+const DOCS_URL = (process.env.NEXT_PUBLIC_DOCS_URL || "http://localhost:3001").replace(/\/+$/, "");
 
 type MapStageProps = {
   /** Dipanggil TEPAT SEKALI setelah event `load` peta pertama. */
@@ -20,10 +25,10 @@ type MapStageProps = {
    * ini untuk `setMap(null)` supaya `use-map-layers` berhenti menyentuh
    * instance peta yang sudah dilepas saat Fast Refresh/remount (review Blok D #6). */
   onMapGone?: () => void;
-  /** Slot kolom cari top-center (Task 23) — map-stage hanya menyediakan posisi
-   * + lebar (`flex-1 min-w-0 max-w-[520px]`); isi kolom (pill, dropdown, a11y)
-   * sepenuhnya milik pemanggil (`SearchBox`). Kosong bila tidak diisi. */
-  searchSlot?: ReactNode;
+  /** Slot di kiri atas peta untuk pemilih lokasi/breadcrumb. */
+  navbarLeft?: ReactNode;
+  /** Slot di kanan atas peta (sebelah kiri tombol bantuan) untuk kolom pencarian. */
+  navbarRight?: ReactNode;
   /** `!bisa(peran, "asisten")` — anonim/tamu. Menentukan apakah klik membuka
    * `DialogTerkunci` (rencana fase 2 Task 22). Dihitung dari peran BAWAAN
    * anonim, tidak menunggu `memuat` — hanya lencananya yang menunggu
@@ -79,7 +84,8 @@ export function MapStage({
   onMapReady,
   onStyleLoad,
   onMapGone,
-  searchSlot,
+  navbarLeft,
+  navbarRight,
   asistenTerkunci,
   onAsistenTerkunci,
   asistenTerbuka,
@@ -208,27 +214,32 @@ export function MapStage({
           malah mengecil sia-sia di viewport sempit (mis. 375px, kolom cari
           bisa terkompres sampai nyaris tak terlihat) padahal ruang itu
           harusnya jadi miliknya. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-center gap-3 p-6 md:pl-[calc(var(--spacing-panel-min)+var(--spacing)*2)] lg:pl-6">
-        <div className="pointer-events-auto min-w-0 max-w-[520px] flex-1">{searchSlot}</div>
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start p-6 md:pl-[calc(var(--spacing-panel-min)+var(--spacing)*2)] lg:pl-6">
+        <div className="pointer-events-auto flex flex-wrap items-center gap-2 max-w-[60%]">
+          {navbarLeft}
+        </div>
 
-        {/* `hidden lg:flex` saat Asisten terbuka (bukan `opacity-0`): tombol
-            ini berbagi tepi kanan peta dengan panel Asisten di rentang
-            drawer/lembar (di bawah lg), jadi harus keluar dari urutan Tab DAN
-            pohon aksesibilitas sekaligus, bukan cuma tak kasatmata. */}
         <div
-          className={`pointer-events-auto ml-auto shrink-0 items-center gap-2 ${asistenTerbuka ? "hidden lg:flex" : "flex"}`}
+          className={`pointer-events-auto ml-auto shrink-0 flex items-center gap-2 ${asistenTerbuka ? "hidden lg:flex" : "flex"}`}
         >
+          {navbarRight}
+          <a
+            href={DOCS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Panduan"
+            className={`group relative flex size-10 cursor-pointer items-center justify-center rounded-full bg-white text-ink shadow-float transition-all duration-300 hover:scale-110 hover:bg-gradient-to-tr hover:from-white hover:via-[#f0fdfa] hover:to-[#fdf4ff] ${FOCUS_RING}`}
+          >
+            <HelpCircle className="size-5" />
+            <div className="pointer-events-none absolute top-full left-1/2 mt-3 -translate-x-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
+              Panduan
+            </div>
+          </a>
+
           <button
             type="button"
             ref={asistenRef}
             onClick={asistenTerkunci ? onAsistenTerkunci : onToggleAsisten}
-            title={
-              asistenTerkunci
-                ? teksTerkunci
-                : asistenTerbuka
-                  ? "Tutup Asisten Desa"
-                  : "Asisten Desa"
-            }
             aria-label={
               asistenTerkunci
                 ? labelTerkunci
@@ -238,12 +249,46 @@ export function MapStage({
             }
             aria-expanded={asistenTerkunci ? undefined : asistenTerbuka}
             aria-controls={asistenTerkunci ? undefined : ID_PANEL_ASISTEN}
-            className={`relative flex size-10 items-center justify-center rounded-full shadow-float ${FOCUS_RING} ${
-              asistenTerbuka ? "bg-surface text-ink" : "bg-float text-muted"
+            className={`group relative flex size-10 cursor-pointer items-center justify-center rounded-full transition-all duration-300 hover:scale-110 ${FOCUS_RING} ${
+              asistenTerbuka 
+                ? "bg-white shadow-float-strong" 
+                : "bg-white text-ink hover:bg-gradient-to-tr hover:from-white hover:via-[#f0fdfa] hover:to-[#fdf4ff] shadow-[0_0_15px_rgba(255,115,0,0.3)]"
             }`}
           >
-            <SparkIcon />
+            {/* Animasi Standby & Aktif (tetap jalan saat asisten terbuka) */}
+            {/* Hilang saat di-hover (group-hover:opacity-0) untuk mengembalikan ke warna statis */}
+            {!asistenTerkunci && (
+              <div className="absolute inset-0 rounded-full transition-opacity duration-300 group-hover:opacity-0 pointer-events-none">
+                {/* Ping radar wave (luar) */}
+                <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-primary/60 opacity-75"></span>
+                {/* Soft continuous glow aura (luar) */}
+                <span className="absolute inset-[-4px] -z-10 rounded-full bg-primary/25 blur-sm animate-pulse"></span>
+                
+                {/* Keyframe khusus untuk efek kilap miring (vertikal ke bawah) */}
+                <style>{`
+                  @keyframes sheen-slide {
+                    0%, 20% { transform: translateY(-200%) skewY(-25deg); }
+                    80%, 100% { transform: translateY(300%) skewY(-25deg); }
+                  }
+                `}</style>
+                
+                {/* Efek kilap (shiny running) melintas dari atas ke bawah */}
+                <div className="absolute inset-0 overflow-hidden rounded-full">
+                  <div className="absolute inset-x-0 top-0 h-[80%] animate-[sheen-slide_3s_infinite_ease-in-out] bg-gradient-to-b from-transparent via-primary/50 to-transparent"></div>
+                </div>
+              </div>
+            )}
+
+            <Image src="/asisten-desa.svg" alt="" width={20} height={20} className="relative z-10 shrink-0" />
             {!memuat && asistenTerkunci && <LockBadge />}
+            
+            <div className="pointer-events-none absolute top-full left-1/2 mt-3 -translate-x-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
+              {asistenTerkunci
+                ? teksTerkunci
+                : asistenTerbuka
+                  ? "Tutup Asisten Desa"
+                  : "Asisten Desa"}
+            </div>
           </button>
         </div>
       </div>
@@ -256,29 +301,35 @@ export function MapStage({
         <button
           type="button"
           onClick={() => mapRef.current?.zoomIn()}
-          title="Perbesar"
           aria-label="Perbesar"
-          className={`pointer-events-auto flex size-11 items-center justify-center rounded-control bg-float text-ink shadow-float ${FOCUS_RING}`}
+          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-white text-ink shadow-float transition-colors hover:bg-ink hover:text-white ${FOCUS_RING}`}
         >
           <ZoomInIcon />
+          <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
+            Perbesar
+          </div>
         </button>
         <button
           type="button"
           onClick={() => mapRef.current?.zoomOut()}
-          title="Perkecil"
           aria-label="Perkecil"
-          className={`pointer-events-auto flex size-11 items-center justify-center rounded-control bg-float text-ink shadow-float ${FOCUS_RING}`}
+          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-white text-ink shadow-float transition-colors hover:bg-ink hover:text-white ${FOCUS_RING}`}
         >
           <ZoomOutIcon />
+          <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
+            Perkecil
+          </div>
         </button>
         <button
           type="button"
           onClick={() => mapRef.current?.fitBounds(CAKUPAN_BBOX, FIT_OPTIONS)}
-          title="Tampilkan cakupan penuh"
           aria-label="Tampilkan cakupan penuh"
-          className={`pointer-events-auto flex size-11 items-center justify-center rounded-control bg-float text-ink shadow-float ${FOCUS_RING}`}
+          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-white text-ink shadow-float transition-colors hover:bg-ink hover:text-white ${FOCUS_RING}`}
         >
           <LocateIcon />
+          <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
+            Tampilkan cakupan penuh
+          </div>
         </button>
       </div>
     </div>

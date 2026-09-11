@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import type * as maplibregl from "maplibre-gl";
 
 import { CAKUPAN_BBOX, FIT_OPTIONS } from "@/lib/map/basemap";
-import { bboxDariFeatureCollection, bboxDariTitik } from "@/lib/map/bounds";
+import { bboxDariFeatureCollection, bboxDariFitur, bboxDariTitik } from "@/lib/map/bounds";
 import {
   LAYER_LINGKARAN_CIRCLE,
   LAYER_LINGKARAN_LABEL,
@@ -194,6 +194,7 @@ export function useMapBase({
    * dilepas" (`kab` kosong/galat mereset ini), sehingga memilih ulang
    * kabupaten yang sama tetap memicu fit baru. */
   const kabFitRef = useRef<string | undefined>(undefined);
+  const desaFitRef = useRef<string | undefined>(undefined);
 
   // Efek 1: interaksi (klik + hover), didaftar sekali per instance `map`.
   useEffect(() => {
@@ -296,6 +297,7 @@ export function useMapBase({
       // efek lintas hook itu sama sekali.
       bersihkanSumberDanLayerTerkait(map, SUMBER_DESA);
       kabFitRef.current = undefined;
+      desaFitRef.current = undefined;
       return;
     }
     if (!geo) return;
@@ -330,19 +332,45 @@ export function useMapBase({
     // Hanya fit saat KABUPATEN benar-benar berganti (review temuan #2) —
     // efek ini refire juga saat `fiturDesa`/`warnaFill` berganti identitas
     // (berganti lensa di kabupaten yang sama), dan kamera user tidak boleh
-    // terlempar kembali ke bbox kabupaten karena itu.
+    // terlempar kembali ke bbox kabupaten karena itu. Bila ada `desa` yang
+    // sedang dipilih, lewati fit kabupaten agar kamera langsung terbang ke desa.
     if (kab !== kabFitRef.current) {
-      const bbox = bboxDariFeatureCollection(geo);
-      if (bbox) map.fitBounds(bbox, FIT_OPTIONS);
+      if (!desa) {
+        const bbox = bboxDariFeatureCollection(geo);
+        if (bbox) map.fitBounds(bbox, FIT_OPTIONS);
+      }
       kabFitRef.current = kab;
     }
-  }, [map, styleVersion, kab, geo, geoError, fiturDesa, warnaFill]);
+  }, [map, styleVersion, kab, geo, geoError, fiturDesa, warnaFill, desa]);
 
-  // Efek 4: filter highlight desa terpilih — cosmetic saja.
+  // Efek 4: filter highlight & auto-zoom/flyTo ke desa terpilih saat dipilih via search, filter, atau klik peta.
   useEffect(() => {
     if (!map) return;
     const filter = filterDesaTerpilih(desa);
     if (map.getLayer(LAYER_DESA_TERPILIH_FILL)) map.setFilter(LAYER_DESA_TERPILIH_FILL, filter);
     if (map.getLayer(LAYER_DESA_TERPILIH_LINE)) map.setFilter(LAYER_DESA_TERPILIH_LINE, filter);
-  }, [map, styleVersion, desa]);
+
+    if (!desa) {
+      desaFitRef.current = undefined;
+      return;
+    }
+
+    if (desa === desaFitRef.current) return;
+
+    const dataDesa = fiturDesa ?? geo;
+    if (!dataDesa) return;
+
+    const fitur = dataDesa.features.find((f) => f.properties?.iddesa === desa);
+    if (!fitur) return;
+
+    const bbox = bboxDariFitur(fitur);
+    if (bbox) {
+      map.fitBounds(bbox, {
+        padding: { top: 120, right: 96, bottom: 60, left: 60 },
+        maxZoom: 15,
+        duration: 1400,
+      });
+      desaFitRef.current = desa;
+    }
+  }, [map, styleVersion, desa, geo, fiturDesa]);
 }

@@ -60,31 +60,10 @@ export function CitraPotensiPanel({ wilayah }: { wilayah: WilayahState }) {
 
   if (!prov) {
     return (
-      <>
-        <section className="rounded-card bg-surface p-5">
-          <p className="text-body-md text-ink">Pilih provinsi di peta, atau dari daftar di bawah.</p>
-        </section>
-        <RegionPicker wilayah={wilayah} />
-      </>
+      <section className="rounded-card bg-surface p-5">
+        <p className="text-body-md text-ink">Pilih provinsi di peta atau lewat menu pilihan lokasi.</p>
+      </section>
     );
-  }
-
-  const chip: ChipWilayah[] = [];
-  chip.push({
-    tingkat: "prov",
-    label: pusat.data?.provinsi.find((p) => p.idprov === prov)?.nama ?? prov,
-    onHapus: reset,
-  });
-  if (kab) {
-    chip.push({
-      tingkat: "kab",
-      label: pusat.data?.kabupaten.find((k) => k.idkab === kab)?.nmkab ?? kab,
-      // `hapusKab` (BUKAN `pilihProv(prov)`, review #2) — provinsinya TIDAK
-      // berganti di sini, hanya naik ke tingkat kabupaten; `pilihProv` selalu
-      // membuang `target` karena dibangun untuk provinsi yang benar-benar
-      // berganti, dan itu membuang komoditas terpilih diam-diam.
-      onHapus: hapusKab,
-    });
   }
 
   // Task 11: `isPending` (BUKAN `isLoading`) dipertahankan sesuai gotcha
@@ -108,7 +87,6 @@ export function CitraPotensiPanel({ wilayah }: { wilayah: WilayahState }) {
 
   return (
     <>
-      <BreadcrumbWilayah chip={chip} />
 
       {/* Task 22 GOTCHA: `?target=` mati (deep-link ke sel yang 404, atau
           galat lain) tidak boleh membuat panel diam byte-identik dengan
@@ -191,24 +169,13 @@ export function CitraPotensiPanel({ wilayah }: { wilayah: WilayahState }) {
         />
       )}
 
-      {/* Ajakan pilih kabupaten + jalan keluarnya (review #3): satu-satunya
-          jalan sebelumnya adalah mengeklik lingkaran di peta, dan itu tidak
-          disebut di mana pun. `RegionPicker` sudah menampilkan daftar
-          kabupaten begitu `prov` ada, dan sudah memakai `pilihKab` yang
-          mempertahankan `target`. */}
       {target && !kab && (
-        <>
-          <section className="rounded-card bg-surface p-5">
-            <p className="text-title-sm text-ink">Pilih kabupaten untuk melihat peringkat desa</p>
-            <p className="mt-1 text-body-md text-muted">
-              Skor komoditas ini dihitung relatif di dalam kabupaten, jadi daftar peringkatnya baru muncul setelah kabupaten dipilih.
-            </p>
-          </section>
-          {/* `tanpaBreadcrumb` (review ronde 2 fase 5, B4): `BreadcrumbWilayah`
-              milik panel ini sudah dirender di atas (baris 100), jadi chip
-              wilayah bawaan `RegionPicker` di sini hanya menduplikasinya. */}
-          <RegionPicker wilayah={wilayah} tanpaBreadcrumb />
-        </>
+        <section className="rounded-card bg-surface p-5">
+          <p className="text-title-sm text-ink">Pilih kabupaten untuk melihat peringkat desa</p>
+          <p className="mt-1 text-body-md text-muted">
+            Skor komoditas ini dihitung relatif di dalam kabupaten, jadi daftar peringkatnya baru muncul setelah kabupaten dipilih.
+          </p>
+        </section>
       )}
 
       {/* `DaftarDesaSel` HANYA bergantung pada `sel` dan `?kab=` — TIDAK

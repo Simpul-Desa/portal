@@ -16,6 +16,8 @@
  * menjelaskan race yang terjadi kalau tujuannya berbeda.
  */
 
+import Image from "next/image";
+
 import { strip } from "@/shared/format";
 import { useRingkasan } from "@/shared/hooks/queries-wilayah";
 
@@ -46,11 +48,22 @@ export function PanelCakupan() {
 
   return (
     <div className="flex h-full flex-col justify-center gap-6 rounded-card bg-deep p-5 text-white">
-      <div>
-        <p className="text-title-md">SIMPUL DESA</p>
-        <p className="mt-1 text-body-md text-on-dark-muted">
-          Sistem Intelijen Potensi dan Kesiapan Ekonomi Desa
-        </p>
+      <div className="flex items-center gap-3">
+        <Image
+          src="/logo-simpul-desa.png"
+          alt="Simpul Desa"
+          width={44}
+          height={44}
+          className="h-11 w-auto shrink-0 rounded-control object-contain"
+          style={{ width: "auto" }}
+          priority
+        />
+        <div>
+          <p className="text-title-md">SIMPUL DESA</p>
+          <p className="mt-1 text-body-md text-on-dark-muted">
+            Sistem Intelijen Potensi dan Kesiapan Ekonomi Desa
+          </p>
+        </div>
       </div>
 
       {/* <768: satu kolom (keputusan user 10 September 2026, Task 18 — angka

@@ -42,6 +42,12 @@ function bacaSupabasePublishableKey(): string {
   return nilai;
 }
 
+function bacaDocsUrl(): string {
+  const nilai = process.env.NEXT_PUBLIC_DOCS_URL;
+  return (nilai || "http://localhost:3001").replace(/\/+$/, "");
+}
+
 export const API_URL = bacaApiUrl();
 export const SUPABASE_URL = bacaSupabaseUrl();
 export const SUPABASE_PUBLISHABLE_KEY = bacaSupabasePublishableKey();
+export const DOCS_URL = bacaDocsUrl();

@@ -44,40 +44,11 @@ export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
   const kartuKembar = useKartu(kembar);
   const kembarQuery = useDesaKembar(desa, true);
 
-  const chip: ChipWilayah[] = [];
-  if (prov) {
-    chip.push({
-      tingkat: "prov",
-      label: pusat.data?.provinsi.find((p) => p.idprov === prov)?.nama ?? prov,
-      onHapus: reset,
-    });
-  }
-  if (prov && kab) {
-    chip.push({
-      tingkat: "kab",
-      label: pusat.data?.kabupaten.find((k) => k.idkab === kab)?.nmkab ?? kab,
-      onHapus: () => pilihProv(prov),
-    });
-  }
-  if (prov && kab && desa) {
-    chip.push({
-      tingkat: "desa",
-      label: (kartuAcuan.data as KartuDesa | undefined)?.identitas.nama ?? desa,
-      onHapus: () => pilihKab(kab),
-    });
-  }
-
   if (!desa) {
     return (
-      <>
-        <BreadcrumbWilayah chip={chip} />
-        {/* `tanpaBreadcrumb` (review ronde 2 fase 5, B4): `BreadcrumbWilayah`
-            di atas sudah menampilkan chip wilayah yang sama. */}
-        <RegionPicker wilayah={wilayah} tanpaBreadcrumb />
-        <section className="rounded-card bg-surface p-5">
-          <p className="text-body-md text-ink">Pilih desa acuan lewat peta atau kolom cari.</p>
-        </section>
-      </>
+      <section className="rounded-card bg-surface p-5">
+        <p className="text-body-md text-ink">Pilih desa acuan lewat peta atau kolom pencarian.</p>
+      </section>
     );
   }
 
@@ -94,7 +65,6 @@ export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
   if (keadaanKembar === "muat") {
     return (
       <>
-        <BreadcrumbWilayah chip={chip} />
         <KerangkaMuat baris={JUMLAH_KERANGKA} />
       </>
     );
@@ -103,7 +73,6 @@ export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
   if (keadaanKembar === "tertunda") {
     return (
       <>
-        <BreadcrumbWilayah chip={chip} />
         <section className="rounded-card bg-surface p-5">
           <KeadaanKosong kalimat="Sambungan sedang terputus, jadi Desa Kembar belum bisa dimuat." />
           <button
@@ -121,7 +90,6 @@ export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
   if (kembarQuery.isError && kembarQuery.error.status === 404) {
     return (
       <>
-        <BreadcrumbWilayah chip={chip} />
         <section className="rounded-card bg-surface p-5">
           <p className="text-title-sm text-ink">Desa tidak ditemukan</p>
           <p className="mt-1 text-body-md text-muted">{pesanGalat(kembarQuery.error).pesan}</p>
@@ -133,23 +101,20 @@ export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
   if (kembarQuery.isError) {
     return (
       <>
-        <BreadcrumbWilayah chip={chip} />
         <BlokGalat galat={kembarQuery.error} onCobaLagi={() => kembarQuery.refetch()} />
       </>
     );
   }
 
-  if (!kembarQuery.data) return <BreadcrumbWilayah chip={chip} />;
 
   const data = kembarQuery.data;
-
+  if (!data) return null;
   // Keadaan kosong berketerangan (Task 13 GOTCHA 1) — `keterangan` mentah
   // ("desa tanpa vektor fitur pada model kembar v3") TIDAK PERNAH dirender
   // apa adanya; kehadirannya hanya pemicu, panel menulis kalimatnya sendiri.
   if (data.keterangan || data.tetangga.length === 0) {
     return (
       <>
-        <BreadcrumbWilayah chip={chip} />
         <section className="rounded-card bg-surface p-5">
           <p className="text-title-sm text-ink">Belum ada Desa Kembar</p>
           <p className="mt-1 text-body-md text-muted">
@@ -175,7 +140,6 @@ export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
 
   return (
     <>
-      <BreadcrumbWilayah chip={chip} />
 
       {/* `?kembar=` di luar `kab` aktif (review #12) — sah menurut regex
           (`?desa=1801040001&kembar=1802010001`), tapi `useKembarLayers` hanya

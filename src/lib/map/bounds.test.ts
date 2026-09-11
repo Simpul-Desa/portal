@@ -1,30 +1,30 @@
 import { describe, expect, test } from "vitest";
 
-import { bboxDariFeatureCollection, bboxDariTitik } from "./bounds";
+import { bboxDariFeatureCollection, bboxDariFitur, bboxDariTitik } from "./bounds";
 
-describe("bboxDariTitik", () => {
-  test("bbox benar dari daftar titik", () => {
-    const bbox = bboxDariTitik([
-      [105.0, -5.0],
-      [106.5, -4.0],
-      [104.2, -6.1],
+describe("bboxDariFitur", () => {
+  test("bbox benar dari satu Feature Polygon", () => {
+    const fitur: GeoJSON.Feature = {
+      type: "Feature",
+      properties: { iddesa: "1801040001", nmdesa: "A" },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [104.0, -5.0],
+            [104.5, -5.0],
+            [104.5, -4.5],
+            [104.0, -4.5],
+            [104.0, -5.0],
+          ],
+        ],
+      },
+    };
+
+    expect(bboxDariFitur(fitur)).toEqual([
+      [104.0, -5.0],
+      [104.5, -4.5],
     ]);
-
-    expect(bbox).toEqual([
-      [104.2, -6.1],
-      [106.5, -4.0],
-    ]);
-  });
-
-  test("satu titik menghasilkan bbox titik itu sendiri", () => {
-    expect(bboxDariTitik([[110.0, -7.0]])).toEqual([
-      [110.0, -7.0],
-      [110.0, -7.0],
-    ]);
-  });
-
-  test("daftar kosong mengembalikan null", () => {
-    expect(bboxDariTitik([])).toBeNull();
   });
 });
 

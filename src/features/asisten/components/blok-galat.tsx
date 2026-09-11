@@ -30,7 +30,7 @@ export function BlokGalat({ galat, onKirimUlang }: BlokGalatProps) {
         <span className="size-1.5 shrink-0 rounded-full bg-critical" aria-hidden="true" />
         {judul}
       </p>
-      <p className="mt-1 text-body-md text-ink">{pesan}</p>
+      <p className="mt-1 text-micro text-ink">{pesan}</p>
       <div className="mt-3 flex items-center gap-3">
         {/* Perbaikan 8 (review Opus): tanpa `shadow-float` — blok ini duduk DI
             DALAM panel `card-float`, dan DESIGN.md § Elevation & Depth

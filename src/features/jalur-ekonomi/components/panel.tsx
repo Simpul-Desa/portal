@@ -256,25 +256,9 @@ export function JalurEkonomiPanel({ wilayah }: { wilayah: WilayahState }) {
     aktif: true,
   });
 
-  const chip: ChipWilayah[] = [];
-  if (prov) {
-    chip.push({
-      tingkat: "prov",
-      label: pusat.data?.provinsi.find((p) => p.idprov === prov)?.nama ?? prov,
-      onHapus: reset,
-    });
-  }
-  if (prov && kab) {
-    chip.push({
-      tingkat: "kab",
-      label: pusat.data?.kabupaten.find((k) => k.idkab === kab)?.nmkab ?? kab,
-      onHapus: () => pilihProv(prov),
-    });
-  }
 
   return (
     <>
-      <BreadcrumbWilayah chip={chip} />
 
       <PilihVarian varian={varianAktif} onPilih={pilihVarian} />
 

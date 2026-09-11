@@ -13,7 +13,8 @@
  * `aria-describedby`.
  */
 
-import type { ChangeEvent } from "react";
+import { type ChangeEvent, useState, useEffect } from "react";
+import { AlertCircle, X } from "lucide-react";
 
 import { FOCUS_RING_WITHIN } from "@/shared/components/focus-ring";
 
@@ -95,14 +96,34 @@ export function AuthField({
  * `daftar-form.tsx` tidak menduplikasi markup ini.
  */
 export function GalatForm({ galat }: { galat: { judul: string; pesan: string; kode?: string } }) {
+  const [tutup, setTutup] = useState(false);
+
+  useEffect(() => {
+    setTutup(false);
+  }, [galat]);
+
+  if (tutup) return null;
+
   return (
-    <div role="alert" className="flex flex-col gap-1">
-      <p className="flex items-center gap-1.5 text-title-sm text-ink">
-        <span className="size-1.5 shrink-0 rounded-full bg-critical" aria-hidden="true" />
-        {galat.judul}
-      </p>
-      <p className="text-body-md text-ink">{galat.pesan}</p>
-      {galat.kode && <p className="text-micro text-muted">{galat.kode}</p>}
+    <div className="relative w-full mb-2">
+      <div role="alert" className="absolute top-0 left-0 w-full rounded-md border border-critical/30 bg-white px-3.5 py-3 shadow-float animate-in fade-in slide-in-from-top-2 z-50">
+        <div className="absolute -top-1.5 left-4 h-3 w-3 rotate-45 border-l border-t border-critical/30 bg-white" />
+        <div className="relative z-10 flex items-start gap-2.5">
+          <AlertCircle className="h-4 w-4 text-critical shrink-0 mt-0.5" />
+          <div className="flex flex-col gap-0.5 flex-1">
+            <p className="font-semibold text-critical text-sm">{galat.judul}</p>
+            <p className="text-muted text-sm">{galat.pesan}</p>
+          </div>
+          <button 
+            type="button" 
+            onClick={() => setTutup(true)}
+            className="text-muted/70 hover:text-ink transition-colors p-1 -mt-1 -mr-1 rounded-sm focus:outline-none focus:ring-2 focus:ring-critical/50"
+            aria-label="Tutup pesan galat"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

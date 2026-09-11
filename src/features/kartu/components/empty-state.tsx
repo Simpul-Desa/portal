@@ -36,13 +36,9 @@ export function EmptyState({ wilayah }: EmptyStateProps) {
   }
 
   return (
-    <>
-      <RegionPicker wilayah={wilayah} />
-
-      <section className="rounded-card bg-surface p-5">
-        <p className="text-body-md text-ink">Pilih desa lewat peta atau kolom cari.</p>
-        {cacah && <p className="mt-1 text-label text-muted">{cacah}</p>}
-      </section>
-    </>
+    <section className="rounded-card bg-surface p-5">
+      <p className="text-body-md text-ink">Pilih desa lewat peta atau kolom pencarian.</p>
+      {cacah && <p className="mt-1 text-label text-muted">{cacah}</p>}
+    </section>
   );
 }

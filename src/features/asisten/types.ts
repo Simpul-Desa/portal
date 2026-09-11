@@ -46,4 +46,6 @@ export type BarisJejak = {
   sukses: boolean;
   /** `null` = baris tidak bertautan (bukan lensa, argumen cacat, atau gagal). */
   tujuan: TujuanJejak | null;
+  /** Argumen asli keluaran model untuk ditampilkan sebagai blok JSON. */
+  argumenMentah: Record<string, unknown>;
 };

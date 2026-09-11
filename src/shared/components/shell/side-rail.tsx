@@ -3,6 +3,7 @@
 import { useRef, useState, type ComponentType } from "react";
 
 import { Shield } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { bisa, KEMAMPUAN_LENSA, type Kemampuan } from "@/core/akses";
@@ -13,7 +14,6 @@ import type { Lensa } from "@/lib/url-state";
 
 import {
   AkunIcon,
-  ChevronRightIcon,
   CitraIcon,
   JalurIcon,
   KartuIcon,
@@ -26,6 +26,7 @@ export type LensaRailItem = {
   nama: string;
   icon: ComponentType<{ className?: string }>;
   lensa: Lensa;
+  isML?: boolean;
 };
 
 /** Urutan PRD §5.2 = urutan "Lima fitur utama" di GLOSSARY.md. Diekspor:
@@ -34,9 +35,9 @@ export type LensaRailItem = {
 export const LENSA_ITEMS: readonly LensaRailItem[] = [
   { nama: "Peta Peran", icon: PetaPeranIcon, lensa: "peta-peran" },
   { nama: "Kartu Ekonomi Desa", icon: KartuIcon, lensa: "kartu" },
-  { nama: "Jalur Ekonomi", icon: JalurIcon, lensa: "jalur-ekonomi" },
-  { nama: "Desa Kembar", icon: KembarIcon, lensa: "desa-kembar" },
-  { nama: "Citra Potensi Desa", icon: CitraIcon, lensa: "citra-potensi" },
+  { nama: "Jalur Ekonomi", icon: JalurIcon, lensa: "jalur-ekonomi", isML: true },
+  { nama: "Desa Kembar", icon: KembarIcon, lensa: "desa-kembar", isML: true },
+  { nama: "Citra Potensi Desa", icon: CitraIcon, lensa: "citra-potensi", isML: true },
 ];
 
 /**
@@ -67,31 +68,13 @@ type SideRailProps =
     }
   | { konteks: "admin" };
 
-const KELAS_BUTIR = "relative flex size-9 items-center justify-center rounded-control";
-
-/**
- * Rail vertikal dari `md` ke atas, strip mendatar di kaki layar di bawahnya
- * (fase 9, Sketsa 5 yang di-acc user 10 September 2026). Geometri dari `md`
- * ke atas TIDAK bergeser satu piksel pun dari sebelum fase 9 — `w-16`,
- * `flex-col`, `gap-4`, `py-4` — karena satu piksel selisih membuat rail
- * melompat saat berpindah antara `/` dan `/admin`.
- *
- * `overflow-x-auto` di bawah `md` (temuan review gelombang 2): strip itu bisa
- * lebih panjang daripada layar — peran admin membawa butir kedelapan dan
- * panel terlipat menambah tombol buka, sehingga di 375px totalnya menembus
- * lebar layar. Gulirnya ditahan DI DALAM strip, pola yang sama dengan Matriks
- * Penugasan Aktor di DESIGN.md, alih-alih dibiarkan menjadi gulir mendatar
- * pada `body` yang justru dilarang audit responsif. `gap-2` menunda titik itu
- * sejauh mungkin tanpa mengecilkan satu pun target sentuh (tetap 36px).
- */
-const KELAS_NAV =
-  "z-30 order-last flex h-16 w-full shrink-0 flex-row items-center gap-2 overflow-x-auto rounded-card bg-rail px-4 md:order-none md:h-auto md:w-16 md:flex-col md:gap-4 md:overflow-x-visible md:px-0 md:py-4";
+const KELAS_BUTIR = "relative flex size-11 items-center justify-center rounded-full transition-colors shadow-sm";
 
 /**
  * Rail navigasi, hidup di dua rute (PRD §5.2). Di dasbor butir lensa adalah
  * tombol yang mengganti `?lensa=` tanpa berpindah halaman; di `/admin` butir
  * yang sama menjadi tautan kembali ke `/?lensa=…`, karena dari halaman lain
- * berpindah lensa memang berpindah halaman.
+ * berpindah halaman memang berpindah lensa.
  *
  * Butir lensa TERKUNCI di `/admin` tetap tautan, bukan pemicu dialog: mendarat
  * di `/` dengan `?lensa=` yang terkunci sudah memicu dialog ajakan masuk milik
@@ -102,7 +85,7 @@ const KELAS_NAV =
  * menuliskannya "hanya terlihat peran admin", jadi peran lain tidak melihat
  * butirnya sama sekali dan tidak ada `LockBadge` di sana.
  *
- * Geometri (`w-16`, `gap-4`, `py-4`, `size-9` per butir) IDENTIK di kedua
+ * Geometri (`w-16` -> `w-20`, `gap-4`, `py-4`, `size-11` per butir) IDENTIK di kedua
  * konteks: satu piksel selisih membuat rail melompat saat pindah rute.
  */
 export function SideRail(props: SideRailProps) {
@@ -116,30 +99,38 @@ export function SideRail(props: SideRailProps) {
   return (
     <nav
       aria-label="Navigasi: logo, lensa, Halaman Admin, panel, akun"
-      className={KELAS_NAV}
+      className="z-30 order-last flex h-16 w-full shrink-0 flex-row items-center gap-3 overflow-x-auto rounded-card bg-transparent px-4 md:order-none md:h-auto md:w-20 md:flex-col md:gap-4 md:overflow-x-visible md:px-0 md:py-4"
     >
       {diAdmin ? (
-        <Link
-          href="/"
-          title="Simpul Desa — kembali ke dasbor"
-          aria-label="Simpul Desa — kembali ke dasbor"
-          className={`flex size-9 items-center justify-center rounded-control text-ink ${FOCUS_RING}`}
-        >
-          <LogoSimpul />
-        </Link>
+        <div className="group relative flex items-center justify-center hover:z-[100]">
+          <Link
+            href="/"
+            aria-label="Simpul Desa — kembali ke dasbor"
+            className={`flex items-center justify-center p-2 cursor-pointer transition-colors ${FOCUS_RING}`}
+          >
+            <LogoSimpul />
+          </Link>
+          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+            Kembali ke dasbor
+          </div>
+        </div>
       ) : (
-        <button
-          type="button"
-          onClick={props.onLogoClick}
-          title="Simpul Desa — lipat panel dan reset pilihan wilayah"
-          aria-label="Simpul Desa — lipat panel dan reset pilihan wilayah"
-          className={`flex size-9 items-center justify-center rounded-control text-ink ${FOCUS_RING}`}
-        >
-          <LogoSimpul />
-        </button>
+        <div className="group relative flex items-center justify-center hover:z-[100]">
+          <button
+            type="button"
+            onClick={props.onLogoClick}
+            aria-label="Simpul Desa — lipat panel dan reset pilihan wilayah"
+            className={`flex items-center justify-center p-2 cursor-pointer transition-colors ${FOCUS_RING}`}
+          >
+            <LogoSimpul />
+          </button>
+          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+            Simpul Desa
+          </div>
+        </div>
       )}
 
-      <div className="flex flex-row items-center gap-1 md:flex-col">
+      <div className="flex flex-row items-center gap-3 ms-2 md:ms-0 md:mt-6 md:flex-col">
         {LENSA_ITEMS.map(({ nama, icon: Icon, lensa }) => {
           const kemampuan = KEMAMPUAN_LENSA[lensa];
           const terkunci = !bisa(peran, kemampuan);
@@ -152,7 +143,7 @@ export function SideRail(props: SideRailProps) {
           // pill `surface` saat aktif (DESIGN.md § Layout, bagian Rail). Di
           // `/admin` tidak ada lensa yang sedang dirender, jadi nol butir aktif.
           const aktif = !diAdmin && lensa === props.lensaAktif;
-          const kelas = `${KELAS_BUTIR} ${FOCUS_RING} ${aktif ? "bg-surface text-ink" : "text-muted"}`;
+          const kelas = `${KELAS_BUTIR} ${FOCUS_RING} cursor-pointer ${aktif ? "bg-primary text-white" : "bg-white text-ink hover:bg-ink hover:text-white"}`;
           const lencana = !memuat && terkunci && <LockBadge />;
           // Diangkat di atas cabang `diAdmin` (temuan A15 lanjutan) supaya
           // kedua konteks mengumumkan kunci yang sama — sebelumnya butir
@@ -163,36 +154,42 @@ export function SideRail(props: SideRailProps) {
 
           if (diAdmin) {
             return (
-              <Link
-                key={lensa}
-                href={`/?lensa=${lensa}`}
-                title={judulTombol}
-                aria-label={labelTombol}
-                className={kelas}
-              >
-                <Icon className="size-5!" />
-                {lencana}
-              </Link>
+              <div key={lensa} className="group relative flex items-center justify-center hover:z-[100]">
+                <Link
+                  href={`/?lensa=${lensa}`}
+                  aria-label={labelTombol}
+                  className={kelas}
+                >
+                  <Icon className="size-5!" />
+                  {lencana}
+                </Link>
+                <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+                  {judulTombol}
+                </div>
+              </div>
             );
           }
 
           return (
-            <button
-              key={lensa}
-              type="button"
-              onClick={
-                terkunci
-                  ? () => props.onKlikTerkunci(kemampuan, nama)
-                  : () => props.onPilihLensa(lensa)
-              }
-              title={judulTombol}
-              aria-label={labelTombol}
-              aria-current={aktif ? "page" : undefined}
-              className={kelas}
-            >
-              <Icon className="size-5!" />
-              {lencana}
-            </button>
+            <div key={lensa} className="group relative flex items-center justify-center hover:z-[100]">
+              <button
+                type="button"
+                onClick={
+                  terkunci
+                    ? () => props.onKlikTerkunci(kemampuan, nama)
+                    : () => { props.onPilihLensa(lensa); props.onOpenPanel(); }
+                }
+                aria-label={labelTombol}
+                aria-current={aktif ? "page" : undefined}
+                className={kelas}
+              >
+                <Icon className="size-5!" />
+                {lencana}
+              </button>
+              <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+                {judulTombol}
+              </div>
+            </div>
           );
         })}
       </div>
@@ -202,29 +199,19 @@ export function SideRail(props: SideRailProps) {
       {/* Butir Admin (PRD §5.2 butir 7) — dirender HANYA untuk peran admin,
           tanpa penanda kunci: peran lain tidak melihatnya sama sekali. */}
       {!memuat && bisaAdmin && (
-        <Link
-          href="/admin"
-          title="Halaman Admin"
-          aria-label="Halaman Admin"
-          aria-current={diAdmin ? "page" : undefined}
-          className={`${KELAS_BUTIR} ${FOCUS_RING} ${diAdmin ? "bg-surface text-ink" : "text-muted"}`}
-        >
-          <Shield size={20} strokeWidth={1.5} aria-hidden="true" />
-        </Link>
-      )}
-
-      {/* Di bawah pemisah (bukan di atas kelompok lensa) supaya posisi
-          kelompok lensa tidak bergeser saat panel dilipat/dibuka. */}
-      {!diAdmin && props.collapsed && (
-        <button
-          type="button"
-          onClick={props.onOpenPanel}
-          title="Buka panel"
-          aria-label="Buka panel"
-          className={`flex size-9 items-center justify-center rounded-control text-muted ${FOCUS_RING}`}
-        >
-          <ChevronRightIcon />
-        </button>
+        <div className="group relative flex items-center justify-center hover:z-[100]">
+          <Link
+            href="/admin"
+            aria-label="Halaman Admin"
+            aria-current={diAdmin ? "page" : undefined}
+            className={`${KELAS_BUTIR} ${FOCUS_RING} cursor-pointer ${diAdmin ? "bg-primary text-white" : "bg-white text-ink hover:bg-ink hover:text-white"}`}
+          >
+            <Shield size={20} strokeWidth={1.5} aria-hidden="true" />
+          </Link>
+          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+            Halaman Admin
+          </div>
+        </div>
       )}
 
       {/* `adaSesi`, bukan `peran === "anonim"` — peran bisa melantai ke
@@ -238,50 +225,50 @@ export function SideRail(props: SideRailProps) {
           ada. `aria-haspopup` harus menyebut apa yang benar-benar dibuka,
           bukan apa yang dulu diklaim. */}
       {adaSesi ? (
-        <div className="relative z-30 ms-auto md:ms-0 md:mt-auto">
-          <button
-            ref={akunTriggerRef}
-            type="button"
-            onClick={() => setMenuTerbuka((sebelumnya) => !sebelumnya)}
-            title="Akun"
-            aria-label="Akun"
-            aria-haspopup="dialog"
-            aria-expanded={menuTerbuka}
-            className={`flex size-9 items-center justify-center rounded-control text-ink ${FOCUS_RING}`}
-          >
-            <AkunIcon />
-          </button>
-          {menuTerbuka && (
-            <MenuAkun triggerRef={akunTriggerRef} onTutup={() => setMenuTerbuka(false)} />
-          )}
+        <div className="relative z-30 ms-auto md:ms-0 md:mt-auto group flex items-center justify-center hover:z-[100]">
+          <MenuAkun>
+            <button
+              type="button"
+              aria-label="Akun"
+              className={`flex size-11 items-center justify-center rounded-full bg-white text-ink shadow-sm hover:bg-ink hover:text-white cursor-pointer transition-colors ${FOCUS_RING}`}
+            >
+              <AkunIcon />
+            </button>
+          </MenuAkun>
+          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+            Akun
+          </div>
         </div>
       ) : (
-        <Link
-          href="/masuk"
-          title="Masuk"
-          aria-label="Masuk"
-          className={`ms-auto flex size-9 items-center justify-center rounded-control text-muted md:ms-0 md:mt-auto ${FOCUS_RING}`}
-        >
-          <AkunIcon />
-        </Link>
+        <div className="ms-auto md:ms-0 md:mt-auto group relative flex items-center justify-center hover:z-[100]">
+          <Link
+            href="/masuk"
+            aria-label="Masuk"
+            className={`flex size-11 items-center justify-center rounded-xl bg-white text-ink shadow-sm hover:bg-ink hover:text-white cursor-pointer transition-colors ${FOCUS_RING}`}
+          >
+            <AkunIcon />
+          </Link>
+          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+            Masuk
+          </div>
+        </div>
       )}
     </nav>
   );
 }
 
-/** Logo dummy MVP (PRD §5.2) — dipakai dua kali di atas, sebagai tombol di
+/** Logo SIMPUL DESA (PRD §5.2) — dipakai dua kali di atas, sebagai tombol di
  * dasbor dan sebagai tautan pulang di `/admin`. */
 function LogoSimpul() {
   return (
-    <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true">
-      <path
-        d="M12 3.2 20 8v8l-8 4.8L4 16V8Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.6}
-        strokeLinejoin="round"
-      />
-      <circle cx="12" cy="12" r="2.6" fill="currentColor" />
-    </svg>
+    <Image
+      src="/logo-simpul-desa.png"
+      alt=""
+      width={40}
+      height={40}
+      className="h-10 w-auto object-contain"
+      style={{ width: "auto" }}
+      priority
+    />
   );
 }

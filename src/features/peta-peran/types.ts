@@ -59,6 +59,14 @@ export type BarisPetaPeranPenuh = BarisPetaPeran & {
   alasan_belum_terpetakan: string;
   kelengkapan_sk: number | null;
   komponen_sk_hilang: string;
+  SP?: number | null;
+  SK?: number | null;
+  ambang_sp?: number | null;
+  ambang_sk?: number | null;
+  jarak_ke_ambang?: number | null;
+  idm_status?: string | null;
+  sentralitas_menit?: number | null;
+  jadesta_kategori?: string | null;
 };
 
 /**

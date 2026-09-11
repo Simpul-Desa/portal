@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { toast } from "sonner";
 
 import type * as maplibregl from "maplibre-gl";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -26,9 +27,9 @@ import { useGangguanServer } from "@/shared/hooks/use-gangguan-server";
 import { useMapBase } from "@/shared/hooks/use-map-base";
 import { useWilayahParams } from "@/shared/hooks/use-wilayah-params";
 
-import { BlokNotifikasi } from "./blok-notifikasi";
 import { LeftPanel } from "./left-panel";
 import { MapStage } from "./map-stage";
+import { NavbarLokasi } from "./navbar-lokasi";
 import { PANEL_DEFAULT } from "./panel-constants";
 import { LENSA_ITEMS, SideRail } from "./side-rail";
 
@@ -161,10 +162,31 @@ export function DashboardShell() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { peran, adaSesi, memuat, galatPeran, cobaLagiPeran } = useSesi();
-  // Nol efek peta (murni bacaan galat dua query fondasi) — ditaruh di sini,
-  // bukan di dekat ketujuh hook peta di bawah, supaya urutan tumpukan hook
-  // peta tidak ikut bergeser (lihat komentar urutan hook di bawah).
+
   const gangguanServer = useGangguanServer();
+
+  useEffect(() => {
+    if (galatPeran) {
+      toast.error("Gagal membaca profil sesi", {
+        id: "galat-peran",
+        description: "Sesi ini aktif, tetapi perannya belum terbaca. Untuk sementara, akses mengikuti peran terendah (tamu).",
+        action: {
+          label: "Coba Lagi",
+          onClick: () => cobaLagiPeran(),
+        },
+      });
+    } else if (gangguanServer) {
+      toast.error("Gangguan sambungan", {
+        id: "gangguan-server",
+        description: gangguanServer.galat?.message || "Gagal terhubung ke server. Beberapa data mungkin tidak tampil.",
+        action: {
+          label: "Coba Lagi",
+          onClick: () => gangguanServer.cobaLagi(),
+        },
+      });
+    }
+  }, [galatPeran, cobaLagiPeran, gangguanServer]);
+
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [panelWidth, setPanelWidth] = useState(PANEL_DEFAULT);
   const [map, setMap] = useState<maplibregl.Map | null>(null);
@@ -277,7 +299,7 @@ export function DashboardShell() {
   const tujuan = `${pathname}${query ? `?${query}` : ""}`;
 
   return (
-    <div className="flex h-dvh flex-col gap-2 bg-canvas p-2 md:flex-row">
+    <div className="flex h-dvh flex-col gap-2 bg-[#f1f2f6] p-4 pl-2 md:flex-row">
       <h1 className="sr-only">SIMPUL DESA</h1>
 
       <SideRail
@@ -298,37 +320,16 @@ export function DashboardShell() {
           onToggleCollapse={() => setPanelCollapsed((sebelumnya) => !sebelumnya)}
           width={panelWidth}
           onWidthChange={setPanelWidth}
+          lensaAktif={lensaEfektif}
         >
-          {/* `<h2>` sr-only untuk lensa aktif (temuan Lighthouse fase 9:
-              "Heading elements are not in a sequentially-descending order").
-              Satu-satunya `<h1>` di halaman ini adalah "SIMPUL DESA" yang juga
-              sr-only, sementara seksi di dalam panel memakai `<h3>` — jadi
-              kerangka heading melompat h1 ke h3 di keempat lensa berbasis
-              daftar. Yang benar tiga tingkat: produk, lensa yang sedang
-              dirender, lalu seksi di dalamnya. Sekalian menolong orientasi
-              pembaca layar, yang sebelumnya tidak diberi tahu lensa mana yang
-              sedang dibuka. */}
-          <h2 className="sr-only">
-            {LENSA_ITEMS.find((item) => item.lensa === lensaEfektif)?.nama ?? "Dasbor"}
-          </h2>
-          {galatPeran ? (
-            <BlokNotifikasi
-              galat={galatPeran}
-              konteks="Sesi ini aktif, tetapi perannya belum terbaca. Untuk sementara, akses mengikuti peran terendah (tamu) sehingga fitur yang menuntut peran lebih tinggi belum terbuka; data juga bisa gagal dimuat selama layanan bermasalah."
-              onCobaLagi={cobaLagiPeran}
-            />
-          ) : (
-            gangguanServer && (
-              <BlokNotifikasi galat={gangguanServer.galat} onCobaLagi={gangguanServer.cobaLagi} />
-            )
-          )}
           {PANEL_LENSA[lensaEfektif](wilayah)}
         </LeftPanel>
         <MapStage
           onMapReady={setMap}
           onStyleLoad={() => setStyleVersion((v) => v + 1)}
           onMapGone={() => setMap(null)}
-          searchSlot={<SearchBox onPilih={wilayah.pilihDesa} />}
+          navbarLeft={<NavbarLokasi />}
+          navbarRight={<SearchBox onPilih={wilayah.pilihDesa} />}
           asistenTerkunci={!bisaAsisten}
           onAsistenTerkunci={() => setDialog({ kemampuan: "asisten", nama: "Asisten Desa" })}
           asistenTerbuka={asistenTerbuka}

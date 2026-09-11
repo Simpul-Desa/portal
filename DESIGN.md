@@ -2,13 +2,13 @@
 version: alpha
 name: SimpulDesa-design-system
 description: |
-  A geospatial monitoring system for SIMPUL DESA (Sistem Intelijen Potensi dan Kesiapan Ekonomi Desa). The map is the stage; everything else is quiet chrome arranged around it. There is no white in this system — hierarchy is built from five closely-spaced gray levels (#dcdcdc canvas, #ededed rail, #f5f5f5 panel card, #f7f7f7 floating surface, #fcfcfc inset) so that satellite imagery stays the brightest, most saturated thing on screen. Ink is a soft charcoal (#323232), never pure black. Orange (#ff7300) is the single voltage color, spent on one primary action per screen and on map highlights; green, amber, and red are reserved strictly for data status and never used decoratively. Numbers are the hero: large metric figures sit above small gray labels inside tightly-packed cards separated by 8px gutters. Corners are 16px on cards, 12px on inset blocks, fully round on top-bar controls. Shadows exist only on elements that genuinely float over the map.
+  A geospatial monitoring system for SIMPUL DESA (Sistem Intelijen Potensi dan Kesiapan Ekonomi Desa). The map is the stage; everything else is quiet chrome arranged around it. The background starts from a crisp white base (#ffffff canvas, #f5f5f5 rail, #f9f9f9 panel card, #ffffff floating surface, #fcfcfc inset) to provide high contrast. Ink is a soft charcoal (#323232), never pure black. Orange (#ff7300) is the single voltage color, spent on one primary action per screen and on map highlights; green, amber, and red are reserved strictly for data status and never used decoratively. The primary button hover state is black. Numbers are the hero: large metric figures sit above small gray labels inside tightly-packed cards separated by 8px gutters. Corners are 32px on main cards, 12px on inset blocks, fully round on all buttons and top-bar controls. Shadows exist only on elements that genuinely float over the map.
 
 colors:
   # Neutrals — the five-level ladder. Order matters: each step is deliberately small.
-  canvas: "#dcdcdc"
-  rail: "#ededed"
-  surface: "#f5f5f5"
+  canvas: "#ffffff"
+  rail: "#f5f5f5"
+  surface: "#f9f9f9"
   surface-float: "#f7f7f7"
   surface-inset: "#fcfcfc"
   surface-dark: "#323232"
@@ -77,73 +77,73 @@ colors:
 
 typography:
   metric-xl:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 44px
     fontWeight: 500
     lineHeight: 1.05
     letterSpacing: -0.8px
   metric-lg:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 32px
     fontWeight: 500
     lineHeight: 1.1
     letterSpacing: -0.5px
   metric-md:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 24px
     fontWeight: 500
     lineHeight: 1.2
     letterSpacing: -0.3px
   title-lg:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 20px
     fontWeight: 500
     lineHeight: 1.3
     letterSpacing: -0.2px
   title-md:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 16px
     fontWeight: 500
     lineHeight: 1.4
     letterSpacing: 0
   title-sm:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 15px
     fontWeight: 500
     lineHeight: 1.4
     letterSpacing: 0
   body-md:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 14px
     fontWeight: 400
     lineHeight: 1.5
     letterSpacing: 0
   label:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 13px
     fontWeight: 400
     lineHeight: 1.4
     letterSpacing: 0
   metric-unit:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 22px
     fontWeight: 500
     lineHeight: 1
     letterSpacing: 0
   badge:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 11px
     fontWeight: 500
     lineHeight: 1
     letterSpacing: 0
   micro:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 12px
     fontWeight: 400
     lineHeight: 1.35
     letterSpacing: 0
   button-md:
-    fontFamily: "Geist, system-ui, sans-serif"
+    fontFamily: "Google Sans Flex, system-ui, sans-serif"
     fontSize: 14px
     fontWeight: 500
     lineHeight: 1
@@ -456,7 +456,7 @@ The five-stop ramp `ramp-1` → `ramp-5` (`#e15848 → #e26a48 → #ebb568 → #
 
 ## Typography
 
-Geist (already loaded via `next/font`) with Geist Mono for identifiers. Weights stay at 400 and 500 — this system never goes bold.
+Google Sans Flex (loaded via `next/font/google` as `--font-sans`) with Geist Mono for identifiers. Weights stay at 400 and 500 across UI chrome and metrics — this system maintains clean geometric elegance and high readability.
 
 The hierarchy is deliberately steep: a metric figure at 44px sits directly above a 13px gray label. That 3× jump, not weight or color, is what makes numbers scan.
 

@@ -1,4 +1,8 @@
 "use client";
+import { ScrollArea } from "@/shared/components/ui/scroll-area";
+
+import Image from "next/image";
+
 
 /**
  * Bingkai panel Asisten Desa (Task 17): header (judul + "Percakapan baru" +
@@ -35,6 +39,7 @@ import { useKartu } from "@/features/kartu/hooks/queries";
 import type { KartuDesa } from "@/features/kartu/types";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { CloseIcon } from "@/shared/components/icons";
+import { Badge } from "@/shared/components/ui/badge";
 import { usePusat } from "@/shared/hooks/queries-wilayah";
 import type { useWilayahParams } from "@/shared/hooks/use-wilayah-params";
 
@@ -98,8 +103,10 @@ export function PanelAsisten({ asisten, wilayah, onTutup }: PanelAsistenProps) {
     }
   }
 
-  function handleKirim() {
-    asisten.kirimPertanyaan(nilaiKomposer);
+  function handleKirim(teksKustom?: string) {
+    const teksFinal = typeof teksKustom === "string" ? teksKustom : nilaiKomposer;
+    if (!teksFinal.trim()) return;
+    asisten.kirimPertanyaan(teksFinal);
     setNilaiKomposer("");
   }
 
@@ -126,19 +133,27 @@ export function PanelAsisten({ asisten, wilayah, onTutup }: PanelAsistenProps) {
       aria-label="Asisten Desa"
       id={ID_PANEL_ASISTEN}
       onKeyDown={handleKeyDown}
-      className="absolute inset-0 z-30 flex flex-col gap-2 rounded-card bg-float p-3 shadow-float md:inset-y-0 md:left-auto md:right-0 md:z-20 md:w-asisten lg:static lg:shrink-0"
+      className="absolute inset-0 z-30 flex flex-col rounded-card bg-canvas md:bg-float md:inset-y-0 md:left-auto md:right-0 md:z-20 md:w-asisten lg:static lg:shrink-0"
     >
-      <header className="flex items-center justify-between gap-2">
-        <h2 className="text-title-md text-ink">Asisten Desa</h2>
-        <div className="flex items-center gap-1">
+      <header className="flex items-center justify-between px-6 py-5">
+        <div className="flex items-center gap-2">
+          <Image src="/asisten-desa.svg" alt="" width={18} height={18} className="shrink-0" />
+          <h2 className="text-title-sm text-ink font-semibold tracking-tight">Asisten Desa</h2>
+          <Badge
+            variant="outline">
+            AI Chatbot
+          </Badge>
+        </div>
+        <div className="flex items-center gap-1.5">
           {adaRiwayat && (
             <button
               type="button"
               onClick={asisten.percakapanBaru}
-              className={`flex items-center gap-1.5 rounded-control px-2 py-1.5 text-label text-muted hover:text-ink ${FOCUS_RING}`}
+              title="Percakapan baru"
+              aria-label="Percakapan baru"
+              className={`flex size-8 shrink-0 items-center justify-center rounded-full border border-transparent bg-transparent text-ink hover:bg-surface hover:border-line-strong transition-all ${FOCUS_RING}`}
             >
               <RotateCcw aria-hidden="true" size={16} strokeWidth={1.5} />
-              Percakapan baru
             </button>
           )}
           <button
@@ -146,39 +161,43 @@ export function PanelAsisten({ asisten, wilayah, onTutup }: PanelAsistenProps) {
             onClick={onTutup}
             title="Tutup Asisten Desa"
             aria-label="Tutup Asisten Desa"
-            className={`flex size-8 shrink-0 items-center justify-center rounded-full text-muted hover:text-ink ${FOCUS_RING}`}
+            className={`flex size-8 shrink-0 items-center justify-center rounded-full border border-transparent bg-transparent text-ink hover:bg-surface hover:border-line-strong transition-all [&>svg]:size-4 ${FOCUS_RING}`}
           >
             <CloseIcon />
           </button>
         </div>
       </header>
 
-      <div className="h-px bg-hairline" />
+      <div className="h-px bg-hairline w-full" />
 
       {adaRiwayat ? (
-        <DaftarGiliran
-          riwayat={asisten.riwayat}
-          sedangMenjawab={asisten.sedangMenjawab}
-          galat={asisten.galat}
-          onKirimUlang={asisten.kirimUlang}
-          onBukaTujuan={wilayah.bukaTujuan}
-        />
-      ) : (
-        <div className="flex-1 overflow-y-auto">
-          <KeadaanKosong onPilihContoh={handlePilihContoh} />
+        <div className="flex-1 min-h-0 h-full w-full overflow-hidden">
+          <DaftarGiliran
+            riwayat={asisten.riwayat}
+            sedangMenjawab={asisten.sedangMenjawab}
+            galat={asisten.galat}
+            onKirimUlang={asisten.kirimUlang}
+            onBukaTujuan={wilayah.bukaTujuan}
+          />
         </div>
+      ) : (
+        <ScrollArea className="flex-1 w-full h-full min-h-0">
+          <KeadaanKosong onPilihContoh={handlePilihContoh} />
+        </ScrollArea>
       )}
 
-      <Komposer
-        ref={komposerRef}
-        nilai={nilaiKomposer}
-        onNilaiChange={setNilaiKomposer}
-        onKirim={handleKirim}
-        cacahPesan={asisten.riwayat.length}
-        sedangMenjawab={asisten.sedangMenjawab}
-        penuh={asisten.penuh}
-        onPercakapanBaru={asisten.percakapanBaru}
-      />
+      <div className="p-4 pt-0">
+        <Komposer
+          ref={komposerRef}
+          nilai={nilaiKomposer}
+          onNilaiChange={setNilaiKomposer}
+          onKirim={handleKirim}
+          cacahPesan={asisten.riwayat.length}
+          sedangMenjawab={asisten.sedangMenjawab}
+          penuh={asisten.penuh}
+          onPercakapanBaru={asisten.percakapanBaru}
+        />
+      </div>
     </div>
   );
 }

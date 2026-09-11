@@ -55,6 +55,17 @@ export function bboxDariTitik(titik: readonly Posisi[]): LngLatBoundsLike | null
   ];
 }
 
+/** Bbox dari satu `Feature` (Polygon/MultiPolygon/Point) —
+ * dipakai untuk auto zoom/flyTo ke desa terpilih. */
+export function bboxDariFitur(fitur: GeoJSON.Feature): LngLatBoundsLike | null {
+  const titik: Posisi[] = [];
+  const geometri = fitur.geometry;
+  if (geometri && "coordinates" in geometri) {
+    telusuriKoordinat(geometri.coordinates, (pos) => titik.push(pos));
+  }
+  return bboxDariTitik(titik);
+}
+
 /** Bbox dari seluruh geometri `FeatureCollection` (Polygon/MultiPolygon) —
  * dipakai untuk batas desa kabupaten (fitBounds tingkat desa, Task 21). */
 export function bboxDariFeatureCollection(
@@ -71,3 +82,4 @@ export function bboxDariFeatureCollection(
 
   return bboxDariTitik(titik);
 }
+

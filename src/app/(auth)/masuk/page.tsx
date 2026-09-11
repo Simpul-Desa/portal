@@ -5,8 +5,17 @@ function bacaLanjut(nilai: string | string[] | undefined): string {
   return typeof nilai === "string" ? nilai : "/";
 }
 
-export default async function MasukPage({ searchParams }: PageProps<"/masuk">) {
-  const { lanjut } = await searchParams;
+function bacaAlasan(nilai: string | string[] | undefined): string | undefined {
+  return typeof nilai === "string" ? nilai : undefined;
+}
 
-  return <MasukForm lanjut={bacaLanjut(lanjut)} />;
+export default async function MasukPage({ searchParams }: PageProps<"/masuk">) {
+  const params = await searchParams;
+
+  return (
+    <MasukForm
+      lanjut={bacaLanjut(params.lanjut)}
+      alasan={bacaAlasan(params.alasan)}
+    />
+  );
 }

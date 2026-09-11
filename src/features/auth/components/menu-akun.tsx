@@ -1,95 +1,94 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefObject } from "react";
-
+import { useState, type ReactNode, type ReactElement } from "react";
 import { useSesi } from "@/core/sesi";
 import { pesanGalatAuth } from "@/features/auth/services/galat-auth";
-import { FOCUS_RING } from "@/shared/components/focus-ring";
-
+import { Combobox as ComboboxPrimitive } from "@base-ui/react";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxList,
+  ComboboxItem,
+  ComboboxSeparator,
+} from "@/shared/components/ui/combobox";
 import { GalatForm } from "./auth-field";
+import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 
 type MenuAkunProps = {
-  /** Butir Akun di rail yang membuka menu ini. Dua kegunaan: (1) fokus balik
-   * ke sini saat menu ditutup, (2) dikecualikan dari deteksi klik-di-luar —
-   * tanpa pengecualian ini, klik pada butir Akun untuk MENUTUP menu yang
-   * sedang terbuka akan terdeteksi sebagai klik-di-luar (menutup), lalu
-   * `onClick` butir itu sendiri langsung membukanya lagi. */
-  triggerRef: RefObject<HTMLButtonElement | null>;
-  onTutup: () => void;
+  children: ReactNode;
 };
 
-/**
- * Menu akun di rail (PRD app §5.2, rencana fase 2 Task 22) — dibuka dari
- * butir Akun saat sudah masuk. Card-float kecil: email, peran aktif, tombol
- * Keluar. Non-modal (bukan `DialogTerkunci`): Esc dan klik di luar menutup,
- * fokus kembali ke `triggerRef` saat ditutup.
- *
- * `keluar()` yang gagal (perbaikan galat diam terlaporkan 10 September
- * 2026): `core/sesi.tsx` melempar galat `signOut` alih-alih menelannya —
- * ditangkap di sini dan ditampilkan lewat `GalatForm` (mekanisme sama yang
- * dipakai form masuk/daftar), menu TETAP TERBUKA supaya pesannya terbaca
- * alih-alih langsung tertutup seperti jalur sukses.
- */
-export function MenuAkun({ triggerRef, onTutup }: MenuAkunProps) {
+export function MenuAkun({ children }: MenuAkunProps) {
   const { email, peran, keluar } = useSesi();
-  const wadahRef = useRef<HTMLDivElement>(null);
   const [galatKeluar, setGalatKeluar] = useState<ReturnType<typeof pesanGalatAuth> | null>(null);
-
-  useEffect(() => {
-    const tombolPemicu = triggerRef.current;
-    return () => {
-      tombolPemicu?.focus();
-    };
-  }, [triggerRef]);
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") onTutup();
-    }
-    function handlePointerDown(e: PointerEvent) {
-      const target = e.target as Node;
-      if (wadahRef.current?.contains(target)) return;
-      if (triggerRef.current?.contains(target)) return;
-      onTutup();
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("pointerdown", handlePointerDown);
-    };
-  }, [onTutup, triggerRef]);
 
   async function handleKeluar() {
     try {
       await keluar();
-      onTutup();
     } catch (error) {
       setGalatKeluar(pesanGalatAuth(error));
     }
   }
 
   return (
-    <div
-      ref={wadahRef}
-      aria-label="Menu akun"
-      className="absolute bottom-0 left-full ml-2 w-56 rounded-card bg-float p-4 shadow-float"
-    >
-      <p className="truncate text-label text-muted">{email}</p>
-      <p className="mt-1 text-body-md text-ink">Peran: {peran}</p>
-      <div className="my-3 h-px bg-hairline" />
-      <button
-        type="button"
-        onClick={handleKeluar}
-        className={`w-full rounded-control px-3 py-2 text-left text-body-md text-ink hover:bg-inset ${FOCUS_RING}`}
-      >
-        Keluar
-      </button>
-      {galatKeluar && (
-        <div className="mt-2">
-          <GalatForm galat={galatKeluar} />
+    <Combobox>
+      <ComboboxPrimitive.Trigger render={children as ReactElement} />
+      
+      <ComboboxContent side="right" align="end" sideOffset={16} className="w-56 p-2 rounded-xl shadow-float-strong border border-line bg-white z-50 outline-none ring-0">
+        <div className="px-2 py-1.5">
+          <p className="truncate text-label text-muted">{email}</p>
+          <p className="mt-0.5 text-body-sm font-medium text-ink">Peran: {peran}</p>
         </div>
-      )}
-    </div>
+        
+        <ComboboxSeparator className="my-2 bg-hairline" />
+        
+        <div className="px-2 pb-1.5">
+          <Tabs defaultValue="system" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 border border-line bg-transparent p-1 rounded-lg">
+              <TabsTrigger 
+                value="light" 
+                aria-label="Terang"
+                className="data-[state=active]:bg-ink data-[state=active]:text-white data-[state=active]:shadow-none hover:bg-surface hover:text-ink transition-colors rounded-md"
+              >
+                <SunIcon className="size-4" />
+              </TabsTrigger>
+              <TabsTrigger 
+                value="dark" 
+                aria-label="Gelap"
+                className="data-[state=active]:bg-ink data-[state=active]:text-white data-[state=active]:shadow-none hover:bg-surface hover:text-ink transition-colors rounded-md"
+              >
+                <MoonIcon className="size-4" />
+              </TabsTrigger>
+              <TabsTrigger 
+                value="system" 
+                aria-label="Sistem"
+                className="data-[state=active]:bg-ink data-[state=active]:text-white data-[state=active]:shadow-none hover:bg-surface hover:text-ink transition-colors rounded-md"
+              >
+                <MonitorIcon className="size-4" />
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+        
+        <ComboboxSeparator className="my-2 bg-hairline" />
+        
+        <ComboboxList className="p-0">
+          <ComboboxItem
+            showIndicator={false}
+            className="data-highlighted:bg-surface data-highlighted:text-ink cursor-pointer rounded-lg px-2.5 py-2"
+            onClick={handleKeluar}
+          >
+            Keluar
+          </ComboboxItem>
+        </ComboboxList>
+        
+        {galatKeluar && (
+          <div className="mt-2 px-2">
+            <GalatForm galat={galatKeluar} />
+          </div>
+        )}
+      </ComboboxContent>
+    </Combobox>
   );
 }

@@ -40,8 +40,10 @@
 
 import type { Session } from "@supabase/supabase-js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -50,6 +52,11 @@ import {
 } from "react";
 
 import { peranEfektif, type Peran } from "@/core/akses";
+import {
+  DURASI_TIDAK_AKTIF_MS,
+  hapusCatatanAktivitas,
+  pasangPemantauInaktivitas,
+} from "@/core/sesi-timeout";
 import { supabaseBrowser } from "@/core/supabase/browser";
 import { daftarkanPengambilToken, type GalatApi } from "@/lib/api/client";
 import { type DataDari, profilSaya } from "@/lib/api/endpoints";
@@ -157,16 +164,40 @@ export function SesiProvider({ children }: { children: ReactNode }) {
   // adalah definisi memuat yang deterministik.
   const memuat = memuatSesi || (adaSesi && profil === undefined && !galatPeran);
 
+  const router = useRouter();
+
   function cobaLagiPeran(): void {
     void refetchPeran();
   }
 
   /** Melempar galat `signOut` ke pemanggil alih-alih menelannya — lihat docstring berkas. */
-  async function keluar(): Promise<void> {
+  const keluar = useCallback(async (): Promise<void> => {
+    hapusCatatanAktivitas();
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     queryClient.clear();
-  }
+  }, [supabase, queryClient]);
+
+  // Pantau inaktivitas sesi: logout otomatis bila 30 menit tidak ada aktivitas
+  useEffect(() => {
+    if (!adaSesi) {
+      hapusCatatanAktivitas();
+      return;
+    }
+
+    const batal = pasangPemantauInaktivitas({
+      onTimeout: () => {
+        void keluar().finally(() => {
+          router.replace("/masuk?alasan=tidak_aktif");
+        });
+      },
+      batasMs: DURASI_TIDAK_AKTIF_MS,
+    });
+
+    return () => {
+      batal();
+    };
+  }, [adaSesi, keluar, router]);
 
   const value: SesiContextValue = {
     peran,

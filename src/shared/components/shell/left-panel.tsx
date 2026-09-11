@@ -1,4 +1,6 @@
 "use client";
+import { ScrollArea } from "@/shared/components/ui/scroll-area";
+
 
 import {
   useEffect,
@@ -11,9 +13,12 @@ import {
 } from "react";
 
 import { FOCUS_RING } from "@/shared/components/focus-ring";
+import { Badge } from "@/shared/components/ui/badge";
+import { PanelLeftClose } from "lucide-react";
+import type { Lensa } from "@/lib/url-state";
 
-import { ChevronLeftIcon } from "../icons";
 import { PANEL_DEFAULT, PANEL_MAX, PANEL_MIN } from "./panel-constants";
+import { LENSA_ITEMS } from "./side-rail";
 
 /** Langkah lebar per tekan panah kiri/kanan saat separator difokuskan lewat keyboard. */
 const LANGKAH_KEYBOARD = 16;
@@ -31,6 +36,8 @@ type LeftPanelProps = {
   width: number;
   /** Dipanggil saat drag atau keyboard mengubah lebar; nilai sudah di-clamp 400-640. */
   onWidthChange: (width: number) => void;
+  /** Lensa aktif yang sedang ditampilkan — untuk judul dan ikon header. */
+  lensaAktif: Lensa;
   children: ReactNode;
 };
 
@@ -50,9 +57,21 @@ type LeftPanelProps = {
  * melayang di atas peta; <768px peta 45vh di atas, panel jadi lembar di
  * bawahnya.
  */
-export function LeftPanel({ collapsed, onToggleCollapse, width, onWidthChange, children }: LeftPanelProps) {
+export function LeftPanel({
+  collapsed,
+  onToggleCollapse,
+  width,
+  onWidthChange,
+  lensaAktif,
+  children,
+}: LeftPanelProps) {
   const [isDragging, setIsDragging] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  const itemAktif = LENSA_ITEMS.find((item) => item.lensa === lensaAktif);
+  const Icon = itemAktif?.icon;
+  const title = itemAktif?.nama ?? "Dasbor";
+  const isML = Boolean(itemAktif?.isML);
 
   function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -134,7 +153,7 @@ export function LeftPanel({ collapsed, onToggleCollapse, width, onWidthChange, c
       <div
         ref={panelRef}
         style={{ "--panel-w": `${width}px` } as CSSProperties}
-        className={`relative flex w-full shrink-0 flex-col gap-2 overflow-y-auto bg-canvas md:absolute md:inset-y-0 md:left-0 md:z-20 md:w-panel-min md:flex-none md:shadow-float lg:static lg:shadow-none xl:w-(--panel-w) ${
+        className={`relative flex h-full w-full overflow-hidden shrink-0 flex-col rounded-card bg-white md:absolute md:inset-y-0 md:left-0 md:z-20 md:w-panel-min md:flex-none lg:relative lg:shrink-0 xl:w-(--panel-w) ${
           isDragging ? "select-none" : ""
         }`}
       >
@@ -145,42 +164,64 @@ export function LeftPanel({ collapsed, onToggleCollapse, width, onWidthChange, c
           className="mx-auto mt-2 h-1 w-6 shrink-0 rounded-full bg-line-strong/60 md:hidden"
         />
 
-        <header className="sticky top-0 z-10 flex shrink-0 items-center bg-canvas p-2 pb-0">
-          <button
-            type="button"
-            onClick={onToggleCollapse}
-            title="Lipat panel"
-            aria-label="Lipat panel"
-            className={`flex size-9 items-center justify-center rounded-control bg-surface text-ink ${FOCUS_RING}`}
-          >
-            <ChevronLeftIcon />
-          </button>
+        <header className="flex items-center justify-between px-6 py-5">
+          <div className="flex items-center gap-2 min-w-0">
+            {Icon && <Icon className="size-[18px] shrink-0 text-ink" />}
+            <h2 className="text-title-sm text-ink font-semibold tracking-tight truncate">
+              {title}
+            </h2>
+            {isML && (
+              <Badge
+                variant="outline"
+                >
+                Machine Learning
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              title={`Tutup ${title}`}
+              aria-label={`Tutup ${title}`}
+              className={`flex size-8 shrink-0 items-center justify-center rounded-full border border-transparent bg-transparent text-ink hover:bg-surface hover:border-line-strong transition-all [&>svg]:size-4 ${FOCUS_RING}`}
+            >
+              <PanelLeftClose size={16} />
+            </button>
+          </div>
         </header>
 
-        <div className="flex flex-col gap-2 p-2 pt-0">{children}</div>
+        <div className="h-px bg-hairline w-full" />
 
-        {/* Handle 8px (hit-target lebih lebar dari garis yang tampak) — hanya
-            aktif dari xl (≥1280px); di bawah itu lebar mengikuti breakpoint
-            tetap (md/lg), bukan drag. Fokusable dan bisa dioperasikan keyboard
-            (panah kiri/kanan step 16px, Home/End ke batas) untuk operator yang
-            tidak memakai pointer. */}
+        <ScrollArea className="flex-1 min-h-0 w-full h-full">
+          <div className="flex flex-col gap-6 px-6 py-6">{children}</div>
+        </ScrollArea>
+      </div>
+
+      {/* Handle resizer (tanda strip) di antara panel kiri dan peta */}
+      <div
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="Ubah lebar panel"
+        title="Tarik untuk mengubah lebar panel (klik ganda untuk reset)"
+        aria-valuemin={PANEL_MIN}
+        aria-valuemax={PANEL_MAX}
+        aria-valuenow={width}
+        tabIndex={0}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerInterrupted}
+        onLostPointerCapture={handlePointerInterrupted}
+        onKeyDown={handleKeyDown}
+        onDoubleClick={() => onWidthChange(PANEL_DEFAULT)}
+        className={`group relative hidden h-full w-3 shrink-0 cursor-col-resize touch-none items-center justify-center -mx-1.5 z-30 xl:flex select-none outline-none ${FOCUS_RING}`}
+      >
         <div
-          role="separator"
-          aria-orientation="vertical"
-          aria-label="Ubah lebar panel"
-          aria-valuemin={PANEL_MIN}
-          aria-valuemax={PANEL_MAX}
-          aria-valuenow={width}
-          tabIndex={0}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerInterrupted}
-          onLostPointerCapture={handlePointerInterrupted}
-          onKeyDown={handleKeyDown}
-          onDoubleClick={() => onWidthChange(PANEL_DEFAULT)}
-          className={`absolute inset-y-0 right-0 hidden w-2 touch-none cursor-col-resize xl:block ${FOCUS_RING} ${
-            isDragging ? "bg-line-strong" : "hover:bg-line-strong/60"
+          className={`h-9 w-1 rounded-full transition-all ${
+            isDragging
+              ? "bg-primary scale-y-110 shadow-sm"
+              : "bg-neutral-400/90 group-hover:bg-primary group-hover:scale-y-110"
           }`}
         />
       </div>

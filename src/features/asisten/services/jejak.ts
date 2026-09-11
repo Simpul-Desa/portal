@@ -202,6 +202,7 @@ export function barisJejak(jejak: readonly JejakFungsi[]): BarisJejak[] {
       rincian: rincianAlat(j.fungsi, j.argumen),
       sukses,
       tujuan: sukses ? tujuanAlat(j.fungsi, j.argumen) : null,
+      argumenMentah: j.argumen,
     });
   }
 
