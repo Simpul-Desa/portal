@@ -2,8 +2,7 @@
  * Builder lingkaran berjenjang (GLOSSARY § Istilah dasbor) dari payload
  * `GET /api/wilayah/pusat`: mode provinsi (5 titik) dan mode kabupaten
  * (kabupaten milik satu provinsi). Layer pasangan `circle`+`symbol` memakai
- * warna `map-marker` DESIGN.md § Map Overlays — pasangan navy/putih khusus
- * marker peta, TIDAK PERNAH dipakai untuk chrome UI.
+ * warna oranye (#ff7300) / putih (`surface-float`) khusus marker peta.
  *
  * Radius lingkaran adalah skala VISUAL dari `n_desa`, bukan hitungan domain
  * (Task 21) — domain interpolasi di bawah adalah pilihan presentasi, dikira
@@ -30,9 +29,9 @@ export const LAYER_LINGKARAN_LABEL = "lingkaran-wilayah-label";
 const DOMAIN_RADIUS_PROVINSI = [0, 26, 9000, 56] as const;
 const DOMAIN_RADIUS_KABUPATEN = [0, 14, 500, 38] as const;
 
-/** Token DESIGN.md § Map Overlays `map-marker` — pasangan isi putih (`surface-float`) + garis navy. */
+/** Pasangan isi putih (`surface-float`) + garis oranye (#ff7300). */
 const WARNA_LINGKARAN_ISI = "#f7f7f7";
-const WARNA_LINGKARAN_GARIS = "#2e5aac";
+const WARNA_LINGKARAN_GARIS = "#ff7300";
 
 function titikDari<T extends { pusat: [number, number]; n_desa: number }>(
   entri: readonly T[],
@@ -66,7 +65,7 @@ export function titikKabupaten(
   );
 }
 
-/** Layer `circle` — isi putih, garis navy, radius interpolasi `n_desa` (domain beda per mode, lihat modul ini). */
+/** Layer `circle` — isi putih, garis oranye, radius interpolasi `n_desa` (domain beda per mode, lihat modul ini). */
 export function layerLingkaranCircle(mode: "provinsi" | "kabupaten"): AddLayerObject {
   const domain = mode === "provinsi" ? DOMAIN_RADIUS_PROVINSI : DOMAIN_RADIUS_KABUPATEN;
 
@@ -93,7 +92,7 @@ export function layerLingkaranCircle(mode: "provinsi" | "kabupaten"): AddLayerOb
  */
 const FONT_LABEL_LINGKARAN = ["Noto Sans Regular"];
 
-/** Layer `symbol` — teks navy `label` (cacah desa siap-format) di atas tiap lingkaran. */
+/** Layer `symbol` — teks oranye `label` (cacah desa siap-format) di atas tiap lingkaran. */
 export function layerLingkaranLabel(): AddLayerObject {
   return {
     id: LAYER_LINGKARAN_LABEL,

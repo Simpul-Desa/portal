@@ -55,7 +55,7 @@ colors:
   map-fill-alt: "rgba(255,115,0,0.18)"
   map-outline-idle: "rgba(255,255,255,0.4)"
   map-fill-idle: "rgba(255,255,255,0.06)"
-  map-marker: "#2e5aac"
+  map-marker: "#ff7300"
   map-gold-outline: "#d9a13b"
   map-gold-fill: "rgba(217,161,59,0.20)"
 
@@ -1019,9 +1019,8 @@ Not present in the reference; derived from this system's tokens (PRD app
 - Labels sit centered on the polygon with a wireless/monitor icon above them.
 - Minimap bottom-left, `rounded.md`, with a white viewport rectangle. Scale bar beneath in `micro` white.
 - **Markers and cluster circles** — a white (`surface-float`) circle pin
-  carrying its glyph or count in `map-marker` navy (6.6:1 on white). The
-  tiered cluster circles (province → kabupaten → desa) use this same pair;
-  navy never colors chrome text, only map markers and their glyphs.
+  carrying its glyph or count in `map-marker` orange (`#ff7300`). The
+  tiered cluster circles (province → kabupaten → desa) use this same pair.
 - **Model-result areas** (validated cells, route areas): 2px
   `map-gold-outline` stroke + `map-gold-fill`. Gold lives only on top of
   satellite imagery and never carries text. It is not `caution`: gold on

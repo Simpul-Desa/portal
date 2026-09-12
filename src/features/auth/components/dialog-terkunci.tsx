@@ -9,12 +9,13 @@ import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { CloseIcon } from "@/shared/components/icons";
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogCancel,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/shared/components/ui/alert-dialog";
 
 type DialogTerkunciProps = {
@@ -34,12 +35,10 @@ export function DialogTerkunci({
   onTutup,
   kembaliKe,
 }: DialogTerkunciProps) {
-  
   useEffect(() => {
-    // We can manually focus `kembaliKe` on unmount if needed, 
-    // but radix UI handles focus return automatically in most cases.
+    const targetKembali = kembaliKe?.current;
     return () => {
-      kembaliKe?.current?.focus();
+      targetKembali?.focus();
     };
   }, [kembaliKe]);
 
@@ -47,16 +46,17 @@ export function DialogTerkunci({
 
   return (
     <AlertDialog open={true} onOpenChange={(open) => { if (!open) onTutup(); }}>
-      <AlertDialogContent className="w-full max-w-[380px] p-5 border-0">
+      <AlertDialogContent className="w-full max-w-[380px] rounded-card border border-line/60 bg-float p-6 shadow-float-strong">
         <AlertDialogHeader className="flex flex-row items-start justify-between gap-3 text-left space-y-0">
-          <AlertDialogTitle className="text-title-md text-ink leading-none mt-1">
+          <AlertDialogTitle className="text-title-md font-semibold text-ink leading-tight">
             {nama} terkunci
           </AlertDialogTitle>
           <AlertDialogPrimitive.Cancel asChild>
             <button
+              type="button"
               title="Tutup"
               aria-label="Tutup"
-              className={`flex size-8 shrink-0 items-center justify-center rounded-full text-muted hover:text-ink ${FOCUS_RING}`}
+              className={`flex size-8 shrink-0 items-center justify-center rounded-full text-muted hover:bg-surface hover:text-ink transition-colors ${FOCUS_RING}`}
             >
               <CloseIcon />
             </button>
@@ -69,34 +69,23 @@ export function DialogTerkunci({
           {PERAN_PEMBUKA[kemampuan]}
         </AlertDialogDescription>
 
-        <AlertDialogFooter className="mt-2">
+        <AlertDialogFooter className="mt-4 flex flex-row items-center justify-end gap-2">
           {adaSesi ? (
-            <AlertDialogPrimitive.Cancel asChild>
-              <button
-                className={`flex h-10 items-center justify-center rounded-full bg-primary px-[18px] text-button-md text-ink hover:bg-primary-active transition-colors ${FOCUS_RING}`}
-              >
-                Tutup
-              </button>
-            </AlertDialogPrimitive.Cancel>
+            <AlertDialogAction asChild>
+              <button type="button">Tutup</button>
+            </AlertDialogAction>
           ) : (
-            <div className="flex w-full justify-end gap-2">
-              <AlertDialogPrimitive.Action asChild>
-                <Link
-                  href={`/masuk?lanjut=${lanjut}`}
-                  className={`flex h-10 items-center justify-center rounded-full bg-primary px-[18px] text-button-md text-ink hover:bg-primary-active transition-colors ${FOCUS_RING}`}
-                >
-                  Masuk
-                </Link>
-              </AlertDialogPrimitive.Action>
-              <AlertDialogPrimitive.Action asChild>
-                <Link
-                  href={`/daftar?lanjut=${lanjut}`}
-                  className={`flex h-10 items-center justify-center rounded-full bg-inset px-[18px] text-button-md text-ink hover:bg-surface transition-colors ${FOCUS_RING}`}
-                >
-                  Daftar
-                </Link>
-              </AlertDialogPrimitive.Action>
-            </div>
+            <>
+              <AlertDialogCancel asChild>
+                <button type="button">Batal</button>
+              </AlertDialogCancel>
+              <AlertDialogAction variant="outline" asChild>
+                <Link href={`/daftar?lanjut=${lanjut}`}>Daftar</Link>
+              </AlertDialogAction>
+              <AlertDialogAction asChild>
+                <Link href={`/masuk?lanjut=${lanjut}`}>Masuk</Link>
+              </AlertDialogAction>
+            </>
           )}
         </AlertDialogFooter>
       </AlertDialogContent>

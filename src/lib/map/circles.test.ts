@@ -1,6 +1,11 @@
 import { describe, expect, test } from "vitest";
 
-import { titikKabupaten, titikProvinsi } from "./circles";
+import {
+  layerLingkaranCircle,
+  layerLingkaranLabel,
+  titikKabupaten,
+  titikProvinsi,
+} from "./circles";
 
 const PUSAT_CONTOH = {
   provinsi: [
@@ -43,3 +48,28 @@ describe("titikKabupaten", () => {
     expect(fc.features).toHaveLength(0);
   });
 });
+
+describe("layerLingkaran", () => {
+  test("layer circle memiliki garis batas oranye (#ff7300) dan tebal 2px", () => {
+    const layer = layerLingkaranCircle("provinsi") as {
+      paint: {
+        "circle-stroke-color": string;
+        "circle-stroke-width": number;
+        "circle-color": string;
+      };
+    };
+    expect(layer.paint["circle-stroke-color"]).toBe("#ff7300");
+    expect(layer.paint["circle-stroke-width"]).toBe(2);
+    expect(layer.paint["circle-color"]).toBe("#f7f7f7");
+  });
+
+  test("layer label memiliki warna teks oranye (#ff7300)", () => {
+    const layer = layerLingkaranLabel() as {
+      paint: {
+        "text-color": string;
+      };
+    };
+    expect(layer.paint["text-color"]).toBe("#ff7300");
+  });
+});
+

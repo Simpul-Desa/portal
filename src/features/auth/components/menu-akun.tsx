@@ -11,6 +11,16 @@ import {
   ComboboxItem,
   ComboboxSeparator,
 } from "@/shared/components/ui/combobox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/shared/components/ui/alert-dialog";
 import { GalatForm } from "./auth-field";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
@@ -22,12 +32,20 @@ type MenuAkunProps = {
 export function MenuAkun({ children }: MenuAkunProps) {
   const { email, peran, keluar } = useSesi();
   const [galatKeluar, setGalatKeluar] = useState<ReturnType<typeof pesanGalatAuth> | null>(null);
+  const [konfirmasiTerbuka, setKonfirmasiTerbuka] = useState(false);
+  const [sedangKeluar, setSedangKeluar] = useState(false);
 
-  async function handleKeluar() {
+  async function handleKonfirmasiKeluar(e: React.MouseEvent) {
+    e.preventDefault();
+    setSedangKeluar(true);
     try {
       await keluar();
+      setKonfirmasiTerbuka(false);
     } catch (error) {
       setGalatKeluar(pesanGalatAuth(error));
+      setKonfirmasiTerbuka(false);
+    } finally {
+      setSedangKeluar(false);
     }
   }
 
@@ -77,7 +95,7 @@ export function MenuAkun({ children }: MenuAkunProps) {
           <ComboboxItem
             showIndicator={false}
             className="data-highlighted:bg-surface data-highlighted:text-ink cursor-pointer rounded-lg px-2.5 py-2"
-            onClick={handleKeluar}
+            onClick={() => setKonfirmasiTerbuka(true)}
           >
             Keluar
           </ComboboxItem>
@@ -89,6 +107,34 @@ export function MenuAkun({ children }: MenuAkunProps) {
           </div>
         )}
       </ComboboxContent>
+
+      <AlertDialog open={konfirmasiTerbuka} onOpenChange={setKonfirmasiTerbuka}>
+        <AlertDialogContent className="w-full max-w-[380px] rounded-card border border-line/60 bg-float p-6 shadow-float-strong">
+          <AlertDialogHeader className="text-left space-y-1">
+            <AlertDialogTitle className="text-title-md font-semibold text-ink leading-tight">
+              Konfirmasi Keluar
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-body-md text-body">
+              Apakah Anda yakin ingin keluar dari akun{email ? <> <span className="font-semibold text-ink">{email}</span></> : null}?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter className="mt-4 flex flex-row items-center justify-end gap-2">
+            <AlertDialogCancel disabled={sedangKeluar} asChild>
+              <button type="button">Batal</button>
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={sedangKeluar}
+              onClick={handleKonfirmasiKeluar}
+              asChild
+            >
+              <button type="button">
+                {sedangKeluar ? "Keluar..." : "Keluar"}
+              </button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Combobox>
   );
 }

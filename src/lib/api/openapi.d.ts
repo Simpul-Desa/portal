@@ -470,6 +470,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/berita/batal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Batalkan Pekerjaan Penyegaran
+         * @description Batalkan pekerjaan latar penyegaran berita yang sedang berjalan.
+         */
+        post: operations["batalkan_penyegaran_api_admin_berita_batal_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/berita/{id_berita}": {
         parameters: {
             query?: never;
@@ -711,6 +731,17 @@ export interface components {
             /** Data */
             data?: {
                 [key: string]: unknown;
+            } | null;
+            galat?: components["schemas"]["Galat"] | null;
+            meta?: components["schemas"]["Meta"] | null;
+        };
+        /** Amplop[dict[str, str]] */
+        Amplop_dict_str__str__: {
+            /** Sukses */
+            sukses: boolean;
+            /** Data */
+            data?: {
+                [key: string]: string;
             } | null;
             galat?: components["schemas"]["Galat"] | null;
             meta?: components["schemas"]["Meta"] | null;
@@ -1838,6 +1869,33 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Amplop_TerimaSegarkan_"];
+                };
+            };
+            /** @description Parameter atau badan permintaan tidak lolos validasi */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    batalkan_penyegaran_api_admin_berita_batal_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Status pembatalan pekerjaan */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Amplop_dict_str__str__"];
                 };
             };
             /** @description Parameter atau badan permintaan tidak lolos validasi */

@@ -22,7 +22,7 @@ export function KartuLaporan({ iddesa }: { iddesa: string }) {
     <section className="rounded-card bg-surface p-5">
       <h3 className="text-title-md text-ink">Laporan Desa</h3>
       <p className="mt-1 text-body-md text-body">
-        PDF berisi Peta Peran dan Kartu Ekonomi Desa ini, dirakit tiap kali diunduh.
+        PDF komprehensif berisi Kartu Ekonomi Desa, Detail Peta Peran, Citra Potensi Unggulan, dan komparasi Desa Kembar.
       </p>
 
       <button

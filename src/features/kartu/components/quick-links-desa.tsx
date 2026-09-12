@@ -119,7 +119,6 @@ export function QuickLinksDesa({
                   <p className="truncate text-title-sm font-medium text-ink group-hover:text-primary transition-colors">
                     {item.label}
                   </p>
-                  {statusBadge}
                 </div>
                 <p className="mt-0.5 truncate text-micro text-muted">
                   {sublabel}
