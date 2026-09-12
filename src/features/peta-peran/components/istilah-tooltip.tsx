@@ -1,6 +1,5 @@
 "use client";
 
-import { HelpCircleIcon } from "@/shared/components/icons";
 import {
   Tooltip,
   TooltipContent,
@@ -82,6 +81,11 @@ type IstilahTooltipProps = {
   className?: string;
 };
 
+/**
+ * Tooltip istilah teknis Peta Peran:
+ * - Tanpa outline/garis bawah pada kalimat (polos).
+ * - Ikon tanya (?) bulat ramping tanpa border/outline tambahan.
+ */
 export function IstilahTooltip({
   istilah,
   label,
@@ -97,31 +101,23 @@ export function IstilahTooltip({
 
   return (
     <span className={`inline-flex items-center gap-1 ${className}`}>
-      {teksTampil ? (
-        <span className="border-b border-dotted border-muted/70 cursor-help" title={data.judul}>
-          {teksTampil}
-        </span>
-      ) : null}
+      {teksTampil ? <span>{teksTampil}</span> : null}
       {tampilkanIkon && (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span
-              role="button"
-              tabIndex={0}
+            <button
+              type="button"
               aria-label={`Penjelasan ${data.judul}`}
               onClick={(e) => e.stopPropagation()}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.stopPropagation();
-                }
-              }}
-              className="inline-flex size-3.5 items-center justify-center rounded-full text-muted hover:text-ink hover:bg-inset focus:outline-none transition-colors cursor-pointer"
+              className="inline-flex size-3.5 items-center justify-center rounded-full bg-hairline/60 text-muted hover:text-ink hover:bg-hairline transition-colors cursor-help align-middle border-0 focus:outline-none"
             >
-              <HelpCircleIcon className="size-3" />
-            </span>
+              <span className="text-[10px] font-semibold leading-none" aria-hidden="true">
+                ?
+              </span>
+            </button>
           </TooltipTrigger>
-          <TooltipContent side="top" className="max-w-xs text-micro p-3 shadow-float leading-relaxed z-50">
-            <p className="font-semibold text-white mb-1">{data.judul}</p>
+          <TooltipContent side="top" className="max-w-xs text-micro p-2.5 shadow-float leading-relaxed z-50">
+            <p className="font-semibold text-white mb-0.5">{data.judul}</p>
             <p className="text-on-dark-muted text-micro leading-relaxed">{data.penjelasan}</p>
           </TooltipContent>
         </Tooltip>

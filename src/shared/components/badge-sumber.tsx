@@ -1,22 +1,54 @@
+import { TanyaTooltip } from "@/features/kartu/components/tanya-tooltip";
 import type { SumberDominan } from "@/features/kartu/types";
 
+const KONFIGURASI_SUMBER: Record<
+  SumberDominan,
+  { label: string; kelas: string; keterangan: string }
+> = {
+  citra: {
+    label: "Citra Satelit",
+    kelas: "bg-positive/10 text-positive border-positive/20",
+    keterangan: "Diverifikasi langsung dari data penginderaan jauh citra satelit resolusi tinggi.",
+  },
+  "heuristik-tervalidasi": {
+    label: "Heuristik Tervalidasi",
+    kelas: "bg-primary/10 text-primary border-primary/20",
+    keterangan: "Dihitung dari aturan inferensi data empiris lapangan yang telah terkonfirmasi.",
+  },
+  "heuristik-belum-teruji": {
+    label: "Heuristik (Belum Teruji)",
+    kelas: "bg-amber-500/10 text-amber-700 border-amber-500/20",
+    keterangan: "Estimasi model awal berdasarkan data sekunder yang belum melalui verifikasi uji petik lapangan.",
+  },
+  "fallback-heuristik": {
+    label: "Heuristik Bawaan",
+    kelas: "bg-surface text-muted border-line",
+    keterangan: "Estimasi cadangan berbasis profil umum karakteristik wilayah sekitarnya.",
+  },
+};
+
 /**
- * Badge sumber Potensi Dominan (GLOSSARY § Sumber Potensi Dominan — 4 nilai,
- * teks persis nama GLOSSARY, bukan terjemahan). `heuristik-belum-teruji`
- * SENGAJA tanpa latar chip (hadir paling lemah di antara keempatnya) + label
- * "belum teruji" — mutunya "harus terbaca, bukan disamarkan", TIDAK PERNAH
- * setara `citra`. Teks tetap `text-muted` (bukan `text-faint`) supaya lolos
- * kontras — DESIGN.md: warna paling redup tidak boleh dipakai untuk teks
- * yang wajib terbaca.
- *
- * Dipromosikan dari `features/kartu/components/seksi-potensi.tsx` (Task 14)
- * ke `shared/` karena dipakai lensa Peta Peran juga (`detail-desa.tsx`).
- * `SumberDominan` TETAP didefinisikan di `features/kartu/types.ts` dan
- * diimpor di sini — tipe kartu adalah bentuk artefak, bukan milik komponen.
+ * Badge sumber Potensi Dominan:
+ * Menampilkan asal data komoditas dominan dalam format badge berwarna yang rapi,
+ * dilengkapi tooltip penjelasan metodologi (?).
  */
 export function BadgeSumber({ sumber }: { sumber: SumberDominan }) {
-  if (sumber === "heuristik-belum-teruji") {
-    return <span className="text-badge text-muted">{sumber} — belum teruji</span>;
-  }
-  return <span className="rounded-xs bg-inset px-2 py-1 text-badge text-ink">{sumber}</span>;
+  const config = KONFIGURASI_SUMBER[sumber] ?? {
+    label: sumber,
+    kelas: "bg-surface text-muted border-line",
+    keterangan: "Sumber data potensi dominan.",
+  };
+
+  return (
+    <span className="inline-flex items-center">
+      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-badge font-medium border ${config.kelas}`}>
+        {config.label}
+      </span>
+      <TanyaTooltip
+        istilah={sumber}
+        judulCustom={config.label}
+        penjelasanCustom={config.keterangan}
+      />
+    </span>
+  );
 }

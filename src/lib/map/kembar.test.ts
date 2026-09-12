@@ -2,7 +2,17 @@ import { describe, expect, test } from "vitest";
 
 import { SUMBER_DESA } from "@/lib/map/sumber";
 
-import { filterKembar, layerKembarFill, layerKembarLine } from "./kembar";
+import {
+  SUMBER_KEMBAR_GARIS,
+  SUMBER_KEMBAR_TITIK,
+  filterKembar,
+  layerKembarFill,
+  layerKembarGaris,
+  layerKembarGarisHalo,
+  layerKembarLine,
+  layerKembarTitik,
+  layerKembarTitikInner,
+} from "./kembar";
 
 describe("filterKembar", () => {
   test("memakai iddesa yang diberikan", () => {
@@ -40,5 +50,33 @@ describe("layerKembarLine", () => {
     expect(layer.paint["line-color"]).toBe("#ff7300");
     expect(layer.paint["line-width"]).toBe(2);
     expect(layer.filter).toEqual(filterKembar("1801040002"));
+  });
+});
+
+describe("layerKembarGaris & Halo", () => {
+  test("memakai SUMBER_KEMBAR_GARIS dan warna oranye", () => {
+    const garis = layerKembarGaris() as {
+      source: string;
+      paint: { "line-color": string };
+    };
+    const halo = layerKembarGarisHalo() as {
+      source: string;
+      paint: { "line-color": string };
+    };
+
+    expect(garis.source).toBe(SUMBER_KEMBAR_GARIS);
+    expect(garis.paint["line-color"]).toBe("#ff7300");
+    expect(halo.source).toBe(SUMBER_KEMBAR_GARIS);
+    expect(halo.paint["line-color"]).toBe("#ff7300");
+  });
+});
+
+describe("layerKembarTitik & Inner", () => {
+  test("memakai SUMBER_KEMBAR_TITIK", () => {
+    const titik = layerKembarTitik() as { source: string };
+    const inner = layerKembarTitikInner() as { source: string };
+
+    expect(titik.source).toBe(SUMBER_KEMBAR_TITIK);
+    expect(inner.source).toBe(SUMBER_KEMBAR_TITIK);
   });
 });

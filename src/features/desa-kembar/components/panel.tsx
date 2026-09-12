@@ -1,136 +1,98 @@
 "use client";
 
-/**
- * Orkestrator lensa Desa Kembar (Task 13). Urutan render: breadcrumb ringkas
- * tiga tingkat (Prov › Kab › Desa, pola `kartu-panel.tsx`) → tanpa `desa`:
- * `RegionPicker` + kartu ajakan, BERHENTI di sana → query primer
- * `useDesaKembar(desa, true)` menggerbang muat/404/galat → kartu keadaan
- * kosong berketerangan bila `keterangan` terisi ATAU `tetangga` kosong →
- * `BandingKembar` bila `?kembar=` terisi → `DaftarKembar` selalu di bawahnya.
- *
- * Dua `useKartu` (acuan + kembar) memakai `queryKey: ["kartu", iddesa]` yang
- * SAMA dengan lensa Kartu — cache dibagi, memilih desa yang pernah dibuka
- * tidak menembakkan permintaan baru. `data` keduanya `dict[str, Any]` — cast
- * ke `KartuDesa` SEKALI di sini (pola `kartu-panel.tsx`), tidak berulang di
- * `BandingKembar`.
- */
-
-import type { GalatApi } from "@/lib/api/client";
-import { pesanGalat } from "@/lib/api/galat-ui";
-import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
-import { BreadcrumbWilayah, type ChipWilayah } from "@/shared/components/breadcrumb-wilayah";
-import { EmptyState } from "@/shared/components/empty-state";
-import { FOCUS_RING } from "@/shared/components/focus-ring";
-import { pilihKeadaan } from "@/shared/components/keadaan";
-import { RegionPicker } from "@/shared/components/region-picker";
-import { usePusat } from "@/shared/hooks/queries-wilayah";
-import type { useWilayahParams } from "@/shared/hooks/use-wilayah-params";
+import { ArrowLeftRight } from "lucide-react";
 
 import { useKartu } from "@/features/kartu/hooks/queries";
 import type { KartuDesa } from "@/features/kartu/types";
+import type { GalatApi } from "@/lib/api/client";
+import { pesanGalat } from "@/lib/api/galat-ui";
+import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
+import { EmptyState } from "@/shared/components/empty-state";
+import { FOCUS_RING } from "@/shared/components/focus-ring";
+import { pilihKeadaan } from "@/shared/components/keadaan";
+import type { useWilayahParams } from "@/shared/hooks/use-wilayah-params";
 
 import { useDesaKembar } from "../hooks/queries";
 import { BandingKembar } from "./banding-kembar";
-import { DaftarKembar } from "./daftar-kembar";
+import { KartuKomparasiAtas } from "./kartu-komparasi-atas";
 
 type WilayahState = ReturnType<typeof useWilayahParams>;
 
 const JUMLAH_KERANGKA = 3;
 
 export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
-  const { prov, kab, desa, kembar, pilihProv, pilihKab, pilihKembar, reset } = wilayah;
-  const pusat = usePusat();
+  const { kab, desa, kembar, pilihKembar } = wilayah;
 
   const kartuAcuan = useKartu(desa);
   const kartuKembar = useKartu(kembar);
   const kembarQuery = useDesaKembar(desa, true);
 
+  // 1. Belum memilih desa acuan (bisa pilih lewat peta atau search box)
   if (!desa) {
     return (
       <EmptyState pesan="Pilih desa di peta atau kolom pencarian terlebih dahulu" />
     );
   }
 
-  // Task 11: `isPending` — badan panel ini SELALU dirender sesudah early
-  // return `!desa` di atas, jadi `kembarQuery` (enabled: `Boolean(desa)`)
-  // SELALU `enabled` di titik ini; tidak ada jebakan query nonaktif macet
-  // `isPending`.
   const keadaanKembar = pilihKeadaan({
-    isPending: kembarQuery.isPending,
-    isPaused: kembarQuery.isPaused,
-    isError: kembarQuery.isError,
+    isPending: kembarQuery.isPending || kartuAcuan.isPending,
+    isPaused: kembarQuery.isPaused || kartuAcuan.isPaused,
+    isError: kembarQuery.isError || kartuAcuan.isError,
   });
 
   if (keadaanKembar === "muat") {
-    return (
-      <>
-        <KerangkaMuat baris={JUMLAH_KERANGKA} />
-      </>
-    );
+    return <KerangkaMuat baris={JUMLAH_KERANGKA} />;
   }
 
   if (keadaanKembar === "tertunda") {
     return (
-      <>
-        <section className="rounded-card bg-surface p-5">
-          <KeadaanKosong kalimat="Sambungan sedang terputus, jadi Desa Kembar belum bisa dimuat." />
-          <button
-            type="button"
-            onClick={() => kembarQuery.refetch()}
-            className={`mt-3 flex h-10 items-center rounded-full bg-float px-4 text-button-md text-ink shadow-float ${FOCUS_RING}`}
-          >
-            Coba lagi
-          </button>
-        </section>
-      </>
+      <section className="rounded-card bg-surface p-5">
+        <KeadaanKosong kalimat="Sambungan sedang terputus, jadi data Desa Kembar belum bisa dimuat." />
+        <button
+          type="button"
+          onClick={() => {
+            kembarQuery.refetch();
+            kartuAcuan.refetch();
+          }}
+          className={`mt-3 flex h-10 items-center rounded-full bg-float px-4 text-button-md text-ink shadow-float ${FOCUS_RING}`}
+        >
+          Coba lagi
+        </button>
+      </section>
     );
   }
 
   if (kembarQuery.isError && kembarQuery.error.status === 404) {
     return (
-      <>
-        <section className="rounded-card bg-surface p-5">
-          <p className="text-title-sm text-ink">Desa tidak ditemukan</p>
-          <p className="mt-1 text-body-md text-muted">{pesanGalat(kembarQuery.error).pesan}</p>
-        </section>
-      </>
+      <section className="rounded-card bg-surface p-5">
+        <p className="text-title-sm text-ink">Desa tidak ditemukan</p>
+        <p className="mt-1 text-body-md text-muted">{pesanGalat(kembarQuery.error).pesan}</p>
+      </section>
     );
   }
 
   if (kembarQuery.isError) {
-    return (
-      <>
-        <BlokGalat galat={kembarQuery.error} onCobaLagi={() => kembarQuery.refetch()} />
-      </>
-    );
+    return <BlokGalat galat={kembarQuery.error} onCobaLagi={() => kembarQuery.refetch()} />;
   }
 
+  if (kartuAcuan.isError) {
+    return <BlokGalat galat={kartuAcuan.error} onCobaLagi={() => kartuAcuan.refetch()} />;
+  }
 
   const data = kembarQuery.data;
-  if (!data) return null;
-  // Keadaan kosong berketerangan (Task 13 GOTCHA 1) — `keterangan` mentah
-  // ("desa tanpa vektor fitur pada model kembar v3") TIDAK PERNAH dirender
-  // apa adanya; kehadirannya hanya pemicu, panel menulis kalimatnya sendiri.
+  if (!data || !kartuAcuan.data) return null;
+
   if (data.keterangan || data.tetangga.length === 0) {
     return (
-      <>
-        <section className="rounded-card bg-surface p-5">
-          <p className="text-title-sm text-ink">Belum ada Desa Kembar</p>
-          <p className="mt-1 text-body-md text-muted">
-            Model kemiripan belum mencakup desa ini. Pilih desa lain sebagai acuan.
-          </p>
-        </section>
-      </>
+      <section className="rounded-card bg-surface p-5">
+        <p className="text-title-sm text-ink">Belum ada Desa Kembar</p>
+        <p className="mt-1 text-body-md text-muted">
+          Model kemiripan belum mencakup desa ini. Pilih desa lain sebagai acuan.
+        </p>
+      </section>
     );
   }
 
-  // Gerbang pada nilai MENTAH `kembar` (bukan hasil `useKartu`) — Task 13
-  // GOTCHA 3: `?kembar=` yang mati (deep-link ke desa yang kartunya 404)
-  // tidak boleh membuat panel diam byte-identik dengan "belum ada kembar
-  // dipilih".
-  // `keadaanBanding` menggabungkan kedua query (`kartuAcuan`+`kartuKembar`) —
-  // seluruh blok di bawah sudah digerbang `kembar &&`, jadi `kartuKembar`
-  // (yang `enabled: Boolean(kembar)`) dijamin aktif di titik ini juga.
   const keadaanBanding = pilihKeadaan({
     isPending: kartuAcuan.isPending || kartuKembar.isPending,
     isPaused: kartuAcuan.isPaused || kartuKembar.isPaused,
@@ -138,41 +100,56 @@ export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
   });
 
   return (
-    <>
+    <div className="space-y-4">
+      {/* 2. Dua card di panel atas: Sisi kiri Desa Acuan, sisi kanan Desa Kembar dengan Combobox */}
+      <KartuKomparasiAtas
+        kiri={kartuAcuan.data as KartuDesa}
+        kanan={kembar && kartuKembar.data ? (kartuKembar.data as KartuDesa) : null}
+        tetangga={data.tetangga}
+        kembarAktif={kembar}
+        persen={data.tetangga.find((t) => t.iddesa === kembar)?.persen ?? null}
+        onPilihKembar={pilihKembar}
+      />
 
-      {/* `?kembar=` di luar `kab` aktif (review #12) — sah menurut regex
-          (`?desa=1801040001&kembar=1802010001`), tapi `useKembarLayers` hanya
-          menyorot kembar bila prefix 4 digitnya sama dengan `kab` aktif, jadi
-          tanpa keterangan ini pengguna melihat kartu banding penuh tanpa
-          sorotan apa pun di peta tanpa tahu sebabnya. */}
+      {/* Peringatan bila Desa Kembar berada di luar Kabupaten acuan */}
       {kembar && kembar.slice(0, 4) !== kab && (
         <p className="px-1 text-micro text-muted">
           Desa Kembar ini di luar kabupaten yang sedang ditampilkan, jadi tidak tersorot di peta.
         </p>
       )}
 
-      {kembar && keadaanBanding === "muat" && <KerangkaMuat baris={1} />}
-      {kembar && keadaanBanding === "tertunda" && (
-        <p className="px-1 py-2 text-label text-muted">Sambungan terputus.</p>
+      {/* 3. Detail perbandingan di bawah card perbandingan */}
+      {kembar ? (
+        <>
+          {keadaanBanding === "muat" && <KerangkaMuat baris={2} />}
+          {keadaanBanding === "tertunda" && (
+            <p className="px-1 py-2 text-label text-muted">Sambungan terputus.</p>
+          )}
+          {(kartuAcuan.isError || kartuKembar.isError) && (
+            <p className="px-1 py-2 text-label text-muted">
+              {pesanGalat((kartuAcuan.error ?? kartuKembar.error) as GalatApi).judul}
+            </p>
+          )}
+          {kartuAcuan.data && kartuKembar.data && (
+            <BandingKembar
+              kiri={kartuAcuan.data as KartuDesa}
+              kanan={kartuKembar.data as KartuDesa}
+              persen={data.tetangga.find((t) => t.iddesa === kembar)?.persen ?? null}
+              lintasKabupaten={kembar.slice(0, 4) !== kab}
+            />
+          )}
+        </>
+      ) : (
+        <section className="flex min-h-[200px] flex-col items-center justify-center rounded-card bg-surface/70 border border-hairline p-6 sm:p-8 text-center">
+          <div className="mb-2.5 flex size-11 items-center justify-center rounded-full bg-float border border-line text-muted shadow-2xs">
+            <ArrowLeftRight className="size-5 text-muted" strokeWidth={1.75} />
+          </div>
+          <p className="text-title-sm font-semibold text-ink">Perbandingan Menunggu Pilihan</p>
+          <p className="mt-1 max-w-[280px] text-micro text-muted leading-relaxed">
+            Pilih desa kembar melalui combobox di kartu atas untuk melihat perbandingan indikator pembangunan secara langsung.
+          </p>
+        </section>
       )}
-      {kembar && (kartuAcuan.isError || kartuKembar.isError) && (
-        <p className="px-1 py-2 text-label text-muted">
-          {pesanGalat((kartuAcuan.error ?? kartuKembar.error) as GalatApi).judul}
-        </p>
-      )}
-      {kembar && kartuAcuan.data && kartuKembar.data && (
-        <BandingKembar
-          kiri={kartuAcuan.data as KartuDesa}
-          kanan={kartuKembar.data as KartuDesa}
-          persen={data.tetangga.find((t) => t.iddesa === kembar)?.persen ?? null}
-          // Sama persis dengan penjaga baris keterangan peta di atas (review
-          // #12) — review ronde 2 fase 5 B3 memakai nilai yang sama supaya
-          // desil dan meter tidak menyandingkan dua kabupaten berbeda.
-          lintasKabupaten={kembar.slice(0, 4) !== kab}
-        />
-      )}
-
-      <DaftarKembar tetangga={data.tetangga} kembarAktif={kembar} onPilih={pilihKembar} />
-    </>
+    </div>
   );
 }

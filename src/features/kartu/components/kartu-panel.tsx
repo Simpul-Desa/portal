@@ -3,10 +3,8 @@
 import { bisa } from "@/core/akses";
 import { useSesi } from "@/core/sesi";
 import { SeksiBerita } from "@/features/berita/components/seksi-berita";
-import { KartuLaporan } from "@/features/laporan/components/kartu-laporan";
 import { pesanGalat } from "@/lib/api/galat-ui";
 import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
-import { BreadcrumbWilayah, type ChipWilayah } from "@/shared/components/breadcrumb-wilayah";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { pilihKeadaan } from "@/shared/components/keadaan";
 import { usePusat } from "@/shared/hooks/queries-wilayah";
@@ -14,60 +12,39 @@ import type { useWilayahParams } from "@/shared/hooks/use-wilayah-params";
 
 import { useKartu } from "../hooks/queries";
 import type { KartuDesa } from "../types";
-import { SeksiBiofisikLogistik } from "./seksi-biofisik-logistik";
-import { SeksiDesaKembar } from "./seksi-desa-kembar";
+import { QuickLinksDesa } from "./quick-links-desa";
 import { SeksiEntitas } from "./seksi-entitas";
-import { SeksiFaktaProgram } from "./seksi-fakta-program";
-import { SeksiKesiapan } from "./seksi-kesiapan";
 import { SeksiMutuData } from "./seksi-mutu-data";
-import { SeksiPotensi } from "./seksi-potensi";
 import { SeksiRekomendasi } from "./seksi-rekomendasi";
-import { SeksiZona } from "./seksi-zona";
+import { TabAnalitikDesa } from "./tab-analitik-desa";
 
 type WilayahState = ReturnType<typeof useWilayahParams>;
 
 type KartuPanelProps = {
-  wilayah: Pick<WilayahState, "prov" | "kab" | "desa" | "pilihProv" | "pilihKab" | "reset">;
+  wilayah: Pick<WilayahState, "prov" | "kab" | "desa" | "pilihProv" | "pilihKab" | "reset" | "gantiLensa">;
 };
 
 const JUMLAH_KERANGKA = 4;
 
 /**
- * Orkestrator lensa Kartu (Task 24): breadcrumb ringkas Prov › Kab › Desa
- * (keputusan Fable — strip navigasi, BUKAN kartu pemilih penuh; × tiap chip
- * pakai setter yang SUDAH ADA: hapus desa = `pilihKab(kab)`, hapus kab =
- * `pilihProv(prov)`, hapus prov = `reset()`), lalu keadaan muat/galat/404,
- * lalu 9 seksi kartu (urutan rencana; `jalur_ekonomi` tidak dirender fase 1).
- *
- * Sejak fase 7 panel ini membawa dua blok bergerbang peran di luar kartu itu
- * sendiri: seksi Berita Desa sebagai seksi ke-9 (sesudah Desa Kembar, sebelum
- * Mutu data) untuk tamu ke atas, dan kartu Laporan Desa di kaki panel untuk
- * pemerintah ke atas. Gerbangnya diturunkan saat render dari `useSesi()` —
- * bukan disimpan di state — supaya peran yang turun di tengah sesi langsung
- * menutup keduanya.
- *
- * `data` dari `useKartu` bertipe `{[key:string]:unknown}` (OpenAPI memang
- * mengetik `dict[str,Any]`) — di-cast KE `KartuDesa` SEKALI di sini saja;
- * seksi anak menerima tipe yang sudah benar, tidak ada cast berulang.
+ * Orkestrator lensa Kartu Ekonomi Desa:
+ * 1. Hero Card: Informasi Desa singkat dengan gradasi visual pembeda, nama desa selalu utuh,
+ *    indikator Zona dengan link ke Peta Peran, dan tombol export Laporan Desa (PDF) ber-tooltip.
+ * 2. Quick Links: Navigasi cepat ke Desa Kembar, Citra Potensi Desa, dan Jalur Ekonomi.
+ * 3. Rekomendasi Aksi: Highlight insight arahan aksi sebelum telaah data detail.
+ * 4. Tab Analitik Desa: Tab interaktif berisi Potensi Dominan, Kesiapan, Fakta Program, dan Biofisik & Logistik.
+ * 5. Berita Desa: Informasi aktual seputar desa terkait.
+ * 6. Mutu Data: Indikator kelengkapan geometri, sensus, IDM, dan bukti SK.
  */
 export function KartuPanel({ wilayah }: KartuPanelProps) {
-  const { prov, kab, desa, pilihProv, pilihKab, reset } = wilayah;
+  const { prov, desa, gantiLensa } = wilayah;
   const pusat = usePusat();
   const { peran, memuat } = useSesi();
   const { data, isPending, isPaused, isError, error, refetch } = useKartu(desa);
   const kartu = data as KartuDesa | undefined;
 
-  // Task 11: `isPending` — `dashboard-shell.tsx` hanya me-mount `KartuPanel`
-  // saat `wilayah.desa` terisi (`wilayah.desa ? <KartuPanel/> : <EmptyState/>`),
-  // jadi `useKartu(desa)` (`enabled: Boolean(desa)`) SELALU `enabled` di
-  // sini; tidak ada jebakan query nonaktif macet `isPending`.
   const keadaan = pilihKeadaan({ isPending, isPaused, isError });
 
-  // Task 4 (status region): jalur konten utama dasbor — umumkan pemuatan,
-  // lalu kesiapan kartu desa bernama. Wadah dipasang TANPA SYARAT di JSX di
-  // bawah dengan string kosong bawaan, supaya wadahnya sudah ada di DOM
-  // SEBELUM isinya berubah (region yang baru muncul bersamaan isinya tidak
-  // selalu terumumkan pembaca layar).
   const kalimatStatus =
     keadaan === "muat"
       ? "Memuat kartu desa."
@@ -75,10 +52,6 @@ export function KartuPanel({ wilayah }: KartuPanelProps) {
         ? `Kartu ${kartu.identitas.nama} termuat.`
         : "";
 
-  // `!memuat` menahan kedipan: sebelum peran terbaca, `peran` bawaannya
-  // "anonim", jadi tanpa penjaga ini pengguna pemerintah melihat kartu laporan
-  // muncul-hilang-muncul saat halaman dimuat. Alasan yang sama dipakai
-  // `lensaEfektif` di `dashboard-shell.tsx`.
   const bisaBerita = !memuat && bisa(peran, "berita");
   const bisaLaporan = !memuat && bisa(peran, "laporan");
 
@@ -86,7 +59,6 @@ export function KartuPanel({ wilayah }: KartuPanelProps) {
 
   return (
     <>
-
       <p role="status" aria-live="polite" className="sr-only">
         {kalimatStatus}
       </p>
@@ -118,23 +90,31 @@ export function KartuPanel({ wilayah }: KartuPanelProps) {
       )}
 
       {keadaan === "isi" && kartu && (
-        <>
-          <SeksiEntitas identitas={kartu.identitas} namaProvinsi={namaProvinsi} />
-          <SeksiZona petaPeran={kartu.peta_peran} />
-          <SeksiPotensi potensi={kartu.potensi} />
+        <div className="space-y-4">
+          {/* 1. Hero Card: Identitas Desa + Zona + Export Laporan */}
+          <SeksiEntitas
+            identitas={kartu.identitas}
+            namaProvinsi={namaProvinsi}
+            petaPeran={kartu.peta_peran}
+            bisaLaporan={bisaLaporan}
+            onNavigasiPetaPeran={() => gantiLensa("peta-peran")}
+          />
+
+          {/* 2. Quick Links: Desa Kembar, Citra Potensi, Jalur Ekonomi */}
+          <QuickLinksDesa onPilihLensa={(lensa) => gantiLensa(lensa)} />
+
+          {/* 3. Rekomendasi Aksi: Arahan Strategis Kebijakan */}
           <SeksiRekomendasi teks={kartu.rekomendasi_aksi} />
-          <SeksiKesiapan komponen={kartu.kesiapan.komponen} />
-          <SeksiFaktaProgram fakta={kartu.fakta_program} />
-          <SeksiBiofisikLogistik biofisik={kartu.biofisik} logistik={kartu.logistik} />
-          <SeksiDesaKembar desaKembar={kartu.desa_kembar} />
-          {/* `key` berprefiks `desa` pada kedua blok: tanpa itu, state internalnya
-              (daftar berita yang sedang terbuka, galat unduh terakhir) ikut
-              berpindah saat pengguna membuka desa lain. Prefiks memastikan
-              kunci saudara unik di tingkat fragment React. */}
+
+          {/* 4. Tab Analitik Desa: Potensi, Kesiapan, Fakta Program, Biofisik & Logistik */}
+          <TabAnalitikDesa kartu={kartu} />
+
+          {/* 5. Berita Desa */}
           {bisaBerita && desa && <SeksiBerita key={`berita-${desa}`} iddesa={desa} />}
+
+          {/* 6. Mutu Data */}
           <SeksiMutuData mutuData={kartu.mutu_data} />
-          {bisaLaporan && desa && <KartuLaporan key={`laporan-${desa}`} iddesa={desa} />}
-        </>
+        </div>
       )}
     </>
   );

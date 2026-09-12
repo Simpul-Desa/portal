@@ -1,59 +1,173 @@
+import {
+  Building2,
+  Coins,
+  Radio,
+  Store,
+} from "lucide-react";
+
 import { formatAngka, strip } from "@/shared/format";
 
 import { kodeKosong, type KartuKesiapan } from "../types";
+import { TanyaTooltip } from "./tanya-tooltip";
 
-type SelKesiapan = { label: string; nilai: KartuKesiapan["komponen"][keyof KartuKesiapan["komponen"]] };
+type SeksiKesiapanProps = {
+  komponen: KartuKesiapan["komponen"];
+  kesiapan?: KartuKesiapan;
+};
 
-/** Satu sel `card-quadrant` — label di atas, `metric-md` di bawah, kode kosong
- * kecil kalau `kosong`. `kodeKosong()` dipakai (bukan `"kosong" in nilai`
- * langsung) karena `nilai` bisa primitif `number` — operator `in` pada
- * primitif melempar TypeError saat runtime. */
-function Sel({ label, nilai, className }: SelKesiapan & { className: string }) {
-  const kode = kodeKosong(nilai);
-  return (
-    <div className={className}>
-      <p className="text-label text-muted">{label}</p>
-      <p className="mt-2 text-metric-md text-ink">{kode ? strip(null) : formatAngka(nilai as number)}</p>
-      {kode && <p className="mt-1 text-micro text-muted">{kode}</p>}
-    </div>
-  );
+type ItemPilar = {
+  kunci: keyof KartuKesiapan["komponen"];
+  judul: string;
+  istilah: string;
+  deskripsi: string;
+  Ikon: React.ComponentType<{ className?: string }>;
+};
+
+const PILAR_KESIAPAN: ItemPilar[] = [
+  {
+    kunci: "SK_INDEKS",
+    judul: "Indeks Desa Membangun",
+    istilah: "Indeks Desa Membangun",
+    deskripsi: "Kemandirian tata kelola sosial, ekonomi, & ketahanan lingkungan",
+    Ikon: Building2,
+  },
+  {
+    kunci: "SK_KELEMBAGAAN",
+    judul: "Kelembagaan Ekonomi",
+    istilah: "Kelembagaan Ekonomi",
+    deskripsi: "Kapasitas kelembagaan usaha lokal, BUMDes, koperasi, & lumbung",
+    Ikon: Store,
+  },
+  {
+    kunci: "SK_AMENITAS",
+    judul: "Amenitas & Keuangan",
+    istilah: "Amenitas & Keuangan",
+    deskripsi: "Kemudahan akses layanan perbankan, transaksi keuangan, & pasar",
+    Ikon: Coins,
+  },
+  {
+    kunci: "SK_KONEKTIVITAS",
+    judul: "Konektivitas Wilayah",
+    istilah: "Konektivitas Wilayah",
+    deskripsi: "Aksesibilitas jaringan jalan, transportasi publik, & sinyal telekomunikasi",
+    Ikon: Radio,
+  },
+];
+
+function statusKesiapan(nilai: number): { label: string; kelas: string } {
+  if (nilai >= 0.75) return { label: "Tinggi", kelas: "text-positive bg-positive/10" };
+  if (nilai >= 0.5) return { label: "Sedang", kelas: "text-primary bg-primary/10" };
+  return { label: "Perlu Penguatan", kelas: "text-muted bg-surface" };
 }
 
 /**
- * `card-quadrant` (Task 24, seksi 5) — 4 komponen Skor Kesiapan (GLOSSARY:
- * Indeks Desa Membangun, kelembagaan ekonomi, amenitas & keuangan,
- * konektivitas). Silang hairline digambar lewat border kanan/bawah pada 3
- * dari 4 sel (bukan `divide-x`+`divide-y` — pada grid 2 kolom keduanya salah
- * menaruh garis horizontal di dalam baris pertama, bukan di antara baris).
- * Di bawah 768px (`md`) grid luruh ke 1×4 (DESIGN.md § Responsive Behavior,
- * fase 9 Task 15): border kanan (silang vertikal) dimatikan
- * (`border-r-0 md:border-r`) karena pada satu kolom ia melayang di tepi
- * tanpa kolom tetangga, dan sel Amenitas & Keuangan mendapat border bawah
- * tambahan (`border-b md:border-b-0`) supaya keempat sel tetap berhairline
- * penuh saat ditumpuk, bukan cuma dua dari tiga sambungan.
+ * Seksi Kesiapan Desa:
+ * Menggambarkan 4 pilar kesiapan ekonomi & institusi desa secara visual
+ * dengan kartu berlatar putih (bg-float) kontras agar langsung terlihat,
+ * dilengkapi tooltip (?) tanpa underline pada istilah-istilah penting.
  */
-export function SeksiKesiapan({ komponen }: { komponen: KartuKesiapan["komponen"] }) {
+export function SeksiKesiapan({ komponen, kesiapan }: SeksiKesiapanProps) {
+  const dataIdm = kesiapan && !("kosong" in kesiapan.idm) ? kesiapan.idm : null;
+
   return (
-    <section className="rounded-card bg-surface p-5">
-      <h3 className="text-title-md text-ink">Kesiapan</h3>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2">
-        <Sel
-          label="Indeks Desa Membangun"
-          nilai={komponen.SK_INDEKS}
-          className="border-r-0 border-b border-hairline pr-3 pb-3 md:border-r"
-        />
-        <Sel
-          label="Kelembagaan Ekonomi"
-          nilai={komponen.SK_KELEMBAGAAN}
-          className="border-b border-hairline pb-3 pl-3"
-        />
-        <Sel
-          label="Amenitas & Keuangan"
-          nilai={komponen.SK_AMENITAS}
-          className="border-r-0 border-b border-hairline pt-3 pr-3 pb-3 md:border-r md:border-b-0 md:pb-0"
-        />
-        <Sel label="Konektivitas" nilai={komponen.SK_KONEKTIVITAS} className="pt-3 pl-3" />
+    <div className="space-y-4">
+      {/* 4 Pilar Kuadran Kesiapan - menggunakan bg-float dan border agar terlihat jelas */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {PILAR_KESIAPAN.map((pilar) => {
+          const mentah = komponen[pilar.kunci];
+          const kode = kodeKosong(mentah);
+          const nilai = typeof mentah === "number" ? mentah : null;
+          const status = nilai !== null ? statusKesiapan(nilai) : null;
+          const Ikon = pilar.Ikon;
+
+          return (
+            <div
+              key={pilar.kunci}
+              className="group flex flex-col justify-between rounded-inset bg-float p-4 border border-line/70 shadow-2xs hover:border-line-strong transition-all"
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="flex size-7 items-center justify-center rounded-full bg-surface text-muted group-hover:text-primary transition-colors">
+                    <Ikon className="size-4" />
+                  </span>
+                  {status && (
+                    <span className={`px-2 py-0.5 rounded-full text-micro font-medium ${status.kelas}`}>
+                      {status.label}
+                    </span>
+                  )}
+                  {kode && (
+                    <span className="px-2 py-0.5 rounded-full text-micro text-muted bg-surface">
+                      {kode}
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-3 flex items-center">
+                  <h4 className="text-title-sm font-semibold text-ink">
+                    {pilar.judul}
+                  </h4>
+                  <TanyaTooltip istilah={pilar.istilah} />
+                </div>
+                <p className="mt-1 text-micro text-muted leading-relaxed">
+                  {pilar.deskripsi}
+                </p>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-hairline flex items-baseline justify-between">
+                <span className="text-micro text-muted">Skor Pilar</span>
+                <span className="text-metric-md font-semibold text-ink">
+                  {nilai !== null ? formatAngka(nilai) : strip(null)}
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
-    </section>
+
+      {/* Rincian Status IDM Resmi jika ada */}
+      {dataIdm && (
+        <div className="rounded-inset bg-float p-4 border border-line/70 shadow-2xs">
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-hairline">
+            <div className="flex items-center">
+              <h4 className="text-title-sm font-semibold text-ink">Penilaian IDM Kemendesa</h4>
+              <TanyaTooltip istilah="Indeks Desa Membangun" />
+            </div>
+            <span className="text-micro font-semibold text-primary px-2.5 py-0.5 rounded-full bg-primary/10">
+              {dataIdm.status} ({dataIdm.tahun})
+            </span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 pt-1 text-center">
+            <div className="rounded-xs bg-surface p-2 border border-hairline/60">
+              <div className="flex items-center justify-center">
+                <span className="text-micro text-muted">IKS (Sosial)</span>
+                <TanyaTooltip istilah="IKS" />
+              </div>
+              <span className="text-title-sm font-semibold text-ink mt-0.5 block">
+                {formatAngka(dataIdm.iks)}
+              </span>
+            </div>
+            <div className="rounded-xs bg-surface p-2 border border-hairline/60">
+              <div className="flex items-center justify-center">
+                <span className="text-micro text-muted">IKE (Ekonomi)</span>
+                <TanyaTooltip istilah="IKE" />
+              </div>
+              <span className="text-title-sm font-semibold text-ink mt-0.5 block">
+                {formatAngka(dataIdm.ike)}
+              </span>
+            </div>
+            <div className="rounded-xs bg-surface p-2 border border-hairline/60">
+              <div className="flex items-center justify-center">
+                <span className="text-micro text-muted">IKL (Lingkungan)</span>
+                <TanyaTooltip istilah="IKL" />
+              </div>
+              <span className="text-title-sm font-semibold text-ink mt-0.5 block">
+                {formatAngka(dataIdm.ikl)}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

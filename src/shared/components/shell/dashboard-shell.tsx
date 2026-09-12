@@ -262,6 +262,7 @@ export function DashboardShell() {
     styleVersion,
     kab: wilayah.kab,
     aktif: lensaEfektif === "desa-kembar",
+    desa: wilayah.desa,
     // Digerbang `wilayah.desa` (fase 5, temuan review Blok A): `?kembar=`
     // tanpa `?desa=` adalah URL yang sah — `parseWilayahParams` hanya
     // membuang `kembar` yang SAMA dengan `desa`, jadi deep-link

@@ -22,10 +22,15 @@ export function BarisBerita({ item }: { item: ItemBerita }) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Buka berita "${item.judul}" di situs ${item.sumber}, tab baru`}
-          className={`flex items-start gap-1.5 text-title-sm text-link ${FOCUS_RING}`}
+          className={`group flex items-start gap-1.5 text-title-sm text-ink hover:text-primary transition-colors ${FOCUS_RING}`}
         >
           <span>{item.judul}</span>
-          <ExternalLink aria-hidden="true" size={16} strokeWidth={1.5} className="mt-0.5 shrink-0" />
+          <ExternalLink
+            aria-hidden="true"
+            size={16}
+            strokeWidth={1.5}
+            className="mt-0.5 shrink-0 text-muted group-hover:text-primary transition-colors"
+          />
         </a>
       ) : (
         <p className="text-title-sm text-ink">{item.judul}</p>
