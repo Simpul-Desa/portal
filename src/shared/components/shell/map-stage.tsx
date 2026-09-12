@@ -56,6 +56,8 @@ type MapStageProps = {
    * supaya pengguna yang sudah masuk (pemerintah/swasta/admin) tidak
    * melihat lencana berkedip sebelum perannya selesai dimuat. */
   memuat: boolean;
+  /** Elemen overlay tambahan di atas kanvas peta (mis. legenda choropleth). */
+  children?: ReactNode;
 };
 
 /**
@@ -92,6 +94,7 @@ export function MapStage({
   asistenRef,
   adaSesi,
   memuat,
+  children,
 }: MapStageProps) {
   // Dua sebab terkunci, dua kalimat. Menyuruh "Masuk" kepada pengguna yang
   // sesinya sudah ada adalah antarmuka yang menyangkal sesi itu sendiri —
@@ -291,6 +294,9 @@ export function MapStage({
           </button>
         </div>
       </div>
+
+      {/* Custom overlays / children */}
+      {children}
 
       {/* Bottom-right: stack map-control (44px) — zoom in, zoom out, locate.
           Sama alasan `hidden lg:flex` dengan klaster di atas. */}

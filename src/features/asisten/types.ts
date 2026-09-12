@@ -33,6 +33,7 @@ export type TujuanJejak = {
   desa?: string;
   varian?: Varian;
   target?: string;
+  jalur?: string;
 };
 
 /** Satu baris siap render di blok "Sumber jawaban". */

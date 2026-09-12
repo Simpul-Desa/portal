@@ -7,6 +7,8 @@ import { pesanGalat } from "@/lib/api/galat-ui";
 import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { pilihKeadaan } from "@/shared/components/keadaan";
+import { useCitraDaftar } from "@/features/citra-potensi/hooks/queries";
+import { cariTargetCitra } from "@/features/citra-potensi/services/sel";
 import { usePusat } from "@/shared/hooks/queries-wilayah";
 import type { useWilayahParams } from "@/shared/hooks/use-wilayah-params";
 
@@ -21,7 +23,10 @@ import { TabAnalitikDesa } from "./tab-analitik-desa";
 type WilayahState = ReturnType<typeof useWilayahParams>;
 
 type KartuPanelProps = {
-  wilayah: Pick<WilayahState, "prov" | "kab" | "desa" | "pilihProv" | "pilihKab" | "reset" | "gantiLensa">;
+  wilayah: Pick<
+    WilayahState,
+    "prov" | "kab" | "desa" | "pilihProv" | "pilihKab" | "reset" | "gantiLensa" | "bukaTujuan"
+  >;
 };
 
 const JUMLAH_KERANGKA = 4;
@@ -37,7 +42,10 @@ const JUMLAH_KERANGKA = 4;
  * 6. Mutu Data: Indikator kelengkapan geometri, sensus, IDM, dan bukti SK.
  */
 export function KartuPanel({ wilayah }: KartuPanelProps) {
-  const { prov, desa, gantiLensa } = wilayah;
+  const { prov, kab, desa, gantiLensa, bukaTujuan } = wilayah;
+  const kodeProv = prov ?? (desa ? desa.slice(0, 2) : undefined);
+  const kodeKab = kab ?? (desa ? desa.slice(0, 4) : undefined);
+  const daftarCitra = useCitraDaftar(kodeProv, Boolean(kodeProv));
   const pusat = usePusat();
   const { peran, memuat } = useSesi();
   const { data, isPending, isPaused, isError, error, refetch } = useKartu(desa);
@@ -101,13 +109,42 @@ export function KartuPanel({ wilayah }: KartuPanelProps) {
           />
 
           {/* 2. Quick Links: Desa Kembar, Citra Potensi, Jalur Ekonomi */}
-          <QuickLinksDesa onPilihLensa={(lensa) => gantiLensa(lensa)} />
+          <QuickLinksDesa
+            desa={desa}
+            kab={kodeKab}
+            onPilihLensa={(lensa) => gantiLensa(lensa)}
+            onNavigasiJalur={({ varian, jalur }) => {
+              bukaTujuan({
+                lensa: "jalur-ekonomi",
+                prov: kodeProv,
+                kab: kodeKab,
+                desa,
+                varian,
+                jalur,
+              });
+            }}
+          />
 
           {/* 3. Rekomendasi Aksi: Arahan Strategis Kebijakan */}
           <SeksiRekomendasi teks={kartu.rekomendasi_aksi} />
 
           {/* 4. Tab Analitik Desa: Potensi, Kesiapan, Fakta Program, Biofisik & Logistik */}
-          <TabAnalitikDesa kartu={kartu} />
+          <TabAnalitikDesa
+            kartu={kartu}
+            onNavigasiCitra={() => {
+              const targetCitra = cariTargetCitra(
+                daftarCitra.data?.daftar ?? [],
+                kartu.potensi,
+              );
+              bukaTujuan({
+                lensa: "citra-potensi",
+                prov: kodeProv,
+                kab: kodeKab,
+                desa,
+                target: targetCitra,
+              });
+            }}
+          />
 
           {/* 5. Berita Desa */}
           {bisaBerita && desa && <SeksiBerita key={`berita-${desa}`} iddesa={desa} />}

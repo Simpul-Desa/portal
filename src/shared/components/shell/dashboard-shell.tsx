@@ -11,11 +11,13 @@ import { useSesi } from "@/core/sesi";
 import { PanelAsisten } from "@/features/asisten/components/panel-asisten";
 import { useAsisten } from "@/features/asisten/hooks/use-asisten";
 import { DialogTerkunci } from "@/features/auth/components/dialog-terkunci";
+import { LegendaCitraMap } from "@/features/citra-potensi/components/legenda-citra-map";
 import { CitraPotensiPanel } from "@/features/citra-potensi/components/panel";
 import { useCitraData, useCitraLayers } from "@/features/citra-potensi/hooks/use-map-layers";
 import { DesaKembarPanel } from "@/features/desa-kembar/components/panel";
 import { useKembarLayers } from "@/features/desa-kembar/hooks/use-map-layers";
 import { JalurEkonomiPanel } from "@/features/jalur-ekonomi/components/panel";
+import { KartuDesaJalurMap } from "@/features/jalur-ekonomi/components/kartu-desa-jalur-map";
 import { useJalurLayers } from "@/features/jalur-ekonomi/hooks/use-map-layers";
 import { EmptyState } from "@/features/kartu/components/empty-state";
 import { KartuPanel } from "@/features/kartu/components/kartu-panel";
@@ -30,7 +32,7 @@ import { useWilayahParams } from "@/shared/hooks/use-wilayah-params";
 import { LeftPanel } from "./left-panel";
 import { MapStage } from "./map-stage";
 import { NavbarLokasi } from "./navbar-lokasi";
-import { PANEL_DEFAULT } from "./panel-constants";
+import { PANEL_DEFAULT, PANEL_MAX } from "./panel-constants";
 import { LENSA_ITEMS, SideRail } from "./side-rail";
 
 type DialogState = { kemampuan: Kemampuan; nama: string };
@@ -223,6 +225,14 @@ export function DashboardShell() {
     if (!bisaAsisten) asisten.percakapanBaru();
   }
 
+  const [lensaSebelumnya, setLensaSebelumnya] = useState(lensaEfektif);
+  if (lensaEfektif !== lensaSebelumnya) {
+    setLensaSebelumnya(lensaEfektif);
+    if (lensaEfektif === "citra-potensi") {
+      setPanelWidth((prev) => Math.max(prev, PANEL_MAX));
+    }
+  }
+
   const petaPeranData = usePetaPeranData({ kab: wilayah.kab, aktif: lensaEfektif === "peta-peran" });
   const citraData = useCitraData({
     prov: wilayah.prov,
@@ -338,7 +348,28 @@ export function DashboardShell() {
           asistenRef={asistenRef}
           adaSesi={adaSesi}
           memuat={memuat}
-        />
+        >
+          {lensaEfektif === "citra-potensi" && (
+            <LegendaCitraMap
+              prov={wilayah.prov}
+              kab={wilayah.kab}
+              target={wilayah.target}
+              desa={wilayah.desa}
+            />
+          )}
+          {lensaEfektif === "jalur-ekonomi" && wilayah.desa && (
+            <KartuDesaJalurMap
+              varian={wilayah.varian ?? VARIAN_DEFAULT}
+              desa={wilayah.desa}
+              kab={wilayah.kab}
+              jalurAktif={wilayah.jalur}
+              onPilihJalur={wilayah.pilihJalur}
+              onTutup={() => {
+                if (wilayah.kab) wilayah.pilihKab(wilayah.kab);
+              }}
+            />
+          )}
+        </MapStage>
         {/* Gerbang ganda (Task 24 GOTCHA 2): tombol di `MapStage` sudah
             digerbangi `asistenTerkunci`, tapi peran bisa turun DI TENGAH sesi
             (mis. sesi kedaluwarsa) — tanpa gerbang kedua di sini, panel yang

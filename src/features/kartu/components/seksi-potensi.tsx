@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 
 import { BadgeSumber } from "@/shared/components/badge-sumber";
+import { FOCUS_RING } from "@/shared/components/focus-ring";
+import { ArrowUpRightIcon } from "@/shared/components/icons";
 import { formatAngka, strip } from "@/shared/format";
 
 import { KUNCI_TEMA, type KartuPotensi, type KunciTema } from "../types";
@@ -39,12 +41,17 @@ function warnaBar(persentil: number): string {
   return "bg-muted";
 }
 
+type SeksiPotensiProps = {
+  potensi: KartuPotensi;
+  onNavigasiCitra?: () => void;
+};
+
 /**
  * Seksi Potensi Dominan:
  * Menggambarkan sektor keunggulan komparatif ekonomi desa dengan visualisasi
  * persentil kompetitif dari 8 tema sub-skor beserta tooltip penjelasan istilah.
  */
-export function SeksiPotensi({ potensi }: { potensi: KartuPotensi }) {
+export function SeksiPotensi({ potensi, onNavigasiCitra }: SeksiPotensiProps) {
   const detail = potensi.detail_dominan;
 
   return (
@@ -92,6 +99,20 @@ export function SeksiPotensi({ potensi }: { potensi: KartuPotensi }) {
         <p className="mt-2.5 text-micro text-muted leading-relaxed">
           Sektor dengan skor daya saing komparatif tertinggi yang menjadi penggerak utama pertumbuhan ekonomi desa.
         </p>
+
+        {onNavigasiCitra && (
+          <div className="mt-3 pt-2.5 border-t border-hairline flex items-center justify-end">
+            <button
+              type="button"
+              onClick={onNavigasiCitra}
+              className={`group inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-micro font-medium text-ink border border-transparent hover:border-line-strong hover:bg-float hover:text-primary transition-all cursor-pointer ${FOCUS_RING}`}
+              title="Arahkan ke fitur Citra Potensi Desa"
+            >
+              <span>Lihat detail peringkat</span>
+              <ArrowUpRightIcon className="size-3.5 text-muted transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Rincian 8 Tema Sub-Skor */}

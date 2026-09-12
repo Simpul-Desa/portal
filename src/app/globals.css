@@ -129,7 +129,7 @@
   /* Layout — panel kiri resizable (Task 17/19; DESIGN.md `layout.panel-*`).
      Sumber sah nilai clamp drag di `shared/components/shell/left-panel.tsx`. */
   --spacing-panel-min: 400px;
-  --spacing-panel: 480px;
+  --spacing-panel: 640px;
   --spacing-panel-max: 640px;
   /* Panel kanan Asisten Desa (DESIGN.md `layout.assistant-width`, § Layout
      "Four columns"). Nilainya sama dengan maxWidth `card-float` — satu

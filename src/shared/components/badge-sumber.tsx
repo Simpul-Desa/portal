@@ -6,9 +6,9 @@ const KONFIGURASI_SUMBER: Record<
   { label: string; kelas: string; keterangan: string }
 > = {
   citra: {
-    label: "Citra Satelit",
+    label: "Citra Potensi Desa",
     kelas: "bg-positive/10 text-positive border-positive/20",
-    keterangan: "Diverifikasi langsung dari data penginderaan jauh citra satelit resolusi tinggi.",
+    keterangan: "Diverifikasi langsung dari fitur Citra Potensi Desa berbasis machine learning analisis satelit dan tutupan lahan.",
   },
   "heuristik-tervalidasi": {
     label: "Heuristik Tervalidasi",

@@ -1,6 +1,7 @@
 "use client";
 
 import { BarisLabelNilai } from "@/features/kartu/components/baris-label-nilai";
+import { TanyaTooltip } from "@/features/kartu/components/tanya-tooltip";
 import { RampMeter } from "@/shared/components/charts";
 import { formatAngka } from "@/shared/format";
 
@@ -30,8 +31,24 @@ export function MutuSel({ sel }: MutuSelProps) {
       </h3>
 
       <div className="mt-4 flex flex-col divide-y divide-hairline">
-        <BarisLabelNilai label="Mutu uji tertahan">{formatAngka(sel.ap_uji_tertahan)}</BarisLabelNilai>
-        <BarisLabelNilai label="Rentang keyakinan">
+        <BarisLabelNilai
+          label={
+            <span className="inline-flex items-center">
+              <span>Mutu uji tertahan</span>
+              <TanyaTooltip istilah="Mutu Uji" />
+            </span>
+          }
+        >
+          {formatAngka(sel.ap_uji_tertahan)}
+        </BarisLabelNilai>
+        <BarisLabelNilai
+          label={
+            <span className="inline-flex items-center">
+              <span>Rentang keyakinan</span>
+              <TanyaTooltip istilah="Rentang Keyakinan" />
+            </span>
+          }
+        >
           {formatAngka(bawah)}–{formatAngka(atas)}
         </BarisLabelNilai>
       </div>

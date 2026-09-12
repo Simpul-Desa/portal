@@ -136,7 +136,7 @@ export function DaftarGiliran({
               <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-surface mt-1 overflow-hidden">
                 <Image src="/asisten-desa.svg" alt="" width={16} height={16} />
               </div>
-              <div className="flex-1 min-w-0 max-w-[90%]">
+              <div className="flex-1 min-w-0">
                 <GiliranAsisten giliran={g} onBukaTujuan={onBukaTujuan} />
               </div>
             </div>
@@ -144,11 +144,11 @@ export function DaftarGiliran({
         )}
 
         {sedangMenjawab && (
-          <div className="flex w-full items-start gap-3">
+          <div className="flex w-full items-start gap-3 min-w-0">
             <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-surface mt-1 overflow-hidden">
               <Image src="/asisten-desa.svg" alt="" width={16} height={16} />
             </div>
-            <div className="flex items-center h-10 px-2">
+            <div className="flex items-center h-10 px-2 min-w-0">
               <div className="flex gap-1.5">
                 <div className="size-2 rounded-full bg-line-strong animate-bounce" style={{ animationDelay: "0ms" }} />
                 <div className="size-2 rounded-full bg-line-strong animate-bounce" style={{ animationDelay: "150ms" }} />

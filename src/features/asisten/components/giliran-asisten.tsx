@@ -33,19 +33,19 @@ export function GiliranAsisten({ giliran, onBukaTujuan }: GiliranAsistenProps) {
   const jejak = giliran.jejak ?? [];
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-4 w-full min-w-0">
+      <div className="flex flex-col gap-2 min-w-0">
         {blok.map((b, i) =>
           b.jenis === "paragraf" ? (
-            <p key={i} className="text-micro text-ink leading-relaxed">
+            <p key={i} className="text-micro text-ink leading-relaxed break-words [overflow-wrap:anywhere]">
               {b.teks}
             </p>
           ) : (
-            <ul key={i} className="flex flex-col gap-1.5 ml-1">
+            <ul key={i} className="flex flex-col gap-1.5 ml-1 min-w-0">
               {b.butir.map((item, j) => (
-                <li key={j} className="flex gap-2 text-micro text-ink leading-relaxed">
-                  <span aria-hidden="true" className="text-muted mt-0.5">•</span>
-                  <span>{item}</span>
+                <li key={j} className="flex gap-2 text-micro text-ink leading-relaxed min-w-0">
+                  <span aria-hidden="true" className="text-muted mt-0.5 shrink-0">•</span>
+                  <span className="flex-1 min-w-0 break-words [overflow-wrap:anywhere]">{item}</span>
                 </li>
               ))}
             </ul>
@@ -54,13 +54,13 @@ export function GiliranAsisten({ giliran, onBukaTujuan }: GiliranAsistenProps) {
       </div>
 
       {kalimat.length > 0 && (
-        <div className="flex flex-col gap-2 mt-1">
+        <div className="flex flex-col gap-2 mt-1 min-w-0">
           {kalimat.map((k) => (
             <Marker key={k} className="text-caution bg-caution/10 px-3 py-2 rounded-md">
               <MarkerIcon>
                 <AlertCircle />
               </MarkerIcon>
-              <MarkerContent className="text-micro font-medium">{k}</MarkerContent>
+              <MarkerContent className="text-micro font-medium break-words [overflow-wrap:anywhere]">{k}</MarkerContent>
             </Marker>
           ))}
         </div>

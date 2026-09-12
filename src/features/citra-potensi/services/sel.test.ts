@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import type { SelCitra, SelCitraDetail } from "../types";
-import { barisSkor, kelompokSel, namaKomoditas, temaDari } from "./sel";
+import { barisSkor, cariTargetCitra, kelompokSel, namaKomoditas, temaDari } from "./sel";
 
 function sel(over: Partial<SelCitra> = {}): SelCitra {
   return {
@@ -120,3 +120,42 @@ describe("barisSkor", () => {
     expect(hasil[0].nDesaKab).toBe(999);
   });
 });
+
+describe("cariTargetCitra", () => {
+  const daftarSampel = [
+    sel({ target: "kom_prov_ternak_01", nama: "Ayam Kampung Biasa", subsektor: "ternak" }),
+    sel({ target: "kom_prov_ternak_02", nama: "Kambing Potong", subsektor: "ternak" }),
+    sel({ target: "kom_prov_tp_01", nama: "Padi Sawah Inbrida", subsektor: "tp" }),
+    sel({ target: "kom_prov_horti_01", nama: "Pisang Kepok ", subsektor: "horti" }),
+  ];
+
+  test("mencocokkan nama komoditas persis dari detail_dominan", () => {
+    const hasil = cariTargetCitra(daftarSampel, {
+      detail_dominan: { komoditas: "Kambing Potong" },
+    });
+    expect(hasil).toBe("kom_prov_ternak_02");
+  });
+
+  test("mencocokkan ID target dari regex berkas sumber", () => {
+    const hasil = cariTargetCitra(daftarSampel, {
+      detail_dominan: {
+        komoditas: "Pisang Lain",
+        sumber: "produksi/18/kom_prov_horti_01.json",
+      },
+    });
+    expect(hasil).toBe("kom_prov_horti_01");
+  });
+
+  test("mencocokkan komoditas dari string dominan tema — komoditas", () => {
+    const hasil = cariTargetCitra(daftarSampel, {
+      dominan: "Tanaman Pangan — Padi Sawah Inbrida",
+    });
+    expect(hasil).toBe("kom_prov_tp_01");
+  });
+
+  test("mengembalikan undefined bila daftar kosong atau tidak ditemukan", () => {
+    expect(cariTargetCitra([], { dominan: "Kambing" })).toBeUndefined();
+    expect(cariTargetCitra(daftarSampel, { dominan: "Komoditas Gaib" })).toBeUndefined();
+  });
+});
+

@@ -3,10 +3,9 @@
 import { useKartu } from "@/features/kartu/hooks/queries";
 import type { KartuDesa } from "@/features/kartu/types";
 import { WARNA_ZONA } from "@/lib/map/zona";
-import { BadgeSumber } from "@/shared/components/badge-sumber";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { ArrowUpRightIcon, ChevronLeftIcon } from "@/shared/components/icons";
-import { formatAngka, strip } from "@/shared/format";
+import { formatAngka } from "@/shared/format";
 import { useWilayahParams } from "@/shared/hooks/use-wilayah-params";
 
 import type { BarisPetaPeranPenuh, NamaZona } from "../types";
@@ -113,7 +112,6 @@ function KotakSkor({
  * - Card 1: Hero Card Identitas Desa & Zona dengan banner warna zona solid, nama desa kontras,
  *   link Kartu Desa, dan callout strategi kebijakan zona.
  * - Card 2: Koordinat Matriks Analitik: Dua kotak skor (SP & SK) + indikator kelengkapan / jarak.
- * - Card 3: Potensi Dominan Wilayah.
  */
 export function DetailDesa({ baris, namaProv, onTutup }: DetailDesaProps) {
   const { data } = useKartu(baris.iddesa);
@@ -321,25 +319,6 @@ export function DetailDesa({ baris, namaProv, onTutup }: DetailDesaProps) {
                 </span>
               </div>
             </div>
-          </div>
-
-          {/* 3. Potensi Dominan Wilayah (Card Terpisah) */}
-          <div className="rounded-inset bg-float p-4 border border-line/70 shadow-2xs">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-hairline">
-              <div className="flex items-center">
-                <h3 className="text-title-sm font-bold text-ink">Potensi Dominan Wilayah</h3>
-                <IstilahTooltip istilah="Potensi Dominan" label="" tampilkanIkon={true} />
-              </div>
-              {baris.sumber_dominan && (
-                <BadgeSumber sumber={baris.sumber_dominan} />
-              )}
-            </div>
-            <p className="mt-1 text-title-md font-bold text-ink">
-              {strip(baris.potensi_dominan)}
-            </p>
-            <p className="mt-1 text-micro text-muted leading-relaxed">
-              Komoditas unggulan teridentifikasi yang menjadi prioritas perlakuan strategi kebijakan zona ini.
-            </p>
           </div>
         </div>
       </section>

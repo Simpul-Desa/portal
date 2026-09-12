@@ -1,6 +1,8 @@
 "use client";
 
 import type { KartuDesa } from "@/features/kartu/types";
+import { FOCUS_RING } from "@/shared/components/focus-ring";
+import { ArrowUpRightIcon } from "@/shared/components/icons";
 import { formatPersen } from "@/shared/format";
 
 import { ComboboxKembar, type TetanggaKembar } from "./combobox-kembar";
@@ -12,11 +14,12 @@ type KartuKomparasiAtasProps = {
   kembarAktif?: string;
   persen: number | null;
   onPilihKembar: (iddesa: string) => void;
+  onBukaKartu?: (iddesa: string) => void;
 };
 
 /**
  * Dua kartu perbandingan di panel atas:
- * 1. Tulisan Desa Acuan / Desa Kembar
+ * 1. Tautan ke Kartu Ekonomi Desa di pojok kanan atas
  * 2. Nama Desa (pada Desa Kembar berfungsi sebagai Combobox)
  * 3. Kec, Kab
  * 4. Nilai Kemiripan
@@ -30,6 +33,7 @@ export function KartuKomparasiAtas({
   kembarAktif,
   persen,
   onPilihKembar,
+  onBukaKartu,
 }: KartuKomparasiAtasProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -42,11 +46,19 @@ export function KartuKomparasiAtas({
         }}
       >
         <div>
-          {/* 1. Tulisan Desa Acuan */}
-          <div className="flex items-center justify-between">
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-badge font-semibold bg-orange-100/90 text-orange-900 border border-orange-200/70">
-              Desa Acuan
-            </span>
+          {/* 1. Tautan Kartu Ekonomi Desa di pojok kanan atas */}
+          <div className="flex items-center justify-end min-h-5">
+            {onBukaKartu && (
+              <button
+                type="button"
+                onClick={() => onBukaKartu(kiri.identitas.iddesa)}
+                className={`group shrink-0 inline-flex items-center gap-1 text-micro font-medium text-muted hover:text-primary transition-colors cursor-pointer ${FOCUS_RING}`}
+                title={`Buka Kartu Ekonomi Desa ${kiri.identitas.nama}`}
+              >
+                <span>Kartu Ekonomi Desa</span>
+                <ArrowUpRightIcon className="size-3.5 text-muted transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary" />
+              </button>
+            )}
           </div>
 
           {/* 2. Nama Desa */}
@@ -83,11 +95,19 @@ export function KartuKomparasiAtas({
           }}
         >
           <div>
-            {/* 1. Tulisan Desa Kembar */}
-            <div className="flex items-center justify-between">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-badge font-semibold bg-orange-200/90 text-orange-950 border border-orange-300/80">
-                Desa Kembar
-              </span>
+            {/* 1. Tautan Kartu Ekonomi Desa di pojok kanan atas */}
+            <div className="flex items-center justify-end min-h-5">
+              {onBukaKartu && (
+                <button
+                  type="button"
+                  onClick={() => onBukaKartu(kanan.identitas.iddesa)}
+                  className={`group shrink-0 inline-flex items-center gap-1 text-micro font-medium text-muted hover:text-primary transition-colors cursor-pointer ${FOCUS_RING}`}
+                  title={`Buka Kartu Ekonomi Desa ${kanan.identitas.nama}`}
+                >
+                  <span>Kartu Ekonomi Desa</span>
+                  <ArrowUpRightIcon className="size-3.5 text-muted transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary" />
+                </button>
+              )}
             </div>
 
             {/* 2. Nama Desa (Berfungsi sebagai Combobox) */}
@@ -118,12 +138,8 @@ export function KartuKomparasiAtas({
         /* Status OFF (Belum Memilih Desa Kembar) */
         <section className="relative flex flex-col justify-between overflow-hidden rounded-card p-3.5 sm:p-4 bg-surface/50 border border-dashed border-line-strong/60 shadow-2xs transition-all">
           <div>
-            {/* 1. Tulisan Desa Kembar */}
-            <div className="flex items-center justify-between">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-badge font-medium bg-inset text-muted border border-hairline">
-                Desa Kembar
-              </span>
-            </div>
+            {/* 1. Placeholder baris atas */}
+            <div className="min-h-5" />
 
             {/* 2. Slot Nama Desa (Combobox untuk memilih) */}
             <div className="mt-2.5 h-8 flex items-center">

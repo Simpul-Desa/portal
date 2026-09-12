@@ -119,7 +119,7 @@ function KartuSegarkanBerita() {
 
         {hasil && !sedangKirim && (
           <p className="text-micro text-positive font-medium">
-            Pekerjaan dimulai untuk {hasil.n_desa} desa. Pantau di tab Status.
+            Pekerjaan dimulai untuk {hasil.n_desa} desa.
           </p>
         )}
       </div>

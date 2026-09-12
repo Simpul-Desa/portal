@@ -1,4 +1,12 @@
+"use client";
+
+import { useState } from "react";
+import { ChevronDown, ExternalLink, SlidersHorizontal } from "lucide-react";
+
+import { DOCS_URL } from "@/core/config";
 import type { Varian } from "@/lib/url-state";
+import { TanyaTooltip } from "@/features/kartu/components/tanya-tooltip";
+import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { formatAngka } from "@/shared/format";
 
 type ParameterVarianProps = {
@@ -29,9 +37,7 @@ const NAMA_SUBSEKTOR: Record<string, string> = {
 /**
  * Satu baris spek waktu tempuh + volume (`{t_maks, v_min, min_mutlak}`) —
  * bentuk dipakai `SUBSEKTOR` (komoditas, satu per subsektor), `GUDANG`
- * (gudang-kopdes), dan `SPEK` (cold-storage, wisata). Baca DEFENSIF per
- * kunci (`typeof x === "number"`) — bentuk `parameter` berbeda per varian,
- * bukan satu skema tetap (GOTCHA 1 rencana Task 28).
+ * (gudang-kopdes), dan `SPEK` (cold-storage, wisata).
  */
 function BarisSpek({ judul, spek }: { judul: string; spek: Record<string, unknown> }) {
   const tMaks = angka(spek.t_maks);
@@ -39,71 +45,40 @@ function BarisSpek({ judul, spek }: { judul: string; spek: Record<string, unknow
   const minMutlak = angka(spek.min_mutlak);
 
   const bagian: string[] = [];
-  if (tMaks !== null) bagian.push(`waktu tempuh maksimum ${formatAngka(tMaks)} menit`);
+  if (tMaks !== null) bagian.push(`waktu tempuh maks. ${formatAngka(tMaks)} menit`);
   if (vMin !== null && minMutlak !== null) {
-    bagian.push(`volume minimum ${formatAngka(vMin)} (mutlak ${formatAngka(minMutlak)})`);
+    bagian.push(`volume min. ${formatAngka(vMin)} (mutlak ${formatAngka(minMutlak)})`);
   } else if (vMin !== null) {
-    bagian.push(`volume minimum ${formatAngka(vMin)}`);
+    bagian.push(`volume min. ${formatAngka(vMin)}`);
   } else if (minMutlak !== null) {
-    bagian.push(`volume minimum mutlak ${formatAngka(minMutlak)}`);
+    bagian.push(`volume min. mutlak ${formatAngka(minMutlak)}`);
   }
   if (bagian.length === 0) return null;
 
   return (
-    <div className="py-1.5">
-      <p className="text-label text-muted">{judul}</p>
-      <p className="text-body-md text-ink">{bagian.join(", ")}</p>
+    <div className="py-2 first:pt-1 last:pb-1">
+      <div className="flex items-center">
+        <p className="text-label text-muted">{judul}</p>
+        <TanyaTooltip istilah={tMaks !== null ? "Waktu Tempuh" : "Volume Minimum"} />
+      </div>
+      <p className="text-body-md text-ink mt-0.5">{bagian.join(", ")}</p>
     </div>
   );
 }
 
 /**
- * `parameter.label`/`parameter.KANDIDAT` artefak membawa istilah solver
- * MENTAH — Inggris (`"Conditional (p,q)-median"`), atau menyebut kandidat
- * yang KALAH (label Wisata masih berbunyi "W5 + bobot v2 terkompresi…" walau
- * kandidat yang MENANG dan dipakai model adalah W6). GLOSSARY § Varian Jalur
- * Ekonomi menamai kandidat terpilih tiap varian secara eksplisit — dipetakan
- * ke situ persis, TIDAK PERNAH string mentah apa adanya (temuan review Jalur
- * Ekonomi #2, HIGH). Komoditas sengaja tidak dipetakan: GLOSSARY tidak
- * menyebut kandidat bernama untuknya (varian ini tanpa biaya buka), dan
- * artefaknya memang tidak membawa kunci `label` sama sekali. Nilai artefak
- * yang tidak cocok dengan yang diketahui (mis. solver berganti label suatu
- * saat) jatuh ke "—" — pola sama seperti `formatTanggal` di
- * `shared/format.ts` untuk masukan yang tidak bisa diformat, bukan
- * `labelTampil` di `daftar-jalur.tsx` (chip status, bukan garis putus).
+ * Parameter varian aktif:
+ * Default tertutup (open toggle), pengguna dapat mengklik untuk membaca selengkapnya
+ * terkait batasan anggota, waktu tempuh, dan volume minimum.
+ * Penjelasan rinci perhitungan model dirujuk langsung ke dokumentasi `/docs/pengolahan-data/jalur-ekonomi`.
  */
-function labelKandidat(varian: Varian, label: string): string {
-  if (varian === "gudang-kopdes" && label === "Biaya buka endogen") {
-    return "opsi B, biaya buka endogen";
-  }
-  if (varian === "cold-storage" && label === "Conditional (p,q)-median") {
-    return "K2, median (p,q) berkondisi";
-  }
-  if (varian === "wisata" && label.startsWith("W5")) {
-    return "W6";
-  }
-  return "—";
-}
+export function ParameterVarian({ parameter }: ParameterVarianProps) {
+  const [terbuka, setTerbuka] = useState(false);
 
-/**
- * Parameter varian aktif (Task 28) — `card-inset` merender `meta.parameter`
- * apa adanya untuk kunci yang bisa dibaca manusia: `MIN_ANGGOTA`/
- * `MAKS_ANGGOTA`, `t_maks`/`v_min`/`min_mutlak` per subsektor/SPEK, dan nama
- * kandidat (lewat `labelKandidat`, BUKAN `label` mentah). Bentuk dideteksi
- * lewat KUNCI yang ADA (`SUBSEKTOR` vs `GUDANG`/`SPEK`), bukan lewat
- * parameter `varian` terpisah — kode ini tetap benar walau urutan atau nama
- * varian berubah di `api/`; `varian` sendiri HANYA dipakai `labelKandidat`
- * untuk memilih nama GLOSSARY yang benar. Kunci solver (`SKALA`, `DET_*`,
- * `PEKERJA`, `catatan_anggaran`, `V_ROBUST_RULE`, `beta_biaya_buka`, `OPSI`,
- * `KANDIDAT`, dan sisanya) SENGAJA tidak dirender — itu catatan solver,
- * bukan parameter yang dibaca pengguna panel.
- */
-export function ParameterVarian({ varian, parameter }: ParameterVarianProps) {
   if (!parameter) return null;
 
   const minAnggota = angka(parameter.MIN_ANGGOTA);
   const maksAnggota = angka(parameter.MAKS_ANGGOTA);
-  const label = typeof parameter.label === "string" ? parameter.label : null;
 
   const subsektor = objek(parameter.SUBSEKTOR);
   const entriSubsektor = Object.entries(subsektor);
@@ -111,26 +86,75 @@ export function ParameterVarian({ varian, parameter }: ParameterVarianProps) {
   const punyaSpecTunggal = entriSubsektor.length === 0 && Object.keys(specTunggal).length > 0;
 
   return (
-    <section className="divide-y divide-hairline rounded-inset bg-inset px-3">
-      {minAnggota !== null && maksAnggota !== null && (
-        <div className="py-1.5">
-          <p className="text-label text-muted">Anggota</p>
-          <p className="text-body-md text-ink">
-            {formatAngka(minAnggota)}–{formatAngka(maksAnggota)} desa
-          </p>
+    <section className="rounded-card bg-surface p-3 transition-colors border border-transparent hover:border-line/40">
+      {/* Header Toggle */}
+      <button
+        type="button"
+        onClick={() => setTerbuka((prev) => !prev)}
+        aria-expanded={terbuka}
+        aria-controls="konten-parameter-varian"
+        className={`flex w-full items-center justify-between gap-2 text-left cursor-pointer rounded-control py-0.5 ${FOCUS_RING}`}
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-float text-muted">
+            <SlidersHorizontal className="size-3.5" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-label font-medium text-ink truncate">Ketentuan & Batasan Varian</p>
+            <p className="text-micro text-muted truncate">
+              {minAnggota !== null && maksAnggota !== null
+                ? `${formatAngka(minAnggota)}–${formatAngka(maksAnggota)} desa per jalur`
+                : "Batas anggota, waktu tempuh, dan volume"}
+            </p>
+          </div>
         </div>
-      )}
 
-      {entriSubsektor.map(([kunci, nilai]) => (
-        <BarisSpek key={kunci} judul={NAMA_SUBSEKTOR[kunci] ?? kunci} spek={objek(nilai)} />
-      ))}
+        <div className="flex items-center gap-1.5 shrink-0 text-micro text-muted hover:text-ink">
+          <span className="hidden sm:inline">{terbuka ? "Sembunyikan" : "Baca selengkapnya"}</span>
+          <ChevronDown
+            className={`size-4 transition-transform duration-200 ${
+              terbuka ? "rotate-180 text-ink" : "text-muted"
+            }`}
+          />
+        </div>
+      </button>
 
-      {punyaSpecTunggal && <BarisSpek judul="Ketentuan" spek={specTunggal} />}
+      {/* Konten Terbuka */}
+      {terbuka && (
+        <div
+          id="konten-parameter-varian"
+          className="mt-3 divide-y divide-hairline rounded-inset bg-inset p-3.5"
+        >
+          {minAnggota !== null && maksAnggota !== null && (
+            <div className="py-2 first:pt-1 last:pb-1">
+              <div className="flex items-center">
+                <p className="text-label text-muted">Batas Anggota</p>
+                <TanyaTooltip istilah="Batas Anggota" />
+              </div>
+              <p className="text-body-md text-ink mt-0.5">
+                {formatAngka(minAnggota)}–{formatAngka(maksAnggota)} desa per jalur
+              </p>
+            </div>
+          )}
 
-      {label && (
-        <div className="py-1.5">
-          <p className="text-label text-muted">Kandidat terpilih</p>
-          <p className="text-body-md text-ink">{labelKandidat(varian, label)}</p>
+          {entriSubsektor.map(([kunci, nilai]) => (
+            <BarisSpek key={kunci} judul={NAMA_SUBSEKTOR[kunci] ?? kunci} spek={objek(nilai)} />
+          ))}
+
+          {punyaSpecTunggal && <BarisSpek judul="Ketentuan Waktu & Volume" spek={specTunggal} />}
+
+          {/* Rujukan Dokumentasi Pengolahan Data Jalur Ekonomi */}
+          <div className="pt-2.5 pb-1">
+            <a
+              href={`${DOCS_URL}/docs/pengolahan-data/jalur-ekonomi`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`inline-flex items-center gap-1.5 text-micro font-medium text-ink hover:underline rounded ${FOCUS_RING}`}
+            >
+              <span>Pelajari perhitungan & metodologi model di Dokumentasi</span>
+              <ExternalLink className="size-3 text-muted shrink-0" />
+            </a>
+          </div>
         </div>
       )}
     </section>

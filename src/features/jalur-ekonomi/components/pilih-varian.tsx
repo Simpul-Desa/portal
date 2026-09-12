@@ -1,10 +1,10 @@
 "use client";
 
-import type { Varian } from "@/lib/url-state";
-import { ChipFilter, ChipFilterGroup } from "@/shared/components/chip-filter";
-import type { useWilayahParams } from "@/shared/hooks/use-wilayah-params";
+import { Compass, Snowflake, Warehouse, Wheat } from "lucide-react";
 
-import { VARIAN } from "../types";
+import type { Varian } from "@/lib/url-state";
+import { FOCUS_RING } from "@/shared/components/focus-ring";
+import type { useWilayahParams } from "@/shared/hooks/use-wilayah-params";
 
 type WilayahState = ReturnType<typeof useWilayahParams>;
 
@@ -13,35 +13,51 @@ type PilihVarianProps = {
   onPilih: WilayahState["pilihVarian"];
 };
 
+export const DAFTAR_VARIAN_TAB = [
+  { slug: "komoditas", label: "Komoditas", Ikon: Wheat },
+  { slug: "gudang-kopdes", label: "Gudang Kopdes", Ikon: Warehouse },
+  { slug: "cold-storage", label: "Cold Storage", Ikon: Snowflake },
+  { slug: "wisata", label: "Wisata", Ikon: Compass },
+] as const;
+
 /**
- * Chip pemilih varian Jalur Ekonomi (Task 28) — satu kelompok single-select,
- * urutan GLOSSARY § Varian Jalur Ekonomi (`types.ts` `VARIAN`). Tanpa dot
- * warna: varian bukan kategori berwarna di peta (beda dari chip zona Peta
- * Peran, yang dot-nya merangkap legenda choropleth).
- *
- * Klik pada chip yang SUDAH aktif adalah no-op (temuan review Jalur Ekonomi
- * #4a, MEDIUM) — DESIGN.md § Form Controls `chip-filter`: pengecualian jalur
- * ini TIDAK bisa dikosongkan, satu dari empat varian GLOSSARY selalu
- * terpilih, beda dari chip zona Peta Peran yang toggle-clear. Tanpa penjaga
- * ini, klik reflektif pada chip aktif tetap memanggil `pilihVarian` dengan
- * varian yang SAMA — `pilihVarian` (`use-wilayah-params.ts`) selalu membuang
- * `jalur` di URL, jadi klik yang seharusnya tidak berefek apa pun malah
- * diam-diam menghapus jalur terpilih beserta garisnya di peta.
+ * Tab pemilih varian Jalur Ekonomi:
+ * Tampil penuh (grid 4 kolom pada tablet/desktop, 2x2 pada layar sempit),
+ * dilengkapi ikon spesifik tiap varian, gaya visual konsisten dengan Kartu Ekonomi Desa.
  */
 export function PilihVarian({ varian, onPilih }: PilihVarianProps) {
   return (
-    <ChipFilterGroup ariaLabel="Varian Jalur Ekonomi">
-      {VARIAN.map((v) => (
-        <ChipFilter
-          key={v.slug}
-          aktif={v.slug === varian}
-          onKlik={() => {
-            if (v.slug !== varian) onPilih(v.slug);
-          }}
-        >
-          {v.nama}
-        </ChipFilter>
-      ))}
-    </ChipFilterGroup>
+    <div
+      role="tablist"
+      aria-label="Pilihan Varian Jalur Ekonomi"
+      className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 w-full"
+    >
+      {DAFTAR_VARIAN_TAB.map((tab) => {
+        const aktif = tab.slug === varian;
+        const Ikon = tab.Ikon;
+
+        return (
+          <button
+            key={tab.slug}
+            role="tab"
+            type="button"
+            id={`tab-varian-${tab.slug}`}
+            aria-selected={aktif}
+            aria-controls="panel-jalur-ekonomi"
+            onClick={() => {
+              if (!aktif) onPilih(tab.slug);
+            }}
+            className={`flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2 text-micro transition-all cursor-pointer ${
+              aktif
+                ? "bg-ink text-white font-medium shadow-xs"
+                : "bg-surface text-muted hover:text-ink hover:bg-float border border-transparent hover:border-line-strong"
+            } ${FOCUS_RING}`}
+          >
+            <Ikon className={`size-3.5 shrink-0 ${aktif ? "text-white" : "text-muted"}`} />
+            <span className="truncate">{tab.label}</span>
+          </button>
+        );
+      })}
+    </div>
   );
 }

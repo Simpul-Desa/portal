@@ -21,7 +21,7 @@ type WilayahState = ReturnType<typeof useWilayahParams>;
 const JUMLAH_KERANGKA = 3;
 
 export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
-  const { kab, desa, kembar, pilihKembar } = wilayah;
+  const { kab, desa, kembar, pilihKembar, bukaTujuan } = wilayah;
 
   const kartuAcuan = useKartu(desa);
   const kartuKembar = useKartu(kembar);
@@ -109,6 +109,14 @@ export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
         kembarAktif={kembar}
         persen={data.tetangga.find((t) => t.iddesa === kembar)?.persen ?? null}
         onPilihKembar={pilihKembar}
+        onBukaKartu={(iddesa) => {
+          bukaTujuan({
+            lensa: "kartu",
+            prov: iddesa.slice(0, 2),
+            kab: iddesa.slice(0, 4),
+            desa: iddesa,
+          });
+        }}
       />
 
       {/* Peringatan bila Desa Kembar berada di luar Kabupaten acuan */}

@@ -89,3 +89,62 @@ export function barisSkor(detail: SelCitraDetail, kab: string): BarisSkorSel[] {
   // artefak — bukan aritmetika domain (Task 15 GOTCHA 4).
   return baris.sort((a, b) => a.peringkat - b.peringkat);
 }
+
+export type PotensiRef = {
+  dominan?: string | null;
+  detail_dominan?: {
+    komoditas?: string;
+    sumber?: string;
+  } | null;
+};
+
+/**
+ * Mencari target komoditas Citra Potensi yang cocok dengan potensi dominan kartu desa.
+ * Mencocokkan berdasarkan regex sumber artefak, nama komoditas persis/parsial,
+ * atau parsing tema/komoditas pada string dominan.
+ */
+export function cariTargetCitra(
+  daftar: readonly SelCitra[],
+  potensi?: PotensiRef | null,
+): string | undefined {
+  if (!potensi || daftar.length === 0) return undefined;
+
+  // 1. Cek bila sumber artefak eksplisit memuat ID target kom_prov_*
+  const targetSumber = potensi.detail_dominan?.sumber?.match(/(kom_prov_[a-z0-9_]+)/i)?.[1];
+  if (targetSumber) {
+    const cocok = daftar.find((s) => s.target.toLowerCase() === targetSumber.toLowerCase());
+    if (cocok) return cocok.target;
+  }
+
+  // 2. Cek nama komoditas dari detail_dominan
+  const namaDetail = potensi.detail_dominan?.komoditas?.trim().toLowerCase();
+  if (namaDetail) {
+    const cocokPersis = daftar.find((s) => namaKomoditas(s.nama).toLowerCase() === namaDetail);
+    if (cocokPersis) return cocokPersis.target;
+
+    const cocokSebagian = daftar.find((s) => {
+      const nama = namaKomoditas(s.nama).toLowerCase();
+      return nama.includes(namaDetail) || namaDetail.includes(nama);
+    });
+    if (cocokSebagian) return cocokSebagian.target;
+  }
+
+  // 3. Cek dari teks dominan (mis. "Peternakan — Kambing Potong")
+  const dominan = potensi.dominan?.trim();
+  if (dominan) {
+    const bagian = dominan.split(/[—–-]/).map((p) => p.trim().toLowerCase());
+    for (const bag of bagian.reverse()) {
+      if (!bag) continue;
+      const cocok = daftar.find((s) => namaKomoditas(s.nama).toLowerCase() === bag);
+      if (cocok) return cocok.target;
+    }
+
+    const cocokDominan = daftar.find((s) =>
+      dominan.toLowerCase().includes(namaKomoditas(s.nama).toLowerCase()),
+    );
+    if (cocokDominan) return cocokDominan.target;
+  }
+
+  return undefined;
+}
+

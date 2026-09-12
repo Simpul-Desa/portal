@@ -183,7 +183,7 @@ export function useWilayahParams() {
           // Parameter milik lensa lama selalu dibuang; yang dibawa tujuan
           // ditulis ulang sesudahnya.
           zona: undefined,
-          jalur: undefined,
+          jalur: tujuan.jalur,
           kembar: undefined,
           varian: tujuan.varian,
           target: tujuan.target,

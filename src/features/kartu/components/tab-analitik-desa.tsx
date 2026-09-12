@@ -31,12 +31,17 @@ const DAFTAR_TAB: TabDef[] = [
   { id: "biofisik", label: "Biofisik & Logistik", Ikon: Mountain },
 ];
 
+type TabAnalitikDesaProps = {
+  kartu: KartuDesa;
+  onNavigasiCitra?: () => void;
+};
+
 /**
  * Tab Analitik Desa:
  * Menggabungkan 4 dimensi analisis desa (Potensi Dominan, Kesiapan, Fakta Program,
  * dan Biofisik & Logistik) ke dalam antarmuka tab yang bersih, intuitif, dan responsif.
  */
-export function TabAnalitikDesa({ kartu }: { kartu: KartuDesa }) {
+export function TabAnalitikDesa({ kartu, onNavigasiCitra }: TabAnalitikDesaProps) {
   const [tabAktif, setTabAktif] = useState<TabId>("potensi");
 
   return (
@@ -80,7 +85,9 @@ export function TabAnalitikDesa({ kartu }: { kartu: KartuDesa }) {
         aria-labelledby={`tab-${tabAktif}`}
         className="rounded-card bg-surface p-4 border border-line/30 shadow-xs"
       >
-        {tabAktif === "potensi" && <SeksiPotensi potensi={kartu.potensi} />}
+        {tabAktif === "potensi" && (
+          <SeksiPotensi potensi={kartu.potensi} onNavigasiCitra={onNavigasiCitra} />
+        )}
         {tabAktif === "kesiapan" && (
           <SeksiKesiapan komponen={kartu.kesiapan.komponen} kesiapan={kartu.kesiapan} />
         )}

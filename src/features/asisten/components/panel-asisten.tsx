@@ -171,7 +171,7 @@ export function PanelAsisten({ asisten, wilayah, onTutup }: PanelAsistenProps) {
       <div className="h-px bg-hairline w-full" />
 
       {adaRiwayat ? (
-        <div className="flex-1 min-h-0 h-full w-full overflow-hidden">
+        <div className="flex-1 min-h-0 min-w-0 h-full w-full overflow-hidden flex flex-col">
           <DaftarGiliran
             riwayat={asisten.riwayat}
             sedangMenjawab={asisten.sedangMenjawab}

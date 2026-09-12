@@ -8,5 +8,5 @@
  * bersamaan; jangan salah satu.
  */
 export const PANEL_MIN = 400;
-export const PANEL_DEFAULT = 480;
+export const PANEL_DEFAULT = 640;
 export const PANEL_MAX = 640;

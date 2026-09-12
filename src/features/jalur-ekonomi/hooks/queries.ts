@@ -24,13 +24,15 @@ const BATAS_DAFTAR = 50;
 type UseJalurDaftarOpsi = {
   varian: Varian;
   kab?: string;
-  hal: number;
+  iddesa?: string;
+  hal?: number;
+  batas?: number;
   /** `true` hanya saat lensa Jalur Ekonomi sedang dirender. */
   aktif: boolean;
 };
 
 /**
- * Daftar baris ringkas satu varian, opsional tersaring `kab`. Mengembalikan
+ * Daftar baris ringkas satu varian, opsional tersaring `kab`/`iddesa`. Mengembalikan
  * `{data, meta}` UTUH (bukan `.data` saja): `meta.total` dipakai `Pagination`
  * (Task 31 `daftar-jalur.tsx`), `meta.parameter` dipakai `ParameterVarian`
  * (Task 28).
@@ -43,13 +45,32 @@ type UseJalurDaftarOpsi = {
  * (`isPlaceholderData: true`) selama halaman baru diambil — tombol pager
  * tidak pernah lepas-pasang, fokus tidak pernah hilang.
  */
-export function useJalurDaftar({ varian, kab, hal, aktif }: UseJalurDaftarOpsi) {
+export function useJalurDaftar({
+  varian,
+  kab,
+  iddesa,
+  hal = 1,
+  batas = BATAS_DAFTAR,
+  aktif,
+}: UseJalurDaftarOpsi) {
   return useQuery<Awaited<ReturnType<typeof modelJalurDaftar>>, GalatApi>({
-    queryKey: ["jalur-ekonomi", "daftar", varian, kab, hal],
-    queryFn: () => modelJalurDaftar(varian, { kab, hal, batas: BATAS_DAFTAR }),
+    queryKey: ["jalur-ekonomi", "daftar", varian, kab, iddesa, hal, batas],
+    queryFn: () => modelJalurDaftar(varian, { kab, iddesa, hal, batas }),
     enabled: aktif,
     staleTime: STALE_BEKU,
     placeholderData: keepPreviousData,
+  });
+}
+
+/**
+ * Cek status desa terpilih (apakah poros atau anggota sejalur) pada varian aktif.
+ */
+export function useJalurDesaStatus(varian: Varian, desa?: string, kab?: string) {
+  return useQuery<Awaited<ReturnType<typeof modelJalurDaftar>>, GalatApi>({
+    queryKey: ["jalur-ekonomi", "status-desa", varian, kab, desa],
+    queryFn: () => modelJalurDaftar(varian, { kab, iddesa: desa, hal: 1, batas: 10 }),
+    enabled: Boolean(desa),
+    staleTime: STALE_BEKU,
   });
 }
 

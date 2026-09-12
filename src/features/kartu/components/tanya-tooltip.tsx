@@ -152,6 +152,80 @@ export const GLOSARIUM_KARTU: Record<string, { judul: string; penjelasan: string
     penjelasan:
       "Rasio kelengkapan data empiris yang berhasil diverifikasi untuk menyusun Skor Kesiapan desa.",
   },
+
+  // Jalur Ekonomi
+  "Desa Poros": {
+    judul: "Desa Poros",
+    penjelasan:
+      "Desa simpul pusat yang mengagregasi komoditas, fasilitas, dan logistik bagi desa-desa sekitarnya berdasarkan optimasi model.",
+  },
+  "Desa Sejalur": {
+    judul: "Desa Sejalur",
+    penjelasan:
+      "Desa anggota yang berada dalam koridor jangkauan pelayanan logistik dari suatu Desa Poros berdasarkan waktu tempuh dan volume.",
+  },
+  "Waktu Tempuh": {
+    judul: "Waktu Tempuh Maksimum",
+    penjelasan:
+      "Batas estimasi waktu perjalanan darat antar desa menuju pusat poros dalam satuan menit berdasarkan jaringan jalan.",
+  },
+  "Volume Minimum": {
+    judul: "Volume Minimum",
+    penjelasan:
+      "Ambang batas akumulasi volume komoditas atau rumah tangga tani minimum agar rute koridor ekonomi layak beroperasi.",
+  },
+  "Batas Anggota": {
+    judul: "Batas Anggota Jalur",
+    penjelasan:
+      "Rentang jumlah desa minimum dan maksimum yang dapat dihimpun dalam satu kelompok jalur ekonomi terpadu.",
+  },
+  "Gudang Kopdes": {
+    judul: "Gudang Koperasi Desa",
+    penjelasan:
+      "Simpul konsolidasi dan penyimpanan komoditas pertanian berbasis kelembagaan koperasi desa.",
+  },
+  "Jalur Wisata": {
+    judul: "Jalur Wisata (Jadesta)",
+    penjelasan:
+      "Jejaring rute desa wisata terintegrasi berbasis data Jadesta Kemenparekraf untuk memperluas kunjungan wisatawan dan ekonomi kreatif.",
+  },
+  "Bobot Jalur": {
+    judul: "Bobot Jalur",
+    penjelasan:
+      "Total akumulasi potensi (jumlah rumah tangga, volume komoditas, atau bobot registri) yang terlayani dalam koridor jalur.",
+  },
+  "Cakupan Layanan": {
+    judul: "Cakupan Layanan",
+    penjelasan:
+      "Jumlah desa anggota yang terhubung dan mendapatkan pelayanan rantai pasok ekonomi dalam satu koridor jalur.",
+  },
+
+  // Citra Potensi Desa
+  "Komoditas Tervalidasi": {
+    judul: "Komoditas Tervalidasi",
+    penjelasan:
+      "Komoditas unggulan yang terverifikasi melalui model Machine Learning berbasis citra satelit dan data sensus pertanian.",
+  },
+  "Mutu Uji": {
+    judul: "Mutu Uji Tertahan (Average Precision)",
+    penjelasan:
+      "Skor presisi prediksi model spasial pada data uji tertahan (held-out test set). Semakin tinggi mendekati 1,0 semakin akurat deteksi spasialnya.",
+  },
+  "Rentang Keyakinan": {
+    judul: "Rentang Keyakinan (Confidence Interval)",
+    penjelasan:
+      "Interval estimasi tingkat kepercayaan rerata akurasi model spasial (95% CI) untuk memastikan prediksi tidak bias.",
+  },
+  "Skor Citra Potensi": {
+    judul: "Skor Citra Potensi",
+    penjelasan:
+      "Skor relatif (skala 0–100) kesesuaian biofisik dan tutupan lahan satelit untuk komoditas terpilih di dalam satu kabupaten.",
+  },
+  "Peringkat Desa": {
+    judul: "Peringkat Potensi Komoditas",
+    penjelasan:
+      "Urutan keunggulan potensi komoditas desa relatif terhadap seluruh desa lain dalam kabupaten yang sama.",
+  },
 };
 
 type TanyaTooltipProps = {
