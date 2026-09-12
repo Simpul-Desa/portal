@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ComponentType } from "react";
+import type { ComponentType } from "react";
 
 import { Shield } from "lucide-react";
 import Image from "next/image";
@@ -90,8 +90,6 @@ const KELAS_BUTIR = "relative flex size-11 items-center justify-center rounded-f
  */
 export function SideRail(props: SideRailProps) {
   const { peran, memuat, adaSesi } = useSesi();
-  const akunTriggerRef = useRef<HTMLButtonElement>(null);
-  const [menuTerbuka, setMenuTerbuka] = useState(false);
 
   const diAdmin = props.konteks === "admin";
   const bisaAdmin = bisa(peran, "admin");
@@ -230,7 +228,7 @@ export function SideRail(props: SideRailProps) {
             <button
               type="button"
               aria-label="Akun"
-              className={`flex size-11 items-center justify-center rounded-full bg-white text-ink shadow-sm hover:bg-ink hover:text-white cursor-pointer transition-colors ${FOCUS_RING}`}
+              className={`${KELAS_BUTIR} ${FOCUS_RING} cursor-pointer bg-white text-ink hover:bg-ink hover:text-white`}
             >
               <AkunIcon />
             </button>
@@ -244,7 +242,7 @@ export function SideRail(props: SideRailProps) {
           <Link
             href="/masuk"
             aria-label="Masuk"
-            className={`flex size-11 items-center justify-center rounded-xl bg-white text-ink shadow-sm hover:bg-ink hover:text-white cursor-pointer transition-colors ${FOCUS_RING}`}
+            className={`${KELAS_BUTIR} ${FOCUS_RING} cursor-pointer bg-white text-ink hover:bg-ink hover:text-white`}
           >
             <AkunIcon />
           </Link>

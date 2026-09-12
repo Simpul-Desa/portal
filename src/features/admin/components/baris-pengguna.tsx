@@ -53,23 +53,33 @@ export function BarisPengguna({
   const peranSekarang: PeranBaru = adalahPeranBaru(pengguna.peran) ? pengguna.peran : "tamu";
   const nilaiTampil = sedangKirim && peranSedangKirim !== undefined ? peranSedangKirim : peranSekarang;
 
+  const inisial = (label[0] ?? "U").toUpperCase();
+
   return (
-    <div className="flex flex-col gap-2 py-3 md:flex-row md:items-center md:justify-between">
-      <div>
-        <p className="text-title-sm text-ink">{label}</p>
-        <p className="text-micro text-muted">
-          dibuat {formatTanggal(pengguna.dibuat_pada)} · diubah {formatTanggal(pengguna.diubah_pada)}
-        </p>
-        {galat && (
-          <p role="alert" className="mt-1 flex items-center gap-1.5 text-micro text-ink">
-            <span className="size-1.5 shrink-0 rounded-full bg-critical" aria-hidden="true" />
-            {galat.pesan}
-            <span className="text-micro text-muted">{galat.kode}</span>
+    <div className="group flex flex-col gap-3 p-3 rounded-xl transition-colors hover:bg-surface/50 md:flex-row md:items-center md:justify-between">
+      <div className="flex items-center gap-3 min-w-0">
+        <div
+          aria-hidden="true"
+          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-ink font-medium text-title-sm border border-hairline select-none"
+        >
+          {inisial}
+        </div>
+        <div className="min-w-0">
+          <p className="text-title-sm font-medium text-ink truncate">{label}</p>
+          <p className="text-micro text-muted">
+            Dibuat {formatTanggal(pengguna.dibuat_pada)} · Diubah {formatTanggal(pengguna.diubah_pada)}
           </p>
-        )}
+          {galat && (
+            <p role="alert" className="mt-1 flex items-center gap-1.5 text-micro text-critical">
+              <span className="size-1.5 shrink-0 rounded-full bg-critical" aria-hidden="true" />
+              {galat.pesan}
+              <span className="text-micro text-muted">({galat.kode})</span>
+            </p>
+          )}
+        </div>
       </div>
 
-      <div>
+      <div className="w-full shrink-0 md:w-48">
         <label htmlFor={idSelect} className="sr-only">
           Peran {label}
         </label>

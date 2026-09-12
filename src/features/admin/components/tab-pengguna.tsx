@@ -40,11 +40,13 @@
  */
 
 import { useId, useState } from "react";
+import { Search } from "lucide-react";
 
 import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { pilihKeadaan } from "@/shared/components/keadaan";
 import { Pagination } from "@/shared/components/pagination";
+import { formatAngka } from "@/shared/format";
 import { useNilaiTelat } from "@/shared/hooks/use-nilai-telat";
 
 import { BarisPengguna } from "./baris-pengguna";
@@ -84,31 +86,50 @@ export function TabPengguna() {
   const keadaan = pilihKeadaan({ isPending, isPaused, isError, kosong });
 
   return (
-    <section className="rounded-card bg-surface p-5">
-      <h2 className="text-title-md text-ink">Pengguna</h2>
-      <p className="mt-1 text-body-md text-body">
-        Hanya admin yang bisa menaikkan peran. Registrasi mandiri selalu menghasilkan tamu.
-      </p>
+    <div className="space-y-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-title-md font-semibold text-ink">Manajemen Pengguna</h2>
+          <p className="mt-0.5 text-body-md text-body">
+            Hanya admin yang bisa menaikkan peran. Registrasi mandiri selalu menghasilkan tamu.
+          </p>
+        </div>
+        {data && (
+          <span className="self-start sm:self-auto rounded-full bg-surface px-3 py-1 text-micro font-medium text-muted border border-hairline">
+            Total {formatAngka(data.total)} pengguna
+          </span>
+        )}
+      </div>
 
-      <div className="mt-4">
-        <label htmlFor={idInput} className="mb-1 block text-label text-muted">
-          Cari email
+      <div className="rounded-2xl border border-hairline bg-surface/30 p-4">
+        <label htmlFor={idInput} className="mb-1.5 block text-label font-medium text-ink">
+          Cari email akun
         </label>
-        <div className="flex h-11 items-center rounded-inset bg-inset px-3 focus-within:outline-solid focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-focus">
+        <div className="relative flex h-11 items-center rounded-xl bg-white px-3.5 border border-line/60 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+          <Search size={18} className="shrink-0 text-muted mr-2.5" />
           <input
             id={idInput}
             type="text"
             autoComplete="off"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="nama@instansi.go.id"
+            placeholder="Ketik email (mis. nama@instansi.go.id)…"
             aria-invalid={qSah ? undefined : true}
             aria-describedby={qSah ? undefined : idBantuan}
-            className="w-full min-w-0 truncate bg-transparent text-body-md text-ink placeholder:text-muted focus:outline-none"
+            className="w-full min-w-0 bg-transparent text-body-md text-ink placeholder:text-muted focus:outline-none"
           />
+          {q && (
+            <button
+              type="button"
+              onClick={() => setQ("")}
+              className="text-micro text-muted hover:text-ink px-1.5 py-0.5 rounded cursor-pointer"
+            >
+              Reset
+            </button>
+          )}
         </div>
         {!qSah && (
-          <p id={idBantuan} className="mt-1 text-micro text-muted">
+          <p id={idBantuan} className="mt-1.5 text-micro text-critical">
             Pakai huruf, angka, dan tanda @ . _ + - saja. Hasil tertahan sampai kata kuncinya sah.
           </p>
         )}
@@ -116,17 +137,17 @@ export function TabPengguna() {
 
       {keadaan === "muat" && (
         <div className="mt-4">
-          <KerangkaMuat tinggi="h-16" baris={2} />
+          <KerangkaMuat tinggi="h-16" baris={3} />
         </div>
       )}
 
       {keadaan === "tertunda" && (
-        <div className="mt-4">
+        <div className="rounded-2xl border border-hairline p-6 text-center">
           <KeadaanKosong kalimat="Sambungan sedang terputus, jadi daftar akun belum bisa dimuat." />
           <button
             type="button"
             onClick={() => refetch()}
-            className={`mt-3 flex h-10 items-center rounded-full bg-float px-4 text-button-md text-ink shadow-float ${FOCUS_RING}`}
+            className={`mt-3 inline-flex h-10 items-center rounded-xl bg-surface px-4 text-button-md text-ink border border-line/60 hover:bg-white transition-colors cursor-pointer ${FOCUS_RING}`}
           >
             Coba lagi
           </button>
@@ -142,7 +163,7 @@ export function TabPengguna() {
       {(keadaan === "isi" || keadaan === "kosong") && (
         <div className={qSah ? undefined : "pointer-events-none opacity-40"}>
           {keadaan === "kosong" && (
-            <div className="mt-4">
+            <div className="rounded-2xl border border-hairline p-8 text-center bg-surface/20">
               <KeadaanKosong
                 kalimat={
                   q.trim()
@@ -154,7 +175,7 @@ export function TabPengguna() {
           )}
 
           {keadaan === "isi" && data && (
-            <div className="mt-4 divide-y divide-hairline">
+            <div className="divide-y divide-hairline rounded-2xl border border-hairline bg-white p-1.5">
               {data.daftar.map((p) => (
                 <BarisPengguna
                   key={p.id}
@@ -171,10 +192,10 @@ export function TabPengguna() {
       )}
 
       {qSah && keadaan === "isi" && data && (
-        <div className="mt-4">
+        <div className="pt-2 flex justify-center sm:justify-end">
           <Pagination hal={hal} total={data.total} batas={BATAS_PENGGUNA} onHal={setHal} />
         </div>
       )}
-    </section>
+    </div>
   );
 }

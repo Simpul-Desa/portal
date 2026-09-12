@@ -38,6 +38,15 @@ function asalWajib(nama: string): string {
   return new URL(nilai).origin;
 }
 
+function asalOpsional(nilai?: string): string {
+  if (!nilai) return "";
+  try {
+    return new URL(nilai).origin;
+  } catch {
+    return "";
+  }
+}
+
 const CSP = [
   "default-src 'self'",
   "frame-ancestors 'none'",
@@ -82,7 +91,7 @@ const CSP = [
   // host itu WAJIB ada di `connect-src`, bukan cukup di `img-src` dan
   // `font-src`. Tanpa ini peta tidak menggambar satu piksel pun dan konsol
   // penuh pelanggaran CSP, sementara build tetap hijau.
-  `connect-src 'self' ${asalWajib("NEXT_PUBLIC_API_URL")} ${asalWajib("NEXT_PUBLIC_SUPABASE_URL")} ${HOST_PETA.join(" ")}`,
+  `connect-src 'self' ${asalWajib("NEXT_PUBLIC_API_URL")} ${asalWajib("NEXT_PUBLIC_SUPABASE_URL")} ${asalOpsional(process.env.NEXT_PUBLIC_PORTAL_URL)} ${asalOpsional(process.env.NEXT_PUBLIC_DOCS_URL)} ${HOST_PETA.join(" ")}`.replace(/\s+/g, " ").trim(),
 ].join("; ");
 
 const nextConfig: NextConfig = {

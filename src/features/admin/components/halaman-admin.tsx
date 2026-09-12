@@ -39,6 +39,7 @@
  */
 
 import { useId, useRef, useState, type ReactNode } from "react";
+import { Shield } from "lucide-react";
 
 import { bisa, PERAN_PEMBUKA } from "@/core/akses";
 import { useSesi } from "@/core/sesi";
@@ -46,7 +47,7 @@ import { DialogTerkunci } from "@/features/auth/components/dialog-terkunci";
 import { BlokNotifikasi } from "@/shared/components/shell/blok-notifikasi";
 import { SideRail } from "@/shared/components/shell/side-rail";
 
-import { TabBar, type TabAdmin } from "./tab-bar";
+import { AdminSidebar, type TabAdmin } from "./tab-bar";
 import { TabBerita } from "./tab-berita";
 import { TabPengguna } from "./tab-pengguna";
 import { TabStatus } from "./tab-status";
@@ -60,7 +61,7 @@ const PANEL_TAB: Record<TabAdmin, () => ReactNode> = {
 };
 
 export function HalamanAdmin() {
-  const { peran, adaSesi, memuat, galatPeran, cobaLagiPeran } = useSesi();
+  const { peran, adaSesi, memuat, galatPeran, cobaLagiPeran, email } = useSesi();
   const [tab, setTab] = useState<TabAdmin>("pengguna");
   const [dialogDitutup, setDialogDitutup] = useState(false);
   const idDasar = useId();
@@ -72,70 +73,87 @@ export function HalamanAdmin() {
   const terkunci = !memuat && !galatPeran && !bisaAdmin;
 
   return (
-    <div className="flex h-dvh gap-2 bg-canvas p-2">
+    <div className="flex h-dvh flex-col gap-2 bg-[#f1f2f6] p-4 pl-2 md:flex-row">
       <SideRail konteks="admin" />
 
-      {/* `tabIndex={0}` di SINI, bukan di tabpanel (Task 9d): `<main>` adalah
-          wadah gulir sungguhan (`overflow-y-auto`) — tabpanel penuh kontrol
-          fokusabel sendiri (input cari, select peran, tombol), jadi
-          menaruh tabIndex di sana menambah satu tab stop kosong tak berlabel
-          sebelum kontrol sungguhan. Dipertahankan (bukan dibuang) supaya
-          panel yang isinya lebih panjang dari layar tetap bisa digulir
-          keyboard. */}
-      {/* `id="isi"` adalah target skip link yang dipasang layout akar
-          (`src/app/layout.tsx`). Tanpa itu skip link di rute ini menunjuk
-          jangkar yang tidak ada — Lighthouse menangkapnya sebagai
-          "Skip links are not focusable / No skip link target" dan skor a11y
-          `/admin` turun ke 98. Setiap rute yang punya landmark utama WAJIB
-          memakai id yang sama. */}
-      <main id="isi" tabIndex={0} className="flex flex-1 flex-col gap-2 overflow-y-auto">
-        <section className="rounded-card bg-surface p-5">
-          <h1 className="text-title-lg text-ink">Halaman Admin</h1>
-          {bisaAdmin && (
-            <div className="mt-4">
-              <TabBar tab={tab} onTab={setTab} idPanel={idPanel} idTab={idTab} />
+      {/* Satu panel full di sisa rail: header Halaman Admin di atas, 
+          sidebar menu di kiri, dan konten info di kanan */}
+      <main
+        id="isi"
+        tabIndex={0}
+        className="flex flex-1 h-full min-h-0 flex-col overflow-hidden rounded-card bg-white shadow-sm border border-line/40 focus:outline-none"
+      >
+        {/* Header Halaman Admin */}
+        <header className="flex shrink-0 items-center justify-between border-b border-hairline px-6 py-4 bg-white">
+          <div className="flex items-center gap-3">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Shield size={22} strokeWidth={2} />
             </div>
-          )}
-        </section>
+            <div>
+              <div className="flex items-center gap-2.5">
+                <h1 className="text-title-md font-semibold text-ink">Halaman Admin</h1>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-badge font-medium text-primary">
+                  <span className="size-1.5 rounded-full bg-primary" />
+                  Akses Administrator
+                </span>
+              </div>
+              <p className="text-micro text-muted">
+                Portal pengelolaan akun pengguna, kurasi berita desa, dan pemantauan sistem
+              </p>
+            </div>
+          </div>
+        </header>
 
         {memuat && (
-          <>
-            <div className="h-32 animate-pulse rounded-card bg-surface" />
-            <div className="h-32 animate-pulse rounded-card bg-surface" />
-          </>
+          <div className="flex-1 p-6 flex flex-col gap-4 animate-pulse">
+            <div className="h-20 rounded-xl bg-surface" />
+            <div className="h-64 rounded-xl bg-surface" />
+          </div>
         )}
 
         {!memuat && galatPeran && (
-          <BlokNotifikasi
-            galat={galatPeran}
-            konteks="Sesi ini aktif, tetapi perannya belum terbaca — jadi halaman ini belum bisa memastikan kamu admin. Coba lagi setelah layanan pulih."
-            onCobaLagi={cobaLagiPeran}
-          />
+          <div className="flex-1 p-6">
+            <BlokNotifikasi
+              galat={galatPeran}
+              konteks="Sesi ini aktif, tetapi perannya belum terbaca — jadi halaman ini belum bisa memastikan kamu admin. Coba lagi setelah layanan pulih."
+              onCobaLagi={cobaLagiPeran}
+            />
+          </div>
         )}
 
         {terkunci && (
-          <section className="rounded-card bg-surface p-5">
-            {/* `tabIndex={-1}` — target fokus terprogram saja (lihat JEBAKAN
-                Task 9e di atas), bukan tab stop baru. */}
-            <h2 ref={judulTerkunciRef} tabIndex={-1} className="text-title-md text-ink outline-none">
+          <div className="flex flex-1 flex-col items-center justify-center p-8 text-center">
+            <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-surface text-muted">
+              <Shield size={28} strokeWidth={1.5} />
+            </div>
+            <h2 ref={judulTerkunciRef} tabIndex={-1} className="text-title-md font-semibold text-ink outline-none">
               Halaman Admin terkunci
             </h2>
-            <p className="mt-1 text-body-md text-body">{PERAN_PEMBUKA.admin}</p>
-          </section>
+            <p className="mt-1.5 max-w-md text-body-md text-body">{PERAN_PEMBUKA.admin}</p>
+          </div>
         )}
 
         {bisaAdmin && (
-          // `key={tab}` supaya state panel yang ditinggalkan (kata kunci cari,
-          // desa terpilih, baris yang sedang dikonfirmasi) tidak terbawa saat
-          // tab dibuka lagi.
-          <div
-            key={tab}
-            role="tabpanel"
-            id={idPanel(tab)}
-            aria-labelledby={idTab(tab)}
-            className="flex flex-col gap-2"
-          >
-            {PANEL_TAB[tab]()}
+          <div className="flex flex-1 min-h-0 flex-col md:flex-row overflow-hidden">
+            {/* Sidebar menu: Pengguna, Berita, Status */}
+            <AdminSidebar
+              tab={tab}
+              onTab={setTab}
+              idPanel={idPanel}
+              idTab={idTab}
+              emailAdmin={email}
+            />
+
+            {/* Konten kanan sesuai menu aktif */}
+            <div
+              key={tab}
+              role="tabpanel"
+              id={idPanel(tab)}
+              aria-labelledby={idTab(tab)}
+              className="flex-1 min-h-0 overflow-y-auto p-6 md:p-8 bg-white"
+            >
+              {PANEL_TAB[tab]()}
+            </div>
           </div>
         )}
       </main>

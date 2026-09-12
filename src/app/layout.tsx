@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Google_Sans_Flex, Geist_Mono } from "next/font/google";
 
+import { PORTAL_URL } from "@/core/config";
 import { Providers } from "@/core/providers";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 
@@ -21,6 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(PORTAL_URL),
   title: "SIMPUL DESA",
   description: "Sistem Intelijen Potensi dan Kesiapan Ekonomi Desa",
   icons: {

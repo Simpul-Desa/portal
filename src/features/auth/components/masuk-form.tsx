@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
+import { DOCS_URL } from "@/core/config";
 import { useAksiAuth } from "@/features/auth/hooks/use-aksi-auth";
 import { useAlihkanBilaMasuk } from "@/features/auth/hooks/use-alihkan-bila-masuk";
 import { tujuanAman } from "@/lib/redirect-aman";
@@ -126,7 +127,7 @@ export function MasukForm({ lanjut, alasan }: MasukFormProps) {
 
               <Field>
                 <Button variant="outline" type="button" asChild className="w-full">
-                  <a href={`${process.env.NEXT_PUBLIC_DOCS_URL || ""}/docs/akun-demo`} target="_blank" rel="noopener noreferrer">
+                  <a href={`${DOCS_URL}/docs/akun-demo`} target="_blank" rel="noopener noreferrer">
                     Dapatkan Akun Demo
                   </a>
                 </Button>

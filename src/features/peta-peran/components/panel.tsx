@@ -1,7 +1,6 @@
 "use client";
 
-import { Info } from "lucide-react";
-
+import { EmptyState } from "@/shared/components/empty-state";
 import { pesanGalat } from "@/lib/api/galat-ui";
 import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
@@ -32,17 +31,10 @@ export function PetaPeranPanel({ wilayah }: { wilayah: WilayahState }) {
   const petaPeran = usePetaPeranPeta(kab, Boolean(kab));
   const detail = usePetaPeranDetail(desa, Boolean(desa));
 
-  // 1. Keadaan Belum Memilih Wilayah: Teks panduan tengah + logo simpel
-  if (!prov && !kab) {
+  // 1. Keadaan Belum Memilih Wilayah: Minimal pilih Provinsi dan Kabupaten
+  if (!prov || !kab) {
     return (
-      <section className="flex min-h-[360px] flex-col items-center justify-center rounded-card bg-surface p-12 text-center">
-        <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-inset text-muted">
-          <Info className="size-6 text-muted" strokeWidth={1.75} aria-hidden="true" />
-        </div>
-        <p className="max-w-[260px] text-body-md text-ink leading-relaxed font-normal">
-          Pilih provinsi atau kabupaten di peta terlebih dahulu
-        </p>
-      </section>
+      <EmptyState pesan="Pilih provinsi dan kabupaten di peta atau kolom pencarian terlebih dahulu" />
     );
   }
 

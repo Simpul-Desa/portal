@@ -251,6 +251,11 @@ export function adminSegarkanBerita(iddesa: readonly string[]) {
   );
 }
 
+/** Batalkan pekerjaan latar penyegaran berita yang sedang berjalan bila ada. */
+export function adminBatalkanSegarkan() {
+  return kirim<{ status: string }>("/api/admin/berita/batal", { bertoken: true });
+}
+
 /** Hapus satu berita lewat `id`. SATU-SATUNYA wrapper bermetode DELETE. */
 export function adminHapusBerita(idBerita: number) {
   return hapus<BeritaTerhapus>(`/api/admin/berita/${idBerita}`, { bertoken: true });

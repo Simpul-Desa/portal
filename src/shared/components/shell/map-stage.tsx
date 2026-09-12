@@ -8,13 +8,12 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import Image from "next/image";
 import { HelpCircle } from "lucide-react";
 
+import { DOCS_URL } from "@/core/config";
 import { ID_PANEL_ASISTEN } from "@/features/asisten/components/panel-asisten";
 import { buatStyleEsri, buatStyleOsm, CAKUPAN_BBOX, FIT_OPTIONS } from "@/lib/map/basemap";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 
 import { LocateIcon, LockBadge, ZoomInIcon, ZoomOutIcon } from "../icons";
-
-const DOCS_URL = (process.env.NEXT_PUBLIC_DOCS_URL || "http://localhost:3001").replace(/\/+$/, "");
 
 type MapStageProps = {
   /** Dipanggil TEPAT SEKALI setelah event `load` peta pertama. */

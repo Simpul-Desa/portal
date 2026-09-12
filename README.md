@@ -50,8 +50,11 @@ Isi `.env.local`:
 | Variabel | Isi |
 |---|---|
 | `NEXT_PUBLIC_API_URL` | alamat layanan backend, mis. `http://localhost:8000` |
+| `NEXT_PUBLIC_PORTAL_URL` | alamat portal web dasbor, mis. `http://localhost:3000` |
+| `NEXT_PUBLIC_DOCS_URL` | alamat situs dokumentasi/panduan, mis. `http://localhost:3001` |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL proyek Supabase |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | kunci publishable Supabase (`sb_publishable_…`) — bukan kunci anon JWT lama, bukan `service_role` |
+
 
 Backend harus bisa diakses di alamat `NEXT_PUBLIC_API_URL` sebelum dasbor
 bisa memuat data apa pun — Portal murni klien, tidak menyimpan salinan data

@@ -127,12 +127,13 @@ export function KartuPanel({ wilayah }: KartuPanelProps) {
           <SeksiFaktaProgram fakta={kartu.fakta_program} />
           <SeksiBiofisikLogistik biofisik={kartu.biofisik} logistik={kartu.logistik} />
           <SeksiDesaKembar desaKembar={kartu.desa_kembar} />
-          {/* `key={desa}` pada kedua blok: tanpa itu, state internalnya
+          {/* `key` berprefiks `desa` pada kedua blok: tanpa itu, state internalnya
               (daftar berita yang sedang terbuka, galat unduh terakhir) ikut
-              berpindah saat pengguna membuka desa lain. */}
-          {bisaBerita && desa && <SeksiBerita key={desa} iddesa={desa} />}
+              berpindah saat pengguna membuka desa lain. Prefiks memastikan
+              kunci saudara unik di tingkat fragment React. */}
+          {bisaBerita && desa && <SeksiBerita key={`berita-${desa}`} iddesa={desa} />}
           <SeksiMutuData mutuData={kartu.mutu_data} />
-          {bisaLaporan && desa && <KartuLaporan key={desa} iddesa={desa} />}
+          {bisaLaporan && desa && <KartuLaporan key={`laporan-${desa}`} iddesa={desa} />}
         </>
       )}
     </>

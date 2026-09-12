@@ -23,6 +23,7 @@
 
 import { useMemo } from "react";
 
+import { EmptyState } from "@/shared/components/empty-state";
 import { pesanGalat } from "@/lib/api/galat-ui";
 import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
 import { BreadcrumbWilayah, type ChipWilayah } from "@/shared/components/breadcrumb-wilayah";
@@ -60,9 +61,7 @@ export function CitraPotensiPanel({ wilayah }: { wilayah: WilayahState }) {
 
   if (!prov) {
     return (
-      <section className="rounded-card bg-surface p-5">
-        <p className="text-body-md text-ink">Pilih provinsi di peta atau lewat menu pilihan lokasi.</p>
-      </section>
+      <EmptyState pesan="Pilih provinsi di peta atau kolom pencarian terlebih dahulu" />
     );
   }
 

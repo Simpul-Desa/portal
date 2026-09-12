@@ -98,6 +98,26 @@ describe("SUPABASE_PUBLISHABLE_KEY", () => {
   });
 });
 
+describe("PORTAL_URL", () => {
+  it("meneruskan nilai NEXT_PUBLIC_PORTAL_URL tanpa trailing slash", async () => {
+    stubEnvLengkap();
+    vi.stubEnv("NEXT_PUBLIC_PORTAL_URL", "https://portal.simpuldesa.id///");
+
+    const { PORTAL_URL } = await import("./config");
+
+    expect(PORTAL_URL).toBe("https://portal.simpuldesa.id");
+  });
+
+  it("jatuh ke fallback http://localhost:3000 saat NEXT_PUBLIC_PORTAL_URL tidak disetel", async () => {
+    stubEnvLengkap();
+    vi.stubEnv("NEXT_PUBLIC_PORTAL_URL", "");
+
+    const { PORTAL_URL } = await import("./config");
+
+    expect(PORTAL_URL).toBe("http://localhost:3000");
+  });
+});
+
 describe("DOCS_URL", () => {
   it("meneruskan nilai NEXT_PUBLIC_DOCS_URL tanpa trailing slash", async () => {
     stubEnvLengkap();
@@ -117,3 +137,4 @@ describe("DOCS_URL", () => {
     expect(DOCS_URL).toBe("http://localhost:3001");
   });
 });
+

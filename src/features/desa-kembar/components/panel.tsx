@@ -19,6 +19,7 @@ import type { GalatApi } from "@/lib/api/client";
 import { pesanGalat } from "@/lib/api/galat-ui";
 import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
 import { BreadcrumbWilayah, type ChipWilayah } from "@/shared/components/breadcrumb-wilayah";
+import { EmptyState } from "@/shared/components/empty-state";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { pilihKeadaan } from "@/shared/components/keadaan";
 import { RegionPicker } from "@/shared/components/region-picker";
@@ -46,9 +47,7 @@ export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
 
   if (!desa) {
     return (
-      <section className="rounded-card bg-surface p-5">
-        <p className="text-body-md text-ink">Pilih desa acuan lewat peta atau kolom pencarian.</p>
-      </section>
+      <EmptyState pesan="Pilih desa di peta atau kolom pencarian terlebih dahulu" />
     );
   }
 

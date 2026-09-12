@@ -153,15 +153,18 @@ export async function ambil<T>(
  * menerima `params` query string: rute yang memakainya belum ada, dan jalur
  * yang tak terpakai menyalahi CLAUDE.md (lokal saja) §2.
  */
-export async function kirim<T, B>(
+export async function kirim<T, B = void>(
   path: string,
-  opsi: { badan: B; bertoken?: boolean },
+  opsi?: { badan?: B; bertoken?: boolean },
 ): Promise<{ data: T; meta: Meta | null }> {
-  const auth = await buatHeaderAuth(opsi.bertoken);
+  const auth = await buatHeaderAuth(opsi?.bertoken);
   const respons = await fetchAman(`${API_URL}${path}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", ...auth },
-    body: JSON.stringify(opsi.badan),
+    headers: {
+      ...(opsi?.badan !== undefined ? { "Content-Type": "application/json" } : {}),
+      ...auth,
+    },
+    ...(opsi?.badan !== undefined ? { body: JSON.stringify(opsi.badan) } : {}),
   });
   return bacaAmplop<T>(respons);
 }

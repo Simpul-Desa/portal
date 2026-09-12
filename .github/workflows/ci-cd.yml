@@ -11,6 +11,11 @@ on:
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL || vars.NEXT_PUBLIC_API_URL || 'http://localhost:8000' }}
+  NEXT_PUBLIC_PORTAL_URL: ${{ secrets.NEXT_PUBLIC_PORTAL_URL || vars.NEXT_PUBLIC_PORTAL_URL || 'http://localhost:3000' }}
+  NEXT_PUBLIC_DOCS_URL: ${{ secrets.NEXT_PUBLIC_DOCS_URL || vars.NEXT_PUBLIC_DOCS_URL || 'http://localhost:3001' }}
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || vars.NEXT_PUBLIC_SUPABASE_URL || 'https://mriaaaptioatrysztutq.supabase.co' }}
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_rRmIvCRpQFHEmJIH6Eo9lQ_VU28VPwf' }}
 
 jobs:
   check:
@@ -34,6 +39,9 @@ jobs:
 
       - name: Run Vitest
         run: npm run test
+
+      - name: Build Next.js
+        run: npm run build
 
   deploy:
     name: Deploy ke Vercel
@@ -61,6 +69,18 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
+      - name: Inject Environment Fallbacks
+        run: |
+          for env_file in .vercel/.env.*.local; do
+            if [ -f "$env_file" ]; then
+              grep -q "NEXT_PUBLIC_API_URL" "$env_file" || echo "NEXT_PUBLIC_API_URL=${{ env.NEXT_PUBLIC_API_URL }}" >> "$env_file"
+              grep -q "NEXT_PUBLIC_PORTAL_URL" "$env_file" || echo "NEXT_PUBLIC_PORTAL_URL=${{ env.NEXT_PUBLIC_PORTAL_URL }}" >> "$env_file"
+              grep -q "NEXT_PUBLIC_DOCS_URL" "$env_file" || echo "NEXT_PUBLIC_DOCS_URL=${{ env.NEXT_PUBLIC_DOCS_URL }}" >> "$env_file"
+              grep -q "NEXT_PUBLIC_SUPABASE_URL" "$env_file" || echo "NEXT_PUBLIC_SUPABASE_URL=${{ env.NEXT_PUBLIC_SUPABASE_URL }}" >> "$env_file"
+              grep -q "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY" "$env_file" || echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${{ env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}" >> "$env_file"
+            fi
+          done
+
       - name: Build Project Artifacts (Preview)
         if: github.event_name == 'pull_request'
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
@@ -76,3 +96,4 @@ jobs:
       - name: Deploy ke Vercel (Production)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+

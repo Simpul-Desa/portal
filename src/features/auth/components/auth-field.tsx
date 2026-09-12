@@ -13,7 +13,7 @@
  * `aria-describedby`.
  */
 
-import { type ChangeEvent, useState, useEffect } from "react";
+import { type ChangeEvent, useState } from "react";
 import { AlertCircle, X } from "lucide-react";
 
 import { FOCUS_RING_WITHIN } from "@/shared/components/focus-ring";
@@ -96,13 +96,9 @@ export function AuthField({
  * `daftar-form.tsx` tidak menduplikasi markup ini.
  */
 export function GalatForm({ galat }: { galat: { judul: string; pesan: string; kode?: string } }) {
-  const [tutup, setTutup] = useState(false);
+  const [ditutupUntuk, setDitutupUntuk] = useState<{ judul: string; pesan: string; kode?: string } | null>(null);
 
-  useEffect(() => {
-    setTutup(false);
-  }, [galat]);
-
-  if (tutup) return null;
+  if (ditutupUntuk === galat) return null;
 
   return (
     <div className="relative w-full mb-2">
@@ -116,7 +112,7 @@ export function GalatForm({ galat }: { galat: { judul: string; pesan: string; ko
           </div>
           <button 
             type="button" 
-            onClick={() => setTutup(true)}
+            onClick={() => setDitutupUntuk(galat)}
             className="text-muted/70 hover:text-ink transition-colors p-1 -mt-1 -mr-1 rounded-sm focus:outline-none focus:ring-2 focus:ring-critical/50"
             aria-label="Tutup pesan galat"
           >

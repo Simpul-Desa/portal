@@ -151,7 +151,7 @@ export function NavbarLokasi() {
   const pusat = usePusat();
 
   const { data: kartuData } = useKartu(wilayah.desa);
-  const namaDesa = (kartuData as any)?.identitas?.nama;
+  const namaDesa = (kartuData as { identitas?: { nama?: string } } | undefined)?.identitas?.nama;
 
   const provinsiItems = useMemo(() => {
     if (!pusat.data) return [];
@@ -223,7 +223,7 @@ export function NavbarLokasi() {
           placeholder="Pilih Desa"
           prefix="Desa"
           selectedValue={wilayah.desa ?? null}
-          selectedLabel={namaDesa ?? wilayah.desa}
+          selectedLabel={namaDesa ?? wilayah.desa ?? null}
           onSelect={(id) => wilayah.pilihDesa(id, { prov: wilayah.prov!, kab: wilayah.kab! })}
           onClear={() => wilayah.pilihKab(wilayah.kab!)}
         />

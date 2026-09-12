@@ -10,11 +10,10 @@
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { DOCS_URL } from "@/core/config";
 import { tujuanAman } from "@/lib/redirect-aman";
 import { Prism } from "@/shared/components/backgrounds/prism";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
-
-const DOCS_URL = (process.env.NEXT_PUBLIC_DOCS_URL || "http://localhost:3001").replace(/\/+$/, "");
 
 export const ONBOARDING_COOKIE = "simpul_onboarded";
 export const ONBOARDING_SESSION_KEY = "simpul_onboarded";

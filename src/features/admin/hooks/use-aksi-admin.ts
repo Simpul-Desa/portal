@@ -61,7 +61,12 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { GalatApi } from "@/lib/api/client";
-import { adminHapusBerita, adminSegarkanBerita, adminUbahPeran } from "@/lib/api/endpoints";
+import {
+  adminBatalkanSegarkan,
+  adminHapusBerita,
+  adminSegarkanBerita,
+  adminUbahPeran,
+} from "@/lib/api/endpoints";
 
 import type { BeritaTerhapus, PeranBaru, PeranDiubah, TerimaSegarkan } from "../types";
 
@@ -125,6 +130,23 @@ export function useSegarkanBerita() {
     segarkan: mutation.mutate,
     sedangKirim: mutation.isPending,
     hasil: mutation.data,
+    galat: mutation.error,
+  };
+}
+
+export function useBatalkanSegarkan() {
+  const queryClient = useQueryClient();
+  const mutation = useMutation<{ status: string }, GalatApi, void>({
+    mutationFn: async () => (await adminBatalkanSegarkan()).data,
+    retry: false,
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin", "status"] });
+    },
+  });
+
+  return {
+    batalkan: mutation.mutate,
+    sedangBatal: mutation.isPending,
     galat: mutation.error,
   };
 }
