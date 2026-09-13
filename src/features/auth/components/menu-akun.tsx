@@ -28,6 +28,7 @@ import { GalatForm } from "./auth-field";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 
+
 type MenuAkunProps = {
   children: ReactNode;
   side?: "top" | "right" | "bottom" | "left";
@@ -52,11 +53,13 @@ export function MenuAkun({ children, side }: MenuAkunProps) {
     try {
       await keluar();
       setKonfirmasiTerbuka(false);
+      window.location.href = '/onboarding';
     } catch (error) {
       setGalatKeluar(pesanGalatAuth(error));
       setKonfirmasiTerbuka(false);
     } finally {
       setSedangKeluar(false);
+      
     }
   }
 
