@@ -7,7 +7,7 @@
  * dengan tombol aksi utama 'Mulai Menjelajah' yang elegan dan interaktif.
  */
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -55,11 +55,11 @@ export function OnboardingCard() {
   const searchParams = useSearchParams();
   const lanjut = searchParams.get("lanjut");
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   function handleMulai() {
     selesaikanOnboarding();

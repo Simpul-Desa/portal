@@ -310,7 +310,7 @@ export function DashboardShell() {
   const tujuan = `${pathname}${query ? `?${query}` : ""}`;
 
   return (
-    <div className="flex h-dvh flex-col gap-2 bg-canvas p-4 pl-2 md:flex-row">
+    <div className="flex h-dvh flex-col gap-2 bg-canvas p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:p-4 md:pl-2 md:flex-row overflow-hidden">
       <h1 className="sr-only">SIMPUL DESA</h1>
 
       <SideRail
@@ -341,6 +341,8 @@ export function DashboardShell() {
           onMapGone={() => setMap(null)}
           navbarLeft={<NavbarLokasi />}
           navbarRight={<SearchBox onPilih={wilayah.pilihDesa} />}
+          panelCollapsed={panelCollapsed}
+          onOpenPanel={() => setPanelCollapsed(false)}
           asistenTerkunci={!bisaAsisten}
           onAsistenTerkunci={() => setDialog({ kemampuan: "asisten", nama: "Asisten Desa" })}
           asistenTerbuka={asistenTerbuka}

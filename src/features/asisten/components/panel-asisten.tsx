@@ -135,7 +135,7 @@ export function PanelAsisten({ asisten, wilayah, onTutup }: PanelAsistenProps) {
       onKeyDown={handleKeyDown}
       className="absolute inset-0 z-30 flex flex-col rounded-card bg-canvas md:bg-float md:inset-y-0 md:left-auto md:right-0 md:z-20 md:w-asisten lg:static lg:shrink-0"
     >
-      <header className="flex items-center justify-between px-6 py-5">
+      <header className="flex items-center justify-between px-4 py-3 md:px-6 md:py-5">
         <div className="flex items-center gap-2">
           <Image src="/asisten-desa.svg" alt="" width={18} height={18} className="shrink-0" />
           <h2 className="text-title-sm text-ink font-semibold tracking-tight">Asisten Desa</h2>
@@ -186,7 +186,7 @@ export function PanelAsisten({ asisten, wilayah, onTutup }: PanelAsistenProps) {
         </ScrollArea>
       )}
 
-      <div className="p-4 pt-0">
+      <div className="p-3 pt-0 md:p-4 md:pt-0">
         <Komposer
           ref={komposerRef}
           nilai={nilaiKomposer}

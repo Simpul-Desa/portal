@@ -14,7 +14,7 @@ import {
 
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { Badge } from "@/shared/components/ui/badge";
-import { PanelLeftClose } from "lucide-react";
+import { PanelBottomClose, PanelLeftClose } from "lucide-react";
 import type { Lensa } from "@/lib/url-state";
 
 import { PANEL_DEFAULT, PANEL_MAX, PANEL_MIN } from "./panel-constants";
@@ -153,7 +153,7 @@ export function LeftPanel({
       <div
         ref={panelRef}
         style={{ "--panel-w": `${width}px` } as CSSProperties}
-        className={`relative flex h-full w-full overflow-hidden shrink-0 flex-col rounded-card bg-float md:absolute md:inset-y-0 md:left-0 md:z-20 md:w-panel-min md:flex-none lg:relative lg:shrink-0 xl:w-(--panel-w) ${
+        className={`relative flex flex-1 min-h-0 w-full overflow-hidden shrink-0 flex-col rounded-card bg-float md:absolute md:inset-y-0 md:left-0 md:z-20 md:w-panel-min md:h-full md:flex-none lg:relative lg:shrink-0 xl:w-(--panel-w) ${
           isDragging ? "select-none" : ""
         }`}
       >
@@ -164,7 +164,7 @@ export function LeftPanel({
           className="mx-auto mt-2 h-1 w-6 shrink-0 rounded-full bg-line-strong/60 md:hidden"
         />
 
-        <header className="flex items-center justify-between px-6 py-5">
+        <header className="flex items-center justify-between px-4 py-3.5 md:px-6 md:py-5">
           <div className="flex items-center gap-2 min-w-0">
             {Icon && <Icon className="size-[18px] shrink-0 text-ink" />}
             <h2 className="text-title-sm text-ink font-semibold tracking-tight truncate">
@@ -186,7 +186,8 @@ export function LeftPanel({
               aria-label={`Tutup ${title}`}
               className={`flex size-8 shrink-0 items-center justify-center rounded-full border border-transparent bg-transparent text-ink hover:bg-surface hover:border-line-strong transition-all [&>svg]:size-4 ${FOCUS_RING}`}
             >
-              <PanelLeftClose size={16} />
+              <PanelBottomClose size={16} className="md:hidden" />
+              <PanelLeftClose size={16} className="hidden md:block" />
             </button>
           </div>
         </header>
@@ -194,7 +195,7 @@ export function LeftPanel({
         <div className="h-px bg-hairline w-full" />
 
         <ScrollArea className="flex-1 min-h-0 w-full h-full">
-          <div className="flex flex-col gap-6 px-6 py-6">{children}</div>
+          <div className="flex flex-col gap-4 px-4 py-4 md:gap-6 md:px-6 md:py-6">{children}</div>
         </ScrollArea>
       </div>
 

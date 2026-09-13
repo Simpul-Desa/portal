@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, type ReactNode, type ReactElement } from "react";
+import { useState, useSyncExternalStore, type ReactNode, type ReactElement } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useSesi } from "@/core/sesi";
 import { pesanGalatAuth } from "@/features/auth/services/galat-auth";
+import { useIsMobile } from "@/shared/hooks/use-is-mobile";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react";
 import {
   Combobox,
@@ -29,19 +30,21 @@ import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 
 type MenuAkunProps = {
   children: ReactNode;
+  side?: "top" | "right" | "bottom" | "left";
 };
 
-export function MenuAkun({ children }: MenuAkunProps) {
+export function MenuAkun({ children, side }: MenuAkunProps) {
   const { email, peran, keluar, adaSesi } = useSesi();
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const isMobile = useIsMobile();
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
   const [galatKeluar, setGalatKeluar] = useState<ReturnType<typeof pesanGalatAuth> | null>(null);
   const [konfirmasiTerbuka, setKonfirmasiTerbuka] = useState(false);
   const [sedangKeluar, setSedangKeluar] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   async function handleKonfirmasiKeluar(e: React.MouseEvent) {
     e.preventDefault();
@@ -57,11 +60,18 @@ export function MenuAkun({ children }: MenuAkunProps) {
     }
   }
 
+  const arahPopover = side ?? (isMobile ? "top" : "right");
+
   return (
     <Combobox>
       <ComboboxPrimitive.Trigger render={children as ReactElement} />
       
-      <ComboboxContent side="right" align="end" sideOffset={16} className="w-56 p-2 rounded-xl shadow-float-strong border border-line bg-float z-50 outline-none ring-0">
+      <ComboboxContent
+        side={arahPopover}
+        align="end"
+        sideOffset={isMobile ? 12 : 16}
+        className="w-56 p-2 rounded-xl shadow-float-strong border border-line bg-float z-50 outline-none ring-0"
+      >
         <div className="px-2 py-1.5">
           <p className="truncate text-label text-muted">{email || "Pengguna Tamu"}</p>
           <p className="mt-0.5 text-body-sm font-medium text-ink capitalize">Peran: {peran || "tamu"}</p>
@@ -71,7 +81,7 @@ export function MenuAkun({ children }: MenuAkunProps) {
         
         <div className="px-2 pb-1.5">
           <Tabs
-            value={mounted ? theme : "system"}
+            value={mounted ? (theme || "system") : "system"}
             onValueChange={(val) => setTheme(val)}
             className="w-full"
           >

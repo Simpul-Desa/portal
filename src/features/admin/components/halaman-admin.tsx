@@ -73,7 +73,7 @@ export function HalamanAdmin() {
   const terkunci = !memuat && !galatPeran && !bisaAdmin;
 
   return (
-    <div className="flex h-dvh flex-col gap-2 bg-canvas p-4 pl-2 md:flex-row">
+    <div className="flex h-dvh flex-col gap-2 bg-canvas p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:p-4 md:pl-2 md:flex-row overflow-hidden">
       <SideRail konteks="admin" />
 
       {/* Satu panel full di sisa rail: header Halaman Admin di atas, 
@@ -84,7 +84,7 @@ export function HalamanAdmin() {
         className="flex flex-1 h-full min-h-0 flex-col overflow-hidden rounded-card bg-float shadow-sm border border-line/40 focus:outline-none"
       >
         {/* Header Halaman Admin */}
-        <header className="flex shrink-0 items-center justify-between border-b border-hairline px-6 py-4 bg-float">
+        <header className="flex shrink-0 items-center justify-between border-b border-hairline px-4 py-3 md:px-6 md:py-4 bg-float">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Shield size={22} strokeWidth={2} />

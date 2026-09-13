@@ -73,10 +73,10 @@ function WilayahCombobox({
         onInputValueChange={setQ}
       >
         <label
-          className={`flex h-10 items-center rounded-full bg-float shadow-float transition-all duration-300 ${
+          className={`flex h-8 md:h-10 items-center rounded-full bg-float shadow-float transition-all duration-300 ${
             terbuka
-              ? `px-3 gap-2 ${FOCUS_RING_WITHIN}`
-              : `px-4 gap-2 cursor-pointer hover:bg-surface ${FOCUS_RING} ${selectedValue ? "text-ink font-medium" : "text-muted"}`
+              ? `px-2.5 md:px-3 gap-1.5 md:gap-2 ${FOCUS_RING_WITHIN}`
+              : `px-2.5 md:px-4 gap-1.5 md:gap-2 cursor-pointer hover:bg-surface ${FOCUS_RING} ${selectedValue ? "text-ink font-medium" : "text-muted"}`
           }`}
           onClick={(e) => {
             if (!terbuka) {
@@ -87,7 +87,7 @@ function WilayahCombobox({
         >
           {!terbuka ? (
             <>
-              <span className="whitespace-nowrap">{selectedValue ? `${prefix}: ${selectedLabel}` : placeholder}</span>
+              <span className="whitespace-nowrap text-xs md:text-sm">{selectedValue ? `${prefix}: ${selectedLabel}` : placeholder}</span>
               {selectedValue ? (
                 <div
                   role="button"
@@ -97,12 +97,12 @@ function WilayahCombobox({
                     e.stopPropagation();
                     onClear();
                   }}
-                  className={`flex size-5 shrink-0 items-center justify-center rounded-full bg-float text-muted hover:text-ink hover:bg-surface shadow-sm ml-auto ${FOCUS_RING}`}
+                  className={`flex size-4.5 md:size-5 shrink-0 items-center justify-center rounded-full bg-float text-muted hover:text-ink hover:bg-surface shadow-sm ml-auto ${FOCUS_RING}`}
                 >
-                  <CloseIcon className="size-3" />
+                  <CloseIcon className="size-2.5 md:size-3" />
                 </div>
               ) : (
-                <ChevronDownIcon className="size-4 shrink-0 opacity-50 ml-auto" />
+                <ChevronDownIcon className="size-3.5 md:size-4 shrink-0 opacity-50 ml-auto" />
               )}
             </>
           ) : (
@@ -194,7 +194,7 @@ export function NavbarLokasi() {
   }, [wilayah.kab, pusat.data]);
 
   return (
-    <div className="flex flex-col items-start gap-2">
+    <div className="flex flex-wrap items-center gap-1.5 md:gap-2">
       <WilayahCombobox
         items={provinsiItems}
         placeholder="Pilih Provinsi"

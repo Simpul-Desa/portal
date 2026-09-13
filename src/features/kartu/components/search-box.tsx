@@ -56,7 +56,7 @@ export function SearchBox({ onPilih }: SearchBoxProps) {
   });
 
   return (
-    <div ref={containerRef} className={`relative transition-all duration-300 ease-in-out ${isExpanded ? "w-64 md:w-80" : "w-10"}`}>
+    <div ref={containerRef} className={`relative transition-all duration-300 ease-in-out ${isExpanded ? "w-52 sm:w-64 md:w-80" : "w-8.5 md:w-10"}`}>
       <Combobox 
         open={terbuka && q.trim().length >= 2} 
         onOpenChange={setTerbuka}
@@ -73,7 +73,7 @@ export function SearchBox({ onPilih }: SearchBoxProps) {
         }}
       >
         <label 
-          className={`flex h-10 items-center rounded-full bg-float shadow-float transition-all duration-300 border border-line/70 ${isExpanded ? "px-3 gap-2 border-line-strong" : "justify-center cursor-pointer hover:scale-105"}`}
+          className={`flex h-8.5 md:h-10 items-center rounded-full bg-float shadow-float transition-all duration-300 border border-line/70 ${isExpanded ? "px-2.5 md:px-3 gap-2 border-line-strong" : "justify-center cursor-pointer hover:scale-105"}`}
           onClick={(e) => {
             if (!isExpanded) {
               e.preventDefault();
@@ -81,7 +81,7 @@ export function SearchBox({ onPilih }: SearchBoxProps) {
             }
           }}
         >
-          <SearchIcon className={`shrink-0 ${isExpanded ? "text-muted" : "text-ink"}`} />
+          <SearchIcon className={`shrink-0 size-3.5 md:size-4.5 ${isExpanded ? "text-muted" : "text-ink"}`} />
           {isExpanded && (
             <ComboboxPrimitive.Input
               autoFocus

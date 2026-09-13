@@ -6,7 +6,7 @@ import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import Image from "next/image";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, PanelBottomOpen } from "lucide-react";
 
 import { DOCS_URL } from "@/core/config";
 import { ID_PANEL_ASISTEN } from "@/features/asisten/components/panel-asisten";
@@ -28,6 +28,10 @@ type MapStageProps = {
   navbarLeft?: ReactNode;
   /** Slot di kanan atas peta (sebelah kiri tombol bantuan) untuk kolom pencarian. */
   navbarRight?: ReactNode;
+  /** Status panel terlipat di dasbor — pada seluler menentukan apakah peta mengambil layar penuh atau berbagi ruang. */
+  panelCollapsed?: boolean;
+  /** Callback untuk membuka kembali panel saat di seluler. */
+  onOpenPanel?: () => void;
   /** `!bisa(peran, "asisten")` — anonim/tamu. Menentukan apakah klik membuka
    * `DialogTerkunci` (rencana fase 2 Task 22). Dihitung dari peran BAWAAN
    * anonim, tidak menunggu `memuat` — hanya lencananya yang menunggu
@@ -87,12 +91,14 @@ export function MapStage({
   onMapGone,
   navbarLeft,
   navbarRight,
+  panelCollapsed,
+  onOpenPanel,
   asistenTerkunci,
+  adaSesi,
   onAsistenTerkunci,
   asistenTerbuka,
   onToggleAsisten,
   asistenRef,
-  adaSesi,
   memuat,
   children,
 }: MapStageProps) {
@@ -174,13 +180,7 @@ export function MapStage({
     }
     map.on("error", handleTileError);
 
-    // Tanpa ResizeObserver manual: MapLibre v6 sudah memasang
-    // ResizeObserver-nya sendiri pada container (opsi `trackResize`, bawaan
-    // `true`) dan mengurus `map.resize()` + redraw dengan throttle internal —
-    // observer kedua di sini cuma duplikasi kerja yang sama.
     return () => {
-      map.off("sourcedata", handleSourceData);
-      map.off("error", handleTileError);
       map.remove();
       mapRef.current = null;
       onMapGoneRef.current?.();
@@ -192,8 +192,12 @@ export function MapStage({
     // langsung, jadi bukan dependency reaktif.
   }, []);
 
+  const kelasWadahPeta = panelCollapsed
+    ? "relative order-first flex-1 h-full min-h-0 overflow-hidden rounded-card md:order-none md:h-auto md:flex-1"
+    : "relative order-first h-[36vh] min-h-[190px] shrink-0 overflow-hidden rounded-card md:order-none md:h-auto md:min-h-0 md:flex-1";
+
   return (
-    <div className="relative order-first h-[45vh] min-h-[260px] shrink-0 overflow-hidden rounded-card md:order-none md:h-auto md:min-h-0 md:flex-1">
+    <div className={kelasWadahPeta}>
       {/* `h-full w-full` (bukan `absolute inset-0`) SENGAJA: `maplibre-gl.css`
           menyetel `.maplibregl-map { position: relative }` tanpa `@layer` —
           CSS tak berlapis selalu menang atas utilitas Tailwind v4 (yang
@@ -216,13 +220,13 @@ export function MapStage({
           malah mengecil sia-sia di viewport sempit (mis. 375px, kolom cari
           bisa terkompres sampai nyaris tak terlihat) padahal ruang itu
           harusnya jadi miliknya. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start p-6 md:pl-[calc(var(--spacing-panel-min)+var(--spacing)*2)] lg:pl-6">
-        <div className="pointer-events-auto flex flex-wrap items-center gap-2 max-w-[60%]">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start p-2.5 md:p-6 md:pl-[calc(var(--spacing-panel-min)+var(--spacing)*2)] lg:pl-6">
+        <div className="pointer-events-auto flex flex-wrap items-center gap-1.5 md:gap-2 max-w-[70%]">
           {navbarLeft}
         </div>
 
         <div
-          className={`pointer-events-auto ml-auto shrink-0 flex items-center gap-2 ${asistenTerbuka ? "hidden lg:flex" : "flex"}`}
+          className={`pointer-events-auto ml-auto shrink-0 flex items-center gap-1.5 md:gap-2 ${asistenTerbuka ? "hidden lg:flex" : "flex"}`}
         >
           {navbarRight}
           <a
@@ -230,9 +234,9 @@ export function MapStage({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Panduan"
-            className={`group relative flex size-10 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-all duration-300 hover:scale-110 hover:bg-surface ${FOCUS_RING}`}
+            className={`group relative flex size-8.5 md:size-10 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-all duration-300 hover:scale-110 hover:bg-surface ${FOCUS_RING}`}
           >
-            <HelpCircle className="size-5" />
+            <HelpCircle className="size-4 md:size-5" />
             <div className="pointer-events-none absolute top-full left-1/2 mt-3 -translate-x-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
               Panduan
             </div>
@@ -251,7 +255,7 @@ export function MapStage({
             }
             aria-expanded={asistenTerkunci ? undefined : asistenTerbuka}
             aria-controls={asistenTerkunci ? undefined : ID_PANEL_ASISTEN}
-            className={`group relative flex size-10 cursor-pointer items-center justify-center rounded-full transition-all duration-300 hover:scale-110 ${FOCUS_RING} ${
+            className={`group relative flex size-8.5 md:size-10 cursor-pointer items-center justify-center rounded-full transition-all duration-300 hover:scale-110 ${FOCUS_RING} ${
               asistenTerbuka 
                 ? "bg-float shadow-float-strong text-ink" 
                 : "bg-float text-ink hover:bg-surface shadow-[0_0_15px_rgba(255,115,0,0.3)]"
@@ -298,16 +302,15 @@ export function MapStage({
       {/* Custom overlays / children */}
       {children}
 
-      {/* Bottom-right: stack map-control (44px) — zoom in, zoom out, locate.
-          Sama alasan `hidden lg:flex` dengan klaster di atas. */}
+      {/* Bottom-right: stack map-control — zoom in, zoom out, locate. */}
       <div
-        className={`pointer-events-none absolute right-6 bottom-6 flex-col gap-2 ${asistenTerbuka ? "hidden lg:flex" : "flex"}`}
+        className={`pointer-events-none absolute right-2.5 bottom-2.5 md:right-6 md:bottom-6 flex flex-col gap-1.5 md:gap-2 ${asistenTerbuka ? "hidden lg:flex" : "flex"}`}
       >
         <button
           type="button"
           onClick={() => mapRef.current?.zoomIn()}
           aria-label="Perbesar"
-          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-colors hover:bg-ink hover:text-canvas ${FOCUS_RING}`}
+          className={`group pointer-events-auto relative flex size-9 md:size-11 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-colors hover:bg-ink hover:text-canvas ${FOCUS_RING}`}
         >
           <ZoomInIcon />
           <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
@@ -318,7 +321,7 @@ export function MapStage({
           type="button"
           onClick={() => mapRef.current?.zoomOut()}
           aria-label="Perkecil"
-          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-colors hover:bg-ink hover:text-canvas ${FOCUS_RING}`}
+          className={`group pointer-events-auto relative flex size-9 md:size-11 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-colors hover:bg-ink hover:text-canvas ${FOCUS_RING}`}
         >
           <ZoomOutIcon />
           <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
@@ -329,7 +332,7 @@ export function MapStage({
           type="button"
           onClick={() => mapRef.current?.fitBounds(CAKUPAN_BBOX, FIT_OPTIONS)}
           aria-label="Tampilkan cakupan penuh"
-          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-colors hover:bg-ink hover:text-canvas ${FOCUS_RING}`}
+          className={`group pointer-events-auto relative flex size-9 md:size-11 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-colors hover:bg-ink hover:text-canvas ${FOCUS_RING}`}
         >
           <LocateIcon />
           <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
@@ -337,6 +340,18 @@ export function MapStage({
           </div>
         </button>
       </div>
+
+      {/* Floating button di pojok kiri bawah saat panel terlipat di seluler */}
+      {panelCollapsed && onOpenPanel && (
+        <button
+          type="button"
+          onClick={onOpenPanel}
+          className={`pointer-events-auto absolute left-2.5 bottom-2.5 flex items-center gap-1.5 rounded-full bg-float/95 backdrop-blur-md px-3 py-1.5 text-micro font-medium text-ink shadow-float border border-line/60 md:hidden hover:bg-surface transition-all ${FOCUS_RING}`}
+        >
+          <PanelBottomOpen className="size-3.5" />
+          <span>Buka Panel Data</span>
+        </button>
+      )}
     </div>
   );
 }
