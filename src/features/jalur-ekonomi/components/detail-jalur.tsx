@@ -57,7 +57,7 @@ export function DetailJalur({
               <span>{judulPeran}</span>
               <TanyaTooltip istilah="Desa Poros" />
             </span>
-            <span className="rounded-full bg-white/70 px-2 py-0.5 text-micro text-amber-950 font-medium">
+            <span className="rounded-full bg-surface/80 dark:bg-amber-950/50 px-2 py-0.5 text-micro text-amber-950 dark:text-amber-200 font-medium border border-amber-500/20">
               {namaVarian}
             </span>
           </div>
@@ -71,7 +71,7 @@ export function DetailJalur({
               }}
               title="Tutup detail jalur"
               aria-label="Tutup detail jalur"
-              className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-micro text-amber-950/70 hover:text-amber-950 hover:bg-amber-500/20 transition-colors ${FOCUS_RING}`}
+              className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-micro text-amber-900/80 dark:text-amber-300 hover:text-amber-950 dark:hover:text-amber-100 hover:bg-amber-500/20 transition-colors ${FOCUS_RING}`}
             >
               <ArrowLeft className="size-3" />
               <span>Ganti jalur</span>
@@ -83,7 +83,7 @@ export function DetailJalur({
           <div>
             <h2 className="text-title-sm font-semibold text-ink flex items-center gap-1.5">
               <span>{jalur.pusat.nmdesa}</span>
-              {apakahPorosAktif && <MapPin className="size-3.5 text-amber-700 shrink-0" />}
+              {apakahPorosAktif && <MapPin className="size-3.5 text-amber-700 dark:text-amber-400 shrink-0" />}
             </h2>
             <p className="text-micro text-muted">Kec. {strip(jalur.pusat.nmkec)}</p>
           </div>
@@ -100,7 +100,7 @@ export function DetailJalur({
           </div>
         </div>
 
-        <div className="mt-3 pt-2.5 border-t border-amber-500/20 flex items-center justify-between text-micro text-amber-950/80">
+        <div className="mt-3 pt-2.5 border-t border-amber-500/20 flex items-center justify-between text-micro text-amber-900/80 dark:text-amber-300/90">
           <div className="flex items-center">
             <span>Melayani {strip(jalur.nAnggota)} desa sekitarnya</span>
             <TanyaTooltip istilah="Cakupan Layanan" />

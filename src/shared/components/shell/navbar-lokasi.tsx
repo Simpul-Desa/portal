@@ -73,7 +73,7 @@ function WilayahCombobox({
         onInputValueChange={setQ}
       >
         <label
-          className={`flex h-10 items-center rounded-full bg-white shadow-float transition-all duration-300 ${
+          className={`flex h-10 items-center rounded-full bg-float shadow-float transition-all duration-300 ${
             terbuka
               ? `px-3 gap-2 ${FOCUS_RING_WITHIN}`
               : `px-4 gap-2 cursor-pointer hover:bg-surface ${FOCUS_RING} ${selectedValue ? "text-ink font-medium" : "text-muted"}`
@@ -120,7 +120,7 @@ function WilayahCombobox({
           )}
         </label>
 
-        <ComboboxContent align="start" sideOffset={8} className="w-[--anchor-width] z-50 max-h-80 overflow-hidden rounded-xl bg-white p-0 shadow-float-strong border border-line flex flex-col outline-none ring-0">
+        <ComboboxContent align="start" sideOffset={8} className="w-[--anchor-width] z-50 max-h-80 overflow-hidden rounded-xl bg-float p-0 shadow-float-strong border border-line flex flex-col outline-none ring-0">
           <ScrollArea className="max-h-80">
             <ComboboxList className="p-2 outline-none ring-0">
               {filtered.length === 0 ? (

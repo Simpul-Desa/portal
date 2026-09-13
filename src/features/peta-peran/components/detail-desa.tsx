@@ -166,7 +166,7 @@ export function DetailDesa({ baris, namaProv, onTutup }: DetailDesaProps) {
       <section
         className="overflow-hidden rounded-card border border-line/60 shadow-xs"
         style={{
-          background: `linear-gradient(180deg, ${warnaLatarProfil} 0%, ${warnaLatarProfil} 38%, ${warnaLatarProfil}24 58%, #ffffff 80%)`,
+          background: `linear-gradient(180deg, ${warnaLatarProfil} 0%, ${warnaLatarProfil} 38%, ${warnaLatarProfil}24 58%, var(--color-float) 80%)`,
         }}
       >
         <div className="p-4 md:p-4.5 space-y-3.5">
@@ -175,7 +175,7 @@ export function DetailDesa({ baris, namaProv, onTutup }: DetailDesaProps) {
             {/* Baris 1 (Atas): Badge ZONA di kiri sejajar dengan Link Kartu Ekonomi Desa di kanan */}
             <div className="pt-1 flex items-center justify-between gap-2.5 flex-wrap">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-badge font-bold tracking-wide uppercase text-ink shadow-xs">
+                <span className="inline-flex items-center gap-2 rounded-full bg-float px-3 py-1 text-badge font-bold tracking-wide uppercase text-ink shadow-xs">
                   <span
                     className="size-2 rounded-full shrink-0"
                     style={{
@@ -254,7 +254,7 @@ export function DetailDesa({ baris, namaProv, onTutup }: DetailDesaProps) {
                 desil={desilSP}
                 peringkatKab={peringkatSP}
                 warnaAksen="#ff7300"
-                badgeBg="bg-primary/10 text-primary border-primary/25"
+                badgeBg="bg-primary/10 text-primary border-primary/25 dark:bg-amber-400/20 dark:text-amber-300 dark:border-amber-400/30"
               />
               <KotakSkor
                 judul="Skor Kesiapan"
@@ -263,7 +263,7 @@ export function DetailDesa({ baris, namaProv, onTutup }: DetailDesaProps) {
                 desil={desilSK}
                 peringkatKab={peringkatSK}
                 warnaAksen="#31a863"
-                badgeBg="bg-positive/10 text-positive-deep border-positive/25"
+                badgeBg="bg-positive/10 text-positive-deep border-positive/25 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30"
               />
             </div>
 

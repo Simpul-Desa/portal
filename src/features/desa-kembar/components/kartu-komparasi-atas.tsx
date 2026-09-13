@@ -39,10 +39,10 @@ export function KartuKomparasiAtas({
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {/* 1. Card Kiri: Desa Acuan */}
       <section
-        className="relative flex flex-col justify-between overflow-hidden rounded-card p-3.5 sm:p-4 border border-orange-200/70 shadow-xs transition-shadow"
+        className="relative flex flex-col justify-between overflow-hidden rounded-card p-3.5 sm:p-4 border border-line dark:border-primary/25 shadow-xs transition-shadow"
         style={{
           background:
-            "linear-gradient(145deg, rgba(255, 115, 0, 0.08) 0%, rgba(255, 248, 240, 0.6) 45%, #ffffff 100%)",
+            "linear-gradient(145deg, rgba(255, 115, 0, 0.08) 0%, var(--color-surface) 45%, var(--color-float) 100%)",
         }}
       >
         <div>
@@ -78,7 +78,7 @@ export function KartuKomparasiAtas({
         </div>
 
         {/* 4. Nilai Kemiripan */}
-        <div className="mt-3 pt-2.5 border-t border-orange-100/80 flex items-center justify-between text-micro">
+        <div className="mt-3 pt-2.5 border-t border-hairline flex items-center justify-between text-micro">
           <span className="text-muted">Kemiripan:</span>
           <span className="font-semibold text-ink">100% (Acuan)</span>
         </div>
@@ -88,10 +88,10 @@ export function KartuKomparasiAtas({
       {kanan ? (
         /* Status ON (Terisi Desa Kembar) */
         <section
-          className="relative flex flex-col justify-between overflow-hidden rounded-card p-3.5 sm:p-4 border border-orange-300/80 shadow-xs transition-shadow"
+          className="relative flex flex-col justify-between overflow-hidden rounded-card p-3.5 sm:p-4 border border-line dark:border-primary/30 shadow-xs transition-shadow"
           style={{
             background:
-              "linear-gradient(145deg, rgba(255, 115, 0, 0.12) 0%, rgba(255, 237, 213, 0.45) 45%, #ffffff 100%)",
+              "linear-gradient(145deg, rgba(255, 115, 0, 0.12) 0%, var(--color-surface) 45%, var(--color-float) 100%)",
           }}
         >
           <div>

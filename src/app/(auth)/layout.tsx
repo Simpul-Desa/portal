@@ -15,7 +15,7 @@
  */
 export default function AuthLayout({ children }: LayoutProps<"/">) {
   return (
-    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-zinc-100 p-6 md:p-10 selection:bg-primary/20 selection:text-ink">
+    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-canvas p-6 md:p-10 selection:bg-primary/20 selection:text-ink">
       <img
         src="/bg-login.png"
         alt="Background Login"

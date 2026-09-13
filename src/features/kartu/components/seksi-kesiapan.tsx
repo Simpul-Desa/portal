@@ -55,9 +55,9 @@ const PILAR_KESIAPAN: ItemPilar[] = [
 ];
 
 function statusKesiapan(nilai: number): { label: string; kelas: string } {
-  if (nilai >= 0.75) return { label: "Tinggi", kelas: "text-positive bg-positive/10" };
-  if (nilai >= 0.5) return { label: "Sedang", kelas: "text-primary bg-primary/10" };
-  return { label: "Perlu Penguatan", kelas: "text-muted bg-surface" };
+  if (nilai >= 0.75) return { label: "Tinggi", kelas: "text-positive dark:text-emerald-300 bg-positive/10 dark:bg-emerald-500/15 border border-transparent dark:border-emerald-500/25" };
+  if (nilai >= 0.5) return { label: "Sedang", kelas: "text-primary dark:text-amber-300 bg-primary/10 dark:bg-amber-500/15 border border-transparent dark:border-amber-500/25" };
+  return { label: "Perlu Penguatan", kelas: "text-muted dark:text-slate-300 bg-surface dark:bg-surface/80 border border-transparent dark:border-line/60" };
 }
 
 /**
@@ -96,7 +96,7 @@ export function SeksiKesiapan({ komponen, kesiapan }: SeksiKesiapanProps) {
                     </span>
                   )}
                   {kode && (
-                    <span className="px-2 py-0.5 rounded-full text-micro text-muted bg-surface">
+                    <span className="px-2 py-0.5 rounded-full text-micro text-muted dark:text-slate-300 bg-surface dark:bg-surface/80 border border-transparent dark:border-line/60">
                       {kode}
                     </span>
                   )}
@@ -132,7 +132,7 @@ export function SeksiKesiapan({ komponen, kesiapan }: SeksiKesiapanProps) {
               <h4 className="text-title-sm font-semibold text-ink">Penilaian IDM Kemendesa</h4>
               <TanyaTooltip istilah="Indeks Desa Membangun" />
             </div>
-            <span className="text-micro font-semibold text-primary px-2.5 py-0.5 rounded-full bg-primary/10">
+            <span className="text-micro font-semibold text-primary dark:text-amber-300 px-2.5 py-0.5 rounded-full bg-primary/10 dark:bg-amber-400/15 border border-primary/20 dark:border-amber-400/30">
               {dataIdm.status} ({dataIdm.tahun})
             </span>
           </div>

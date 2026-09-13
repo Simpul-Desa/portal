@@ -29,10 +29,10 @@ const IKON_TEMA: Record<KunciTema, React.ComponentType<{ className?: string }>> 
 };
 
 function labelTingkat(persentil: number): { teks: string; kelas: string } {
-  if (persentil >= 75) return { teks: "Unggul", kelas: "text-positive bg-positive/10" };
-  if (persentil >= 50) return { teks: "Menengah Atas", kelas: "text-primary bg-primary/10" };
-  if (persentil >= 25) return { teks: "Menengah Bawah", kelas: "text-muted bg-surface" };
-  return { teks: "Dasar", kelas: "text-muted bg-surface" };
+  if (persentil >= 75) return { teks: "Unggul", kelas: "text-positive dark:text-emerald-300 bg-positive/10 dark:bg-emerald-500/15 border border-transparent dark:border-emerald-500/25" };
+  if (persentil >= 50) return { teks: "Menengah Atas", kelas: "text-primary dark:text-amber-300 bg-primary/10 dark:bg-amber-500/15 border border-transparent dark:border-amber-500/25" };
+  if (persentil >= 25) return { teks: "Menengah Bawah", kelas: "text-muted dark:text-slate-300 bg-surface dark:bg-surface/80 border border-transparent dark:border-line/60" };
+  return { teks: "Dasar", kelas: "text-muted dark:text-slate-300 bg-surface dark:bg-surface/80 border border-transparent dark:border-line/60" };
 }
 
 function warnaBar(persentil: number): string {

@@ -222,7 +222,7 @@ export function TabStatus() {
         <button
           type="button"
           onClick={tanganiMuatUlang}
-          className={`mt-3 inline-flex h-10 items-center rounded-xl bg-surface px-4 text-button-md text-ink border border-line/60 hover:bg-white transition-colors cursor-pointer ${FOCUS_RING}`}
+          className={`mt-3 inline-flex h-10 items-center rounded-xl bg-surface px-4 text-button-md text-ink border border-line/60 hover:bg-float transition-colors cursor-pointer ${FOCUS_RING}`}
         >
           Coba lagi
         </button>
@@ -258,7 +258,7 @@ export function TabStatus() {
           type="button"
           disabled={sedangMemeriksa}
           onClick={tanganiMuatUlang}
-          className={`inline-flex h-10 items-center gap-2 self-start sm:self-auto rounded-xl bg-surface px-4 text-button-md text-ink hover:bg-white hover:shadow-xs border border-line/60 transition-all cursor-pointer disabled:opacity-50 ${FOCUS_RING}`}
+          className={`inline-flex h-10 items-center gap-2 self-start sm:self-auto rounded-xl bg-surface px-4 text-button-md text-ink hover:bg-float hover:shadow-xs border border-line/60 transition-all cursor-pointer disabled:opacity-50 ${FOCUS_RING}`}
         >
           <RotateCcw
             aria-hidden="true"
@@ -361,7 +361,7 @@ export function TabStatus() {
                 {/* Baris Header Kartu */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2.5">
-                    <div className="flex size-9 items-center justify-center rounded-xl bg-white border border-hairline/80 shadow-2xs">
+                    <div className="flex size-9 items-center justify-center rounded-xl bg-float border border-hairline/80 shadow-2xs">
                       {ikon}
                     </div>
                     <div>
@@ -435,7 +435,7 @@ export function TabStatus() {
             </p>
 
             <div className="mt-4 space-y-3">
-              <div className="rounded-xl bg-white p-4 border border-hairline">
+              <div className="rounded-xl bg-surface p-4 border border-hairline">
                 <span className="text-micro font-medium uppercase tracking-wider text-muted block mb-1">
                   Kode Build Manifest (Hash)
                 </span>
@@ -444,7 +444,7 @@ export function TabStatus() {
                 </p>
               </div>
 
-              <div className="rounded-xl bg-white p-4 border border-hairline flex items-center justify-between">
+              <div className="rounded-xl bg-surface p-4 border border-hairline flex items-center justify-between">
                 <div>
                   <span className="text-micro font-medium uppercase tracking-wider text-muted block mb-0.5">
                     Tanggal Rilis Data
@@ -480,7 +480,7 @@ export function TabStatus() {
             </p>
 
             <div className="mt-4 space-y-2.5">
-              <div className="flex items-center justify-between rounded-xl bg-white p-3 border border-hairline">
+              <div className="flex items-center justify-between rounded-xl bg-surface p-3 border border-hairline">
                 <div className="flex items-center gap-2.5">
                   {konfigurasi.supabase ? (
                     <CheckCircle2 size={18} className="text-positive shrink-0" />
@@ -497,7 +497,7 @@ export function TabStatus() {
                 </StatusChip>
               </div>
 
-              <div className="flex items-center justify-between rounded-xl bg-white p-3 border border-hairline">
+              <div className="flex items-center justify-between rounded-xl bg-surface p-3 border border-hairline">
                 <div className="flex items-center gap-2.5">
                   {konfigurasi.gemini ? (
                     <Sparkles size={18} className="text-positive shrink-0" />
@@ -514,7 +514,7 @@ export function TabStatus() {
                 </StatusChip>
               </div>
 
-              <div className="flex items-center justify-between rounded-xl bg-white p-3 border border-hairline">
+              <div className="flex items-center justify-between rounded-xl bg-surface p-3 border border-hairline">
                 <div className="flex items-center gap-2.5">
                   {konfigurasi.gemini_chat ? (
                     <Sparkles size={18} className="text-positive shrink-0" />

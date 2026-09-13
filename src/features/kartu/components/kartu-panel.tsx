@@ -125,8 +125,8 @@ export function KartuPanel({ wilayah }: KartuPanelProps) {
             }}
           />
 
-          {/* 3. Rekomendasi Aksi: Arahan Strategis Kebijakan */}
-          <SeksiRekomendasi teks={kartu.rekomendasi_aksi} />
+          {/* 3. Rekomendasi Aksi: AI Insight */}
+          <SeksiRekomendasi iddesa={desa || kartu.identitas.iddesa} />
 
           {/* 4. Tab Analitik Desa: Potensi, Kesiapan, Fakta Program, Biofisik & Logistik */}
           <TabAnalitikDesa

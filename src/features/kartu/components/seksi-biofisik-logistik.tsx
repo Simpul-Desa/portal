@@ -36,9 +36,9 @@ function labelPantai(km: number | null): string {
 
 function labelAkses(menit: number | null): { teks: string; kelas: string } {
   if (menit === null) return { teks: "", kelas: "" };
-  if (menit <= 45) return { teks: "Akses Cepat", kelas: "text-positive bg-positive/10" };
-  if (menit <= 90) return { teks: "Akses Sedang", kelas: "text-primary bg-primary/10" };
-  return { teks: "Akses Terbatas", kelas: "text-muted bg-surface" };
+  if (menit <= 45) return { teks: "Akses Cepat", kelas: "text-positive dark:text-emerald-300 bg-positive/10 dark:bg-emerald-500/15 border border-transparent dark:border-emerald-500/25" };
+  if (menit <= 90) return { teks: "Akses Sedang", kelas: "text-primary dark:text-amber-300 bg-primary/10 dark:bg-amber-500/15 border border-transparent dark:border-amber-500/25" };
+  return { teks: "Akses Terbatas", kelas: "text-muted dark:text-slate-300 bg-surface dark:bg-surface/80 border border-transparent dark:border-line/60" };
 }
 
 /**

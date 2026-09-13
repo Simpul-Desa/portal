@@ -42,9 +42,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="id"
+      suppressHydrationWarning
       className={`${googleSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#f1f2f6]">
+      <body className="min-h-full flex flex-col bg-canvas text-ink transition-colors duration-200">
         <a
           href="#isi"
           className={`sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-control focus:bg-surface focus:px-4 focus:py-2 focus:text-body-md focus:text-ink ${FOCUS_RING}`}

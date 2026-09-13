@@ -105,7 +105,7 @@ export function TabPengguna() {
         <label htmlFor={idInput} className="mb-1.5 block text-label font-medium text-ink">
           Cari email akun
         </label>
-        <div className="relative flex h-11 items-center rounded-xl bg-white px-3.5 border border-line/60 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+        <div className="relative flex h-11 items-center rounded-xl bg-surface px-3.5 border border-line/60 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
           <Search size={18} className="shrink-0 text-muted mr-2.5" />
           <input
             id={idInput}
@@ -147,7 +147,7 @@ export function TabPengguna() {
           <button
             type="button"
             onClick={() => refetch()}
-            className={`mt-3 inline-flex h-10 items-center rounded-xl bg-surface px-4 text-button-md text-ink border border-line/60 hover:bg-white transition-colors cursor-pointer ${FOCUS_RING}`}
+            className={`mt-3 inline-flex h-10 items-center rounded-xl bg-surface px-4 text-button-md text-ink border border-line/60 hover:bg-float transition-colors cursor-pointer ${FOCUS_RING}`}
           >
             Coba lagi
           </button>
@@ -175,7 +175,7 @@ export function TabPengguna() {
           )}
 
           {keadaan === "isi" && data && (
-            <div className="divide-y divide-hairline rounded-2xl border border-hairline bg-white p-1.5">
+            <div className="divide-y divide-hairline rounded-2xl border border-hairline bg-surface p-1.5">
               {data.daftar.map((p) => (
                 <BarisPengguna
                   key={p.id}

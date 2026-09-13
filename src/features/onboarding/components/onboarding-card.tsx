@@ -7,8 +7,10 @@
  * dengan tombol aksi utama 'Mulai Menjelajah' yang elegan dan interaktif.
  */
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTheme } from "next-themes";
 
 import { DOCS_URL } from "@/core/config";
 import { tujuanAman } from "@/lib/redirect-aman";
@@ -52,6 +54,12 @@ export function OnboardingCard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const lanjut = searchParams.get("lanjut");
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   function handleMulai() {
     selesaikanOnboarding();
@@ -59,8 +67,10 @@ export function OnboardingCard() {
     router.replace(tujuan);
   }
 
+  const isLight = mounted ? resolvedTheme !== "dark" : true;
+
   return (
-    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-white px-4 py-8 sm:px-8 sm:py-12 selection:bg-primary/20 selection:text-ink">
+    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-canvas px-4 py-8 sm:px-8 sm:py-12 selection:bg-primary/20 selection:text-ink">
       {/* 1. Latar Belakang Penuh: Prism (React Bits) */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         <Prism
@@ -77,7 +87,7 @@ export function OnboardingCard() {
           inertia={0.07}
           bloom={1.5}
           timeScale={0.9}
-          lightMode
+          lightMode={isLight}
         />
       </div>
 
@@ -110,13 +120,13 @@ export function OnboardingCard() {
           </span>
         </h1>
 
-        {/* Dua Tombol CTA Side by Side: "Mulai Menjelajah" (Primary Orange -> Hover Black) & "Baca Panduan" (Pure White Lineless Link) */}
+        {/* Dua Tombol CTA Side by Side: "Mulai Menjelajah" (Primary Orange -> Hover Ink) & "Baca Panduan" (Float Lineless Link) */}
         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-8 sm:mt-10">
-          {/* Tombol Utama: Mulai Menjelajah (Pill Orange Primary dengan Hover Hitam & Teks Putih) */}
+          {/* Tombol Utama: Mulai Menjelajah (Pill Orange Primary dengan Hover Ink & Teks Putih) */}
           <button
             type="button"
             onClick={handleMulai}
-            className={`inline-flex items-center gap-2.5 rounded-full bg-primary px-6 py-3 sm:px-7 sm:py-3.5 text-sm sm:text-base font-medium text-white shadow-sm shadow-primary/25 transition-all duration-200 hover:bg-black hover:text-white hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${FOCUS_RING}`}
+            className={`inline-flex items-center gap-2.5 rounded-full bg-primary px-6 py-3 sm:px-7 sm:py-3.5 text-sm sm:text-base font-medium text-white shadow-sm shadow-primary/25 transition-all duration-200 hover:bg-ink hover:text-canvas hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${FOCUS_RING}`}
           >
             <svg
               className="size-4.5 sm:size-5"
@@ -130,12 +140,12 @@ export function OnboardingCard() {
             <span>Mulai Menjelajah</span>
           </button>
 
-          {/* Tombol Sekunder: Baca Panduan (Tautan ke DOCS_URL, Pill Putih Tanpa Garis Tepi) */}
+          {/* Tombol Sekunder: Baca Panduan (Tautan ke DOCS_URL, Pill Float Tanpa Garis Tepi) */}
           <a
             href={DOCS_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className={`inline-flex items-center justify-center rounded-full bg-white px-6 py-3 sm:px-7 sm:py-3.5 text-sm sm:text-base font-medium text-ink shadow-xs transition-all duration-200 hover:bg-[#fafafa] hover:shadow-sm hover:scale-[1.02] active:scale-[0.98] ${FOCUS_RING}`}
+            className={`inline-flex items-center justify-center rounded-full bg-float px-6 py-3 sm:px-7 sm:py-3.5 text-sm sm:text-base font-medium text-ink shadow-xs transition-all duration-200 hover:bg-surface hover:shadow-sm hover:scale-[1.02] active:scale-[0.98] ${FOCUS_RING}`}
           >
             Baca Panduan
           </a>

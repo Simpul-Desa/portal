@@ -112,8 +112,8 @@ export function AdminSidebar({ tab, onTab, idPanel, idTab, emailAdmin }: TabBarP
                 onClick={() => onTab(t.id)}
                 className={`group flex flex-1 cursor-pointer items-center gap-3 rounded-xl px-3.5 py-3 text-left transition-all md:flex-none ${FOCUS_RING} ${
                   aktif
-                    ? "bg-white text-ink shadow-xs border border-line/60"
-                    : "border border-transparent text-body hover:bg-white/70 hover:text-ink"
+                    ? "bg-float text-ink shadow-xs border border-line/60"
+                    : "border border-transparent text-body hover:bg-float/70 hover:text-ink"
                 }`}
               >
                 <div

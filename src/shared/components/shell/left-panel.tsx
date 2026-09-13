@@ -153,7 +153,7 @@ export function LeftPanel({
       <div
         ref={panelRef}
         style={{ "--panel-w": `${width}px` } as CSSProperties}
-        className={`relative flex h-full w-full overflow-hidden shrink-0 flex-col rounded-card bg-white md:absolute md:inset-y-0 md:left-0 md:z-20 md:w-panel-min md:flex-none lg:relative lg:shrink-0 xl:w-(--panel-w) ${
+        className={`relative flex h-full w-full overflow-hidden shrink-0 flex-col rounded-card bg-float md:absolute md:inset-y-0 md:left-0 md:z-20 md:w-panel-min md:flex-none lg:relative lg:shrink-0 xl:w-(--panel-w) ${
           isDragging ? "select-none" : ""
         }`}
       >

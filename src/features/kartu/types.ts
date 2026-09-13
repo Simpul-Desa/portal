@@ -259,3 +259,18 @@ export type KartuDesa = {
   fakta_program: KartuFaktaProgram;
   mutu_data: KartuMutuData;
 };
+
+export interface RekomendasiAktor {
+  aktor: string;
+  aksi: string;
+}
+
+export interface AIInsightData {
+  id?: string;
+  iddesa: string;
+  kondisi_ekonomi: string;
+  rekomendasi_aktor: RekomendasiAktor[];
+  teks_lengkap: string;
+  created_at?: string;
+  updated_at?: string;
+}

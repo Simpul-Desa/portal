@@ -48,7 +48,7 @@ export function MasukForm({ lanjut, alasan }: MasukFormProps) {
   return (
     <Card className="overflow-hidden p-0 shadow-float border-0 rounded-card">
       <CardContent className="grid p-0 md:grid-cols-2 min-h-[500px]">
-        <div className="flex flex-col p-6 md:p-8 bg-white relative justify-center">
+        <div className="flex flex-col p-6 md:p-8 bg-float relative justify-center">
           <Link href="/" className={`absolute top-6 left-6 md:top-8 md:left-8 w-fit text-sm text-muted hover:text-ink hover:underline hover:underline-offset-2 ${FOCUS_RING}`}>
             ← Kembali
           </Link>

@@ -54,7 +54,7 @@ export function LegendaCitraMap({
         <button
           type="button"
           onClick={() => setCollapsed(false)}
-          className={`pointer-events-auto flex items-center gap-2 rounded-full bg-white/95 backdrop-blur-md px-3.5 py-2 text-ink shadow-float transition-all hover:bg-white cursor-pointer ${FOCUS_RING}`}
+          className={`pointer-events-auto flex items-center gap-2 rounded-full bg-float/95 backdrop-blur-md px-3.5 py-2 text-ink shadow-float transition-all hover:bg-float cursor-pointer ${FOCUS_RING}`}
           aria-label="Tampilkan legenda skor potensi"
           title="Tampilkan legenda skor"
         >
@@ -63,7 +63,7 @@ export function LegendaCitraMap({
           <ChevronUp className="size-3.5 text-muted" />
         </button>
       ) : (
-        <div className="pointer-events-auto flex w-64 sm:w-72 flex-col rounded-2xl bg-white/95 backdrop-blur-md p-3.5 shadow-float transition-all">
+        <div className="pointer-events-auto flex w-64 sm:w-72 flex-col rounded-2xl bg-float/95 backdrop-blur-md p-3.5 shadow-float transition-all">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">

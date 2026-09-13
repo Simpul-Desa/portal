@@ -40,19 +40,22 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
+import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/shared/components/ui/tooltip";
 
 export function Providers({ children }: { children: ReactNode }) {
   const queryClient = getQueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider delayDuration={300}>
-        <SesiProvider>
-          <OnboardingGuard />
-          {children}
-        </SesiProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider delayDuration={300}>
+          <SesiProvider>
+            <OnboardingGuard />
+            {children}
+          </SesiProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }

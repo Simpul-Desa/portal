@@ -300,7 +300,7 @@ function ItemKartuDesaBerita({
     <button
       type="button"
       onClick={() => onPilih({ iddesa, nmdesa })}
-      className={`group flex flex-col justify-between rounded-xl border border-hairline/80 bg-white p-3.5 text-left transition-all hover:border-line-strong hover:bg-surface/30 cursor-pointer ${FOCUS_RING}`}
+      className={`group flex flex-col justify-between rounded-xl border border-hairline/80 bg-float p-3.5 text-left transition-all hover:border-line-strong hover:bg-surface/50 cursor-pointer ${FOCUS_RING}`}
     >
       <div className="w-full">
         <div className="flex items-center justify-between gap-2">
@@ -396,7 +396,7 @@ function KartuHapusBeritaNyasar() {
             </h4>
 
             {daftarDesaPanen.length === 0 ? (
-              <div className="rounded-xl border border-hairline bg-white p-4 text-center">
+              <div className="rounded-xl border border-hairline bg-surface p-4 text-center">
                 <p className="text-micro text-muted">
                   Belum ada riwayat desa yang dipanen berita. Silakan segarkan berita pada seksi di atas atau gunakan pencarian untuk memilih desa.
                 </p>
@@ -421,7 +421,7 @@ function KartuHapusBeritaNyasar() {
       ) : (
         /* Jika desa sudah dipilih: Tampilkan header desa terpilih, tombol kembali, dan tabel sederhana rincian berita */
         <div className="mt-5 space-y-4">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-xl border border-hairline/80 bg-white p-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-xl border border-hairline/80 bg-float p-4">
             <div>
               <span className="text-micro font-semibold uppercase tracking-wider text-muted">
                 Rincian Berita Desa
@@ -452,12 +452,12 @@ function KartuHapusBeritaNyasar() {
           )}
 
           {keadaan === "tertunda" && (
-            <div className="mt-4 rounded-xl border border-hairline bg-white p-5 text-center">
+            <div className="mt-4 rounded-xl border border-hairline bg-surface p-5 text-center">
               <KeadaanKosong kalimat="Sambungan sedang terputus, jadi daftar berita belum bisa dimuat." />
               <button
                 type="button"
                 onClick={() => refetch()}
-                className={`mt-3 inline-flex h-10 items-center rounded-xl bg-surface px-4 text-button-md text-ink border border-line/60 hover:bg-white transition-colors cursor-pointer ${FOCUS_RING}`}
+                className={`mt-3 inline-flex h-10 items-center rounded-xl bg-surface px-4 text-button-md text-ink border border-line/60 hover:bg-float transition-colors cursor-pointer ${FOCUS_RING}`}
               >
                 Coba lagi
               </button>
@@ -471,7 +471,7 @@ function KartuHapusBeritaNyasar() {
           )}
 
           {keadaan === "kosong" && (
-            <div className="rounded-xl border border-hairline bg-white p-6 text-center">
+            <div className="rounded-xl border border-hairline bg-surface p-6 text-center">
               <p className="text-micro text-muted">
                 Belum ada berita tersimpan untuk {desa.nmdesa}.
               </p>
@@ -479,7 +479,7 @@ function KartuHapusBeritaNyasar() {
           )}
 
           {keadaan === "isi" && data && (
-            <div className="overflow-hidden rounded-xl border border-hairline bg-white">
+            <div className="overflow-hidden rounded-xl border border-hairline bg-surface">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-body-md">
                   <thead>

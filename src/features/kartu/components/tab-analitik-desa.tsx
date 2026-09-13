@@ -67,11 +67,11 @@ export function TabAnalitikDesa({ kartu, onNavigasiCitra }: TabAnalitikDesaProps
               onClick={() => setTabAktif(tab.id)}
               className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-micro transition-all cursor-pointer ${
                 aktif
-                  ? "bg-ink text-white font-medium shadow-xs"
+                  ? "bg-ink text-canvas font-medium shadow-xs"
                   : "bg-surface text-muted hover:text-ink hover:bg-float border border-transparent hover:border-line-strong"
               } ${FOCUS_RING}`}
             >
-              <Ikon className={`size-3.5 ${aktif ? "text-white" : "text-muted"}`} />
+              <Ikon className={`size-3.5 ${aktif ? "text-canvas" : "text-muted"}`} />
               <span>{tab.label}</span>
             </button>
           );

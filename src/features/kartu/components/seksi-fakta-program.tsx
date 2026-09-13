@@ -72,7 +72,7 @@ export function SeksiFaktaProgram({ fakta }: { fakta: KartuFaktaProgram }) {
               </div>
               {fakta.jadesta ? (
                 <div className="flex flex-wrap items-center gap-1.5 font-medium text-ink">
-                  <span className="px-2 py-0.5 rounded-full bg-positive/10 text-positive text-badge font-semibold">
+                  <span className="px-2 py-0.5 rounded-full bg-positive/10 text-positive dark:text-emerald-300 dark:bg-emerald-500/15 border border-transparent dark:border-emerald-500/25 text-badge font-semibold">
                     {fakta.jadesta.kategori}
                   </span>
                   <span>
@@ -121,7 +121,7 @@ export function SeksiFaktaProgram({ fakta }: { fakta: KartuFaktaProgram }) {
             <div className="flex items-center justify-between gap-1">
               <span className="text-muted">Kampung Perikanan Budidaya</span>
               {fakta.kampung_budidaya ? (
-                <span className="px-2 py-0.5 rounded-full bg-positive/10 text-positive text-badge font-semibold">
+                <span className="px-2 py-0.5 rounded-full bg-positive/10 text-positive dark:text-emerald-300 dark:bg-emerald-500/15 border border-transparent dark:border-emerald-500/25 text-badge font-semibold">
                   {fakta.kampung_budidaya.komoditas}
                 </span>
               ) : (

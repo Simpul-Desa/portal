@@ -167,7 +167,7 @@ export function DaftarJalur({ varian, kab, jalurAktif, onPilih }: DaftarJalurPro
                       {b.poros.nmdesa}
                     </span>
                     {terpilih && (
-                      <span className="rounded-full bg-ink px-2 py-0.2 text-badge text-white">
+                      <span className="rounded-full bg-primary/15 text-primary dark:text-amber-300 dark:bg-amber-400/20 border border-primary/30 dark:border-amber-400/30 px-2 py-0.2 text-badge font-semibold">
                         Aktif
                       </span>
                     )}

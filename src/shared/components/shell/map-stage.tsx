@@ -230,10 +230,10 @@ export function MapStage({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Panduan"
-            className={`group relative flex size-10 cursor-pointer items-center justify-center rounded-full bg-white text-ink shadow-float transition-all duration-300 hover:scale-110 hover:bg-gradient-to-tr hover:from-white hover:via-[#f0fdfa] hover:to-[#fdf4ff] ${FOCUS_RING}`}
+            className={`group relative flex size-10 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-all duration-300 hover:scale-110 hover:bg-surface ${FOCUS_RING}`}
           >
             <HelpCircle className="size-5" />
-            <div className="pointer-events-none absolute top-full left-1/2 mt-3 -translate-x-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
+            <div className="pointer-events-none absolute top-full left-1/2 mt-3 -translate-x-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
               Panduan
             </div>
           </a>
@@ -253,8 +253,8 @@ export function MapStage({
             aria-controls={asistenTerkunci ? undefined : ID_PANEL_ASISTEN}
             className={`group relative flex size-10 cursor-pointer items-center justify-center rounded-full transition-all duration-300 hover:scale-110 ${FOCUS_RING} ${
               asistenTerbuka 
-                ? "bg-white shadow-float-strong" 
-                : "bg-white text-ink hover:bg-gradient-to-tr hover:from-white hover:via-[#f0fdfa] hover:to-[#fdf4ff] shadow-[0_0_15px_rgba(255,115,0,0.3)]"
+                ? "bg-float shadow-float-strong text-ink" 
+                : "bg-float text-ink hover:bg-surface shadow-[0_0_15px_rgba(255,115,0,0.3)]"
             }`}
           >
             {/* Animasi Standby & Aktif (tetap jalan saat asisten terbuka) */}
@@ -284,7 +284,7 @@ export function MapStage({
             <Image src="/asisten-desa.svg" alt="" width={20} height={20} className="relative z-10 shrink-0" />
             {!memuat && asistenTerkunci && <LockBadge />}
             
-            <div className="pointer-events-none absolute top-full left-1/2 mt-3 -translate-x-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
+            <div className="pointer-events-none absolute top-full left-1/2 mt-3 -translate-x-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
               {asistenTerkunci
                 ? teksTerkunci
                 : asistenTerbuka
@@ -307,10 +307,10 @@ export function MapStage({
           type="button"
           onClick={() => mapRef.current?.zoomIn()}
           aria-label="Perbesar"
-          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-white text-ink shadow-float transition-colors hover:bg-ink hover:text-white ${FOCUS_RING}`}
+          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-colors hover:bg-ink hover:text-canvas ${FOCUS_RING}`}
         >
           <ZoomInIcon />
-          <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
+          <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
             Perbesar
           </div>
         </button>
@@ -318,10 +318,10 @@ export function MapStage({
           type="button"
           onClick={() => mapRef.current?.zoomOut()}
           aria-label="Perkecil"
-          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-white text-ink shadow-float transition-colors hover:bg-ink hover:text-white ${FOCUS_RING}`}
+          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-colors hover:bg-ink hover:text-canvas ${FOCUS_RING}`}
         >
           <ZoomOutIcon />
-          <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
+          <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
             Perkecil
           </div>
         </button>
@@ -329,10 +329,10 @@ export function MapStage({
           type="button"
           onClick={() => mapRef.current?.fitBounds(CAKUPAN_BBOX, FIT_OPTIONS)}
           aria-label="Tampilkan cakupan penuh"
-          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-white text-ink shadow-float transition-colors hover:bg-ink hover:text-white ${FOCUS_RING}`}
+          className={`group pointer-events-auto relative flex size-11 cursor-pointer items-center justify-center rounded-full bg-float text-ink shadow-float transition-colors hover:bg-ink hover:text-canvas ${FOCUS_RING}`}
         >
           <LocateIcon />
-          <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
+          <div className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-50">
             Tampilkan cakupan penuh
           </div>
         </button>

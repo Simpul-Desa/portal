@@ -49,11 +49,11 @@ export function PilihVarian({ varian, onPilih }: PilihVarianProps) {
             }}
             className={`flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2 text-micro transition-all cursor-pointer ${
               aktif
-                ? "bg-ink text-white font-medium shadow-xs"
+                ? "bg-ink text-canvas font-medium shadow-xs"
                 : "bg-surface text-muted hover:text-ink hover:bg-float border border-transparent hover:border-line-strong"
             } ${FOCUS_RING}`}
           >
-            <Ikon className={`size-3.5 shrink-0 ${aktif ? "text-white" : "text-muted"}`} />
+            <Ikon className={`size-3.5 shrink-0 ${aktif ? "text-canvas" : "text-muted"}`} />
             <span className="truncate">{tab.label}</span>
           </button>
         );

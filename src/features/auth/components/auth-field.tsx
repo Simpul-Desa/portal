@@ -102,8 +102,8 @@ export function GalatForm({ galat }: { galat: { judul: string; pesan: string; ko
 
   return (
     <div className="relative w-full mb-2">
-      <div role="alert" className="absolute top-0 left-0 w-full rounded-md border border-critical/30 bg-white px-3.5 py-3 shadow-float animate-in fade-in slide-in-from-top-2 z-50">
-        <div className="absolute -top-1.5 left-4 h-3 w-3 rotate-45 border-l border-t border-critical/30 bg-white" />
+      <div role="alert" className="absolute top-0 left-0 w-full rounded-md border border-critical/30 bg-float px-3.5 py-3 shadow-float animate-in fade-in slide-in-from-top-2 z-50">
+        <div className="absolute -top-1.5 left-4 h-3 w-3 rotate-45 border-l border-t border-critical/30 bg-float" />
         <div className="relative z-10 flex items-start gap-2.5">
           <AlertCircle className="h-4 w-4 text-critical shrink-0 mt-0.5" />
           <div className="flex flex-col gap-0.5 flex-1">

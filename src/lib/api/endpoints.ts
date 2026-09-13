@@ -35,6 +35,7 @@ import type { JawabanChat, PesanChat } from "@/features/asisten/types";
 import type { SelCitra, SelCitraDetail } from "@/features/citra-potensi/types";
 import type { BarisJalur } from "@/features/jalur-ekonomi/types";
 import type { BarisPetaPeran, BarisPetaPeranPenuh, NamaZona, RingkasanKab } from "@/features/peta-peran/types";
+import type { AIInsightData } from "@/features/kartu/types";
 import type { Varian } from "@/lib/url-state";
 
 import { ambil, ambilBerkas, ambilGeo, hapus, kirim } from "./client";
@@ -266,4 +267,16 @@ export function adminHapusBerita(idBerita: number) {
  * dikirim `api/`. */
 export function adminStatus() {
   return ambil<DataDari<"/api/admin/status">>("/api/admin/status", { bertoken: true });
+}
+
+/**
+ * Buat atau dapatkan AI Insight untuk desa.
+ * Mengirim permintaan ke `POST /api/ai-insight`.
+ * Menuntut pengguna terotentikasi di atas tamu (pemerintah, swasta, admin).
+ */
+export function aiInsightBuat(iddesa: string, generateUlang = false) {
+  return kirim<AIInsightData, { iddesa: string; generate_ulang: boolean }>(
+    "/api/ai-insight",
+    { badan: { iddesa, generate_ulang: generateUlang }, bertoken: true },
+  );
 }

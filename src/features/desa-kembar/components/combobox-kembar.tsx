@@ -68,7 +68,7 @@ export function ComboboxKembar({
           <button
             type="button"
             aria-label="Pilih desa kembar"
-            className={`group flex h-8 w-full items-center justify-between gap-2 rounded-lg bg-surface/90 px-2.5 py-1 text-left border border-line-strong/60 shadow-2xs hover:border-line-strong hover:bg-white transition-all cursor-pointer ${FOCUS_RING}`}
+            className={`group flex h-8 w-full items-center justify-between gap-2 rounded-lg bg-surface/90 px-2.5 py-1 text-left border border-line-strong/60 shadow-2xs hover:border-line-strong hover:bg-float transition-all cursor-pointer ${FOCUS_RING}`}
           >
             <div className="flex items-center gap-1.5 min-w-0">
               <Search className="size-3.5 text-muted shrink-0 group-hover:text-ink transition-colors" />
@@ -84,7 +84,7 @@ export function ComboboxKembar({
       <PopoverContent
         align="start"
         sideOffset={6}
-        className="w-72 sm:w-80 z-50 overflow-hidden rounded-2xl bg-white p-2 shadow-float-strong border border-line flex flex-col outline-none"
+        className="w-72 sm:w-80 z-50 overflow-hidden rounded-2xl bg-float p-2 shadow-float-strong border border-line flex flex-col outline-none"
       >
         <div className="px-2 pt-1 pb-2 border-b border-hairline">
           <div className="flex items-center justify-between mb-1.5">
@@ -133,7 +133,7 @@ export function ComboboxKembar({
                   }}
                   className={`flex w-full items-center justify-between gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors cursor-pointer ${
                     aktif
-                      ? "bg-orange-50 text-orange-950 font-medium"
+                      ? "bg-primary/15 text-primary font-medium dark:bg-primary/25 dark:text-primary-soft"
                       : "hover:bg-surface text-ink"
                   }`}
                 >
@@ -144,7 +144,7 @@ export function ComboboxKembar({
                     <p className="text-micro text-muted truncate">Kec. {strip(t.nmkec)}</p>
                   </div>
                   <div className="shrink-0 flex items-center gap-1.5">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-badge font-semibold bg-orange-100/90 text-orange-900 border border-orange-200/70">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-badge font-semibold bg-primary/10 text-primary dark:bg-amber-400/15 dark:text-amber-300 dark:border-amber-400/30 border border-primary/30">
                       {formatPersen(t.persen)}
                     </span>
                     {aktif && <Check className="size-4 text-primary shrink-0" />}

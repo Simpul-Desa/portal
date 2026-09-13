@@ -73,7 +73,7 @@ export function SearchBox({ onPilih }: SearchBoxProps) {
         }}
       >
         <label 
-          className={`flex h-10 items-center rounded-full bg-white shadow-float transition-all duration-300 border border-line/70 ${isExpanded ? "px-3 gap-2 border-line-strong" : "justify-center cursor-pointer hover:scale-105"}`}
+          className={`flex h-10 items-center rounded-full bg-float shadow-float transition-all duration-300 border border-line/70 ${isExpanded ? "px-3 gap-2 border-line-strong" : "justify-center cursor-pointer hover:scale-105"}`}
           onClick={(e) => {
             if (!isExpanded) {
               e.preventDefault();
@@ -94,7 +94,7 @@ export function SearchBox({ onPilih }: SearchBoxProps) {
           )}
         </label>
 
-        <ComboboxContent align="start" sideOffset={8} className="w-[--anchor-width] z-50 max-h-80 overflow-hidden rounded-xl bg-white p-0 shadow-float-strong border border-line flex flex-col outline-none ring-0">
+        <ComboboxContent align="start" sideOffset={8} className="w-[--anchor-width] z-50 max-h-80 overflow-hidden rounded-xl bg-float p-0 shadow-float-strong border border-line flex flex-col outline-none ring-0">
           <ScrollArea className="max-h-80">
             <ComboboxList className="p-2 outline-none ring-0">
               {keadaan === "muat" &&

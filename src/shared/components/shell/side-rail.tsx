@@ -108,7 +108,7 @@ export function SideRail(props: SideRailProps) {
           >
             <LogoSimpul />
           </Link>
-          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
             Kembali ke dasbor
           </div>
         </div>
@@ -122,7 +122,7 @@ export function SideRail(props: SideRailProps) {
           >
             <LogoSimpul />
           </button>
-          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
             Simpul Desa
           </div>
         </div>
@@ -141,7 +141,7 @@ export function SideRail(props: SideRailProps) {
           // pill `surface` saat aktif (DESIGN.md § Layout, bagian Rail). Di
           // `/admin` tidak ada lensa yang sedang dirender, jadi nol butir aktif.
           const aktif = !diAdmin && lensa === props.lensaAktif;
-          const kelas = `${KELAS_BUTIR} ${FOCUS_RING} cursor-pointer ${aktif ? "bg-primary text-white" : "bg-white text-ink hover:bg-ink hover:text-white"}`;
+          const kelas = `${KELAS_BUTIR} ${FOCUS_RING} cursor-pointer ${aktif ? "bg-primary text-white" : "bg-float text-ink hover:bg-ink hover:text-canvas"}`;
           const lencana = !memuat && terkunci && <LockBadge />;
           // Diangkat di atas cabang `diAdmin` (temuan A15 lanjutan) supaya
           // kedua konteks mengumumkan kunci yang sama — sebelumnya butir
@@ -161,7 +161,7 @@ export function SideRail(props: SideRailProps) {
                   <Icon className="size-5!" />
                   {lencana}
                 </Link>
-                <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+                <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
                   {judulTombol}
                 </div>
               </div>
@@ -184,7 +184,7 @@ export function SideRail(props: SideRailProps) {
                 <Icon className="size-5!" />
                 {lencana}
               </button>
-              <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+              <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
                 {judulTombol}
               </div>
             </div>
@@ -202,55 +202,31 @@ export function SideRail(props: SideRailProps) {
             href="/admin"
             aria-label="Halaman Admin"
             aria-current={diAdmin ? "page" : undefined}
-            className={`${KELAS_BUTIR} ${FOCUS_RING} cursor-pointer ${diAdmin ? "bg-primary text-white" : "bg-white text-ink hover:bg-ink hover:text-white"}`}
+            className={`${KELAS_BUTIR} ${FOCUS_RING} cursor-pointer ${diAdmin ? "bg-primary text-white" : "bg-float text-ink hover:bg-ink hover:text-canvas"}`}
           >
             <Shield size={20} strokeWidth={1.5} aria-hidden="true" />
           </Link>
-          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
             Halaman Admin
           </div>
         </div>
       )}
 
-      {/* `adaSesi`, bukan `peran === "anonim"` — peran bisa melantai ke
-          `"tamu"` saat sesi ADA tapi bacaannya gagal (`peranEfektif`),
-          dan pengguna itu tetap sudah masuk: rail-nya menu Akun, bukan
-          tautan Masuk. */}
-      {/* `aria-haspopup="dialog"`, bukan `"menu"`: `MenuAkun` membuang
-          `role="menu"` di fase 9 (temuan A15) karena anaknya — email, peran
-          aktif, hairline, blok galat — bukan `menuitem`, sehingga pembaca
-          layar memangkas justru dua informasi yang menjadi alasan popup itu
-          ada. `aria-haspopup` harus menyebut apa yang benar-benar dibuka,
-          bukan apa yang dulu diklaim. */}
-      {adaSesi ? (
-        <div className="relative z-30 ms-auto md:ms-0 md:mt-auto group flex items-center justify-center hover:z-[100]">
-          <MenuAkun>
-            <button
-              type="button"
-              aria-label="Akun"
-              className={`${KELAS_BUTIR} ${FOCUS_RING} cursor-pointer bg-white text-ink hover:bg-ink hover:text-white`}
-            >
-              <AkunIcon />
-            </button>
-          </MenuAkun>
-          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
-            Akun
-          </div>
-        </div>
-      ) : (
-        <div className="ms-auto md:ms-0 md:mt-auto group relative flex items-center justify-center hover:z-[100]">
-          <Link
-            href="/masuk"
-            aria-label="Masuk"
-            className={`${KELAS_BUTIR} ${FOCUS_RING} cursor-pointer bg-white text-ink hover:bg-ink hover:text-white`}
+      {/* Akun & Preferensi Tema: MenuAkun tersedia untuk semua pengguna agar dapat beralih tema kapan saja */}
+      <div className="ms-auto md:ms-0 md:mt-auto group relative flex items-center justify-center hover:z-[100]">
+        <MenuAkun>
+          <button
+            type="button"
+            aria-label="Akun"
+            className={`${KELAS_BUTIR} ${FOCUS_RING} cursor-pointer bg-float text-ink hover:bg-ink hover:text-canvas`}
           >
             <AkunIcon />
-          </Link>
-          <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-white opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
-            Masuk
-          </div>
+          </button>
+        </MenuAkun>
+        <div className="pointer-events-none absolute left-full top-1/2 ml-4 -translate-y-1/2 rounded bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-float transition-opacity group-hover:opacity-100 hidden md:block whitespace-nowrap z-[100]">
+          {adaSesi ? "Akun" : "Akun & Tema"}
         </div>
-      )}
+      </div>
     </nav>
   );
 }

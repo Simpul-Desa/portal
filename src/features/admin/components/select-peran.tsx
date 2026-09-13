@@ -76,7 +76,7 @@ export function SelectPeran({ id, nilai, sedangKirim, onUbah }: SelectPeranProps
           id={id}
           disabled={sedangKirim}
           aria-label={`Ubah peran pengguna, saat ini ${infoAktif.nama}`}
-          className={`flex h-10 w-full items-center justify-between gap-2 rounded-xl bg-surface/80 px-3 text-left border border-line/70 hover:bg-white hover:border-line-strong hover:shadow-xs transition-all cursor-pointer ${FOCUS_RING} ${
+          className={`flex h-10 w-full items-center justify-between gap-2 rounded-xl bg-surface/80 px-3 text-left border border-line/70 hover:bg-float hover:border-line-strong hover:shadow-xs transition-all cursor-pointer ${FOCUS_RING} ${
             sedangKirim ? "opacity-60 pointer-events-none" : ""
           }`}
         >
@@ -95,7 +95,7 @@ export function SelectPeran({ id, nilai, sedangKirim, onUbah }: SelectPeranProps
         <ComboboxContent
           align="end"
           sideOffset={6}
-          className="w-64 z-50 overflow-hidden rounded-xl bg-white p-1.5 shadow-float-strong border border-line flex flex-col outline-none ring-0"
+          className="w-64 z-50 overflow-hidden rounded-xl bg-float p-1.5 shadow-float-strong border border-line flex flex-col outline-none ring-0"
         >
           <div className="px-2.5 py-1.5 border-b border-hairline mb-1">
             <p className="text-micro font-medium uppercase tracking-wider text-muted">

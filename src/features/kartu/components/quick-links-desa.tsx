@@ -82,7 +82,7 @@ export function QuickLinksDesa({
             if (apakahPoros && jalurTerkait) {
               sublabel = `Pusat ${jalurTerkait.label} (${formatAngka(jalurTerkait.n_anggota)} desa)`;
               statusBadge = (
-                <span className="inline-flex items-center gap-0.5 rounded-full bg-float border border-hairline px-1.5 py-0.5 text-[10px] font-medium text-muted">
+                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/15 dark:bg-amber-400/20 border border-amber-500/30 dark:border-amber-400/30 px-1.5 py-0.5 text-[10px] font-medium text-amber-900 dark:text-amber-200">
                   <Sparkles className="size-2.5" />
                   Poros
                 </span>
@@ -90,7 +90,7 @@ export function QuickLinksDesa({
             } else if (apakahSejalur && jalurTerkait) {
               sublabel = `Sejalur ke ${jalurTerkait.poros.nmdesa}`;
               statusBadge = (
-                <span className="inline-flex items-center gap-0.5 rounded-full bg-float border border-hairline px-1.5 py-0.5 text-[10px] font-medium text-muted">
+                <span className="inline-flex items-center gap-0.5 rounded-full bg-blue-500/15 dark:bg-sky-400/20 border border-blue-500/30 dark:border-sky-400/30 px-1.5 py-0.5 text-[10px] font-medium text-blue-900 dark:text-sky-200">
                   <Network className="size-2.5" />
                   Sejalur
                 </span>

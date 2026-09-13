@@ -73,7 +73,7 @@ export function HalamanAdmin() {
   const terkunci = !memuat && !galatPeran && !bisaAdmin;
 
   return (
-    <div className="flex h-dvh flex-col gap-2 bg-[#f1f2f6] p-4 pl-2 md:flex-row">
+    <div className="flex h-dvh flex-col gap-2 bg-canvas p-4 pl-2 md:flex-row">
       <SideRail konteks="admin" />
 
       {/* Satu panel full di sisa rail: header Halaman Admin di atas, 
@@ -81,10 +81,10 @@ export function HalamanAdmin() {
       <main
         id="isi"
         tabIndex={0}
-        className="flex flex-1 h-full min-h-0 flex-col overflow-hidden rounded-card bg-white shadow-sm border border-line/40 focus:outline-none"
+        className="flex flex-1 h-full min-h-0 flex-col overflow-hidden rounded-card bg-float shadow-sm border border-line/40 focus:outline-none"
       >
         {/* Header Halaman Admin */}
-        <header className="flex shrink-0 items-center justify-between border-b border-hairline px-6 py-4 bg-white">
+        <header className="flex shrink-0 items-center justify-between border-b border-hairline px-6 py-4 bg-float">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Shield size={22} strokeWidth={2} />
@@ -92,8 +92,8 @@ export function HalamanAdmin() {
             <div>
               <div className="flex items-center gap-2.5">
                 <h1 className="text-title-md font-semibold text-ink">Halaman Admin</h1>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-badge font-medium text-primary">
-                  <span className="size-1.5 rounded-full bg-primary" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 dark:bg-amber-400/15 text-primary dark:text-amber-300 border border-primary/20 dark:border-amber-400/30 px-2.5 py-0.5 text-badge font-medium">
+                  <span className="size-1.5 rounded-full bg-primary dark:bg-amber-400" />
                   Akses Administrator
                 </span>
               </div>
@@ -150,7 +150,7 @@ export function HalamanAdmin() {
               role="tabpanel"
               id={idPanel(tab)}
               aria-labelledby={idTab(tab)}
-              className="flex-1 min-h-0 overflow-y-auto p-6 md:p-8 bg-white"
+              className="flex-1 min-h-0 overflow-y-auto p-6 md:p-8 bg-float"
             >
               {PANEL_TAB[tab]()}
             </div>

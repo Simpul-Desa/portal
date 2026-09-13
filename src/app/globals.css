@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: var(--font-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
@@ -141,6 +143,88 @@ body {
   background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Skema Tema Gelap (Dark Mode Ladder & Tokens) */
+.dark {
+  /* Surfaces — ladder lima tingkat gelap */
+  --color-canvas: #0f1115;
+  --color-rail: #15181e;
+  --color-surface: #1b1e26;
+  --color-float: #222630;
+  --color-inset: #13151b;
+  --color-deep: #090a0d;
+
+  /* Lines */
+  --color-hairline: rgba(255, 255, 255, 0.08);
+  --color-line: rgba(255, 255, 255, 0.14);
+  --color-line-strong: rgba(255, 255, 255, 0.26);
+
+  /* Text */
+  --color-ink: #f3f4f6;
+  --color-body: #cbd5e1;
+  --color-muted: #94a3b8;
+  --color-muted-sampled: #64748b;
+  --color-faint: #475569;
+  --color-on-dark-muted: rgba(255, 255, 255, 0.75);
+
+  /* Action & Status */
+  --color-primary: #ff8a3d;
+  --color-primary-active: #ff9d54;
+  --color-primary-soft: rgba(255, 138, 61, 0.18);
+  --color-positive: #34d399;
+  --color-positive-deep: #34d399;
+  --color-caution: #fbbf24;
+  --color-critical: #f87171;
+
+  /* Data ramp & Charts */
+  --color-chart-fill: rgba(52, 211, 153, 0.18);
+  --color-chart-warm: rgba(251, 191, 36, 0.18);
+
+  /* Overlay */
+  --color-scrim: rgba(0, 0, 0, 0.72);
+
+  /* Shadows */
+  --shadow-float: 0 4px 20px rgb(0 0 0 / 0.5);
+  --shadow-float-strong: 0 8px 32px rgb(0 0 0 / 0.65);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-canvas: #0f1115;
+    --color-rail: #15181e;
+    --color-surface: #1b1e26;
+    --color-float: #222630;
+    --color-inset: #13151b;
+    --color-deep: #090a0d;
+
+    --color-hairline: rgba(255, 255, 255, 0.08);
+    --color-line: rgba(255, 255, 255, 0.14);
+    --color-line-strong: rgba(255, 255, 255, 0.26);
+
+    --color-ink: #f3f4f6;
+    --color-body: #cbd5e1;
+    --color-muted: #94a3b8;
+    --color-muted-sampled: #64748b;
+    --color-faint: #475569;
+    --color-on-dark-muted: rgba(255, 255, 255, 0.75);
+
+    --color-primary: #ff8a3d;
+    --color-primary-active: #ff9d54;
+    --color-primary-soft: rgba(255, 138, 61, 0.18);
+    --color-positive: #34d399;
+    --color-positive-deep: #34d399;
+    --color-caution: #fbbf24;
+    --color-critical: #f87171;
+
+    --color-chart-fill: rgba(52, 211, 153, 0.18);
+    --color-chart-warm: rgba(251, 191, 36, 0.18);
+
+    --color-scrim: rgba(0, 0, 0, 0.72);
+
+    --shadow-float: 0 4px 20px rgb(0 0 0 / 0.5);
+    --shadow-float-strong: 0 8px 32px rgb(0 0 0 / 0.65);
+  }
 }
 
 /* Hormati "Reduce motion" sistem (tinjauan pra-commit temuan A10, 10

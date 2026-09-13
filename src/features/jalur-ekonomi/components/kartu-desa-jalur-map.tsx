@@ -57,7 +57,7 @@ export function KartuDesaJalurMap({
       aria-label="Status Desa di Jalur Ekonomi"
       className="pointer-events-none absolute left-4 bottom-11 z-20 md:left-6 md:bottom-11"
     >
-      <div className="pointer-events-auto w-80 max-w-[calc(100vw-2rem)] rounded-card bg-white/95 p-4 shadow-float backdrop-blur-md border border-line/60">
+      <div className="pointer-events-auto w-80 max-w-[calc(100vw-2rem)] rounded-card bg-float/95 p-4 shadow-float backdrop-blur-md border border-line/60">
         {/* Header Info Desa */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-2.5 min-w-0">
@@ -68,14 +68,14 @@ export function KartuDesaJalurMap({
               <div className="flex items-center gap-1.5 flex-wrap">
                 <h3 className="text-title-sm text-ink font-semibold truncate">{namaDesa}</h3>
                 {apakahPoros && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.2 text-badge font-medium text-amber-900">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 dark:bg-amber-400/20 border border-amber-500/30 dark:border-amber-400/30 px-2 py-0.2 text-badge font-medium text-amber-900 dark:text-amber-200">
                     <Sparkles className="size-2.5" />
                     <span>Poros</span>
                     <TanyaTooltip istilah="Desa Poros" />
                   </span>
                 )}
                 {apakahSejalur && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/15 px-2 py-0.2 text-badge font-medium text-blue-900">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/15 dark:bg-sky-400/20 border border-blue-500/30 dark:border-sky-400/30 px-2 py-0.2 text-badge font-medium text-blue-900 dark:text-sky-200">
                     <Network className="size-2.5" />
                     <span>Sejalur</span>
                     <TanyaTooltip istilah="Desa Sejalur" />
@@ -117,12 +117,12 @@ export function KartuDesaJalurMap({
                 className={`flex w-full items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-micro font-medium transition-all ${
                   sedangAktif
                     ? "bg-inset text-muted cursor-default"
-                    : "bg-ink text-white hover:bg-ink/90 cursor-pointer shadow-xs"
+                    : "bg-ink text-canvas hover:bg-ink/90 cursor-pointer shadow-xs"
                 } ${FOCUS_RING}`}
               >
                 {sedangAktif ? (
                   <>
-                    <Check className="size-3.5 text-green-600" />
+                    <Check className="size-3.5 text-emerald-500" />
                     <span>Jalur sedang aktif di peta</span>
                   </>
                 ) : (
@@ -147,7 +147,7 @@ export function KartuDesaJalurMap({
                 className={`flex w-full items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-micro font-medium transition-all ${
                   sedangAktif
                     ? "bg-inset text-muted cursor-default"
-                    : "bg-ink text-white hover:bg-ink/90 cursor-pointer shadow-xs"
+                    : "bg-ink text-canvas hover:bg-ink/90 cursor-pointer shadow-xs"
                 } ${FOCUS_RING}`}
               >
                 {sedangAktif ? (

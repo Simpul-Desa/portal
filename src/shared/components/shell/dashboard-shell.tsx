@@ -310,7 +310,7 @@ export function DashboardShell() {
   const tujuan = `${pathname}${query ? `?${query}` : ""}`;
 
   return (
-    <div className="flex h-dvh flex-col gap-2 bg-[#f1f2f6] p-4 pl-2 md:flex-row">
+    <div className="flex h-dvh flex-col gap-2 bg-canvas p-4 pl-2 md:flex-row">
       <h1 className="sr-only">SIMPUL DESA</h1>
 
       <SideRail

@@ -46,23 +46,39 @@ function TandaArah({ arah }: { arah: BarisBanding["arah"] }) {
   return null;
 }
 
+const KELAS_ZONA: Record<string, { badge: string; dot: string }> = {
+  "Zona Pemerintah": {
+    badge: "bg-[#d6338f]/10 text-[#d6338f] border-[#d6338f]/30 dark:bg-[#f472b6]/15 dark:text-[#f472b6] dark:border-[#f472b6]/35",
+    dot: "bg-[#d6338f] dark:bg-[#f472b6]",
+  },
+  "Zona Mitra": {
+    badge: "bg-[#7d5ae0]/10 text-[#7d5ae0] border-[#7d5ae0]/30 dark:bg-[#a78bfa]/15 dark:text-[#a78bfa] dark:border-[#a78bfa]/35",
+    dot: "bg-[#7d5ae0] dark:bg-[#a78bfa]",
+  },
+  "Zona Poros": {
+    badge: "bg-[#00a9bf]/10 text-[#00a9bf] border-[#00a9bf]/30 dark:bg-[#38bdf8]/15 dark:text-[#38bdf8] dark:border-[#38bdf8]/35",
+    dot: "bg-[#00a9bf] dark:bg-[#38bdf8]",
+  },
+  "Zona Bantuan": {
+    badge: "bg-[#8d9aab]/10 text-[#556375] border-[#8d9aab]/30 dark:bg-[#94a3b8]/15 dark:text-[#cbd5e1] dark:border-[#94a3b8]/35",
+    dot: "bg-[#8d9aab] dark:bg-[#cbd5e1]",
+  },
+};
+
 /**
  * Badge berwarna untuk nilai Zona (Zona Pemerintah, Zona Mitra, Zona Poros, Zona Bantuan, Belum Terpetakan).
  */
 function BadgeZonaNilai({ zona }: { zona: string }) {
-  const warna =
-    zona !== "Belum Terpetakan" ? WARNA_ZONA[zona as NamaZona] ?? "#6b7280" : "#6b7280";
+  const cfg = KELAS_ZONA[zona] ?? {
+    badge: "bg-surface text-muted border-hairline dark:text-slate-300 dark:bg-surface/80",
+    dot: "bg-muted dark:bg-slate-400",
+  };
 
   return (
     <span
-      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-badge font-semibold truncate max-w-full border shadow-2xs"
-      style={{
-        backgroundColor: `${warna}15`,
-        color: warna,
-        borderColor: `${warna}40`,
-      }}
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-badge font-semibold truncate max-w-full border shadow-2xs ${cfg.badge}`}
     >
-      <span className="size-1.5 rounded-full mr-1.5 shrink-0" style={{ backgroundColor: warna }} />
+      <span className={`size-1.5 rounded-full mr-1.5 shrink-0 ${cfg.dot}`} />
       <span className="truncate">{zona}</span>
     </span>
   );

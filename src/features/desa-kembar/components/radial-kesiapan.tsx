@@ -15,10 +15,10 @@ type RadialKesiapanProps = {
 };
 
 function kategoriKesiapan(skor: number | null): { label: string; kelas: string } {
-  if (skor === null) return { label: "Belum Terpetakan", kelas: "bg-surface text-muted border-hairline" };
-  if (skor >= 75) return { label: "Kesiapan Tinggi", kelas: "bg-green-500/10 text-green-700 border-green-500/20" };
-  if (skor >= 50) return { label: "Kesiapan Sedang", kelas: "bg-amber-500/10 text-amber-800 border-amber-500/20" };
-  return { label: "Perlu Penguatan", kelas: "bg-red-500/10 text-red-700 border-red-500/20" };
+  if (skor === null) return { label: "Belum Terpetakan", kelas: "bg-surface text-muted border-hairline dark:text-slate-300" };
+  if (skor >= 75) return { label: "Kesiapan Tinggi", kelas: "bg-green-500/10 text-green-700 border-green-500/20 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30" };
+  if (skor >= 50) return { label: "Kesiapan Sedang", kelas: "bg-amber-500/10 text-amber-800 border-amber-500/20 dark:bg-amber-400/15 dark:text-amber-300 dark:border-amber-400/30" };
+  return { label: "Perlu Penguatan", kelas: "bg-red-500/10 text-red-700 border-red-500/20 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30" };
 }
 
 /**

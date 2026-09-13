@@ -63,7 +63,7 @@ export function SeksiEntitas({
     <section
       className="overflow-hidden rounded-card border border-line/60 shadow-xs"
       style={{
-        background: `linear-gradient(180deg, ${warnaZona} 0%, ${warnaZona} 16%, ${warnaZona}33 42%, #ffffff 82%)`,
+        background: `linear-gradient(180deg, ${warnaZona} 0%, ${warnaZona} 16%, ${warnaZona}33 42%, var(--color-float) 82%)`,
       }}
     >
       {/* 1. Header Atas: Nama Zona di tengah berlatar warna zona solid + panah Peta Peran */}

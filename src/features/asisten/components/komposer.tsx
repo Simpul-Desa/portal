@@ -224,7 +224,7 @@ export function Komposer({
               side="top"
               align="start"
               sideOffset={8}
-              className="w-72 p-2 rounded-xl shadow-float-strong border border-line bg-white z-50 outline-none ring-0"
+              className="w-72 p-2 rounded-xl shadow-float-strong border border-line bg-float z-50 outline-none ring-0"
             >
               <div className="flex items-center gap-2 border-b border-hairline pb-2 mb-2 px-1">
                 <Search className="size-4 text-muted shrink-0 ml-1" />

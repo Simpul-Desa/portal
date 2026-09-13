@@ -190,11 +190,11 @@ export function DaftarDesaSel({
                 <div
                   className={`flex size-6 shrink-0 items-center justify-center rounded-full text-micro font-bold transition-transform group-hover:scale-105 ${
                     b.peringkat === 1
-                      ? "bg-amber-100 text-amber-900 border border-amber-300"
+                      ? "bg-amber-100 text-amber-900 border border-amber-300 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-700"
                       : b.peringkat === 2
-                      ? "bg-slate-200 text-slate-800 border border-slate-300"
+                      ? "bg-slate-200 text-slate-800 border border-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700"
                       : b.peringkat === 3
-                      ? "bg-amber-50 text-amber-800 border border-amber-200"
+                      ? "bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800"
                       : "bg-surface text-muted border border-hairline"
                   }`}
                   title={`Peringkat ${b.peringkat} dari ${b.nDesaKab} desa di kabupaten ini`}
