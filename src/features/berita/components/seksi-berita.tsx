@@ -6,12 +6,20 @@
  * membuat pengguna mengira fiturnya tidak ada untuk perannya. "Tampilkan
  * semua"/"Ringkas lagi" hanya membuka/menutup apa yang sudah ada di cache
  * (keputusan user 10 September 2026) — nol permintaan baru.
+ *
+ * Keadaan kosong memberi tombol "Cari Berita" KHUSUS admin — memicu panen RSS
+ * desa aktif (`adminSegarkanBerita([iddesa])`) dan menginvalidasi cache berita
+ * setelah mutation settle. Pengguna lain mendapat catatan bahwa hanya admin
+ * yang dapat mencari berita.
  */
 
 import { useId, useState } from "react";
 
-import { RotateCcw } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Newspaper, RotateCcw } from "lucide-react";
 
+import { useSesi } from "@/core/sesi";
+import { useSegarkanBerita } from "@/features/admin/hooks/use-aksi-admin";
 import { pesanGalat } from "@/lib/api/galat-ui";
 import { KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
@@ -105,7 +113,7 @@ export function SeksiBerita({ iddesa }: { iddesa: string }) {
           `daftar`, jadi itu pula yang menentukan seksi ini punya isi atau
           tidak. `total` tetap dipakai untuk label tombol dan catatan kaki. */}
       {data && data.daftar.length === 0 && (
-        <p className="mt-4 text-body-md text-muted">Belum ada berita untuk desa ini.</p>
+        <KosongBerita iddesa={iddesa} onSelesai={() => void refetch()} />
       )}
 
       {data && data.daftar.length > 0 && (
@@ -132,5 +140,85 @@ export function SeksiBerita({ iddesa }: { iddesa: string }) {
         </>
       )}
     </section>
+  );
+}
+
+/**
+ * Konten keadaan kosong berita: tombol "Cari Berita" untuk admin, catatan
+ * informatif untuk peran lain. Dipisah komponen sendiri agar `useSegarkanBerita`
+ * (mutation hook) dan `useSesi` hanya dipanggil saat data benar-benar kosong.
+ */
+function KosongBerita({ iddesa, onSelesai }: { iddesa: string; onSelesai: () => void }) {
+  const { peran } = useSesi();
+  const queryClient = useQueryClient();
+  const { segarkan, sedangKirim, galat } = useSegarkanBerita();
+  const [sudahDimulai, setSudahDimulai] = useState(false);
+
+  const isAdmin = peran === "admin";
+
+  function handleCariBerita() {
+    segarkan([iddesa], {
+      onSuccess: () => {
+        setSudahDimulai(true);
+        // Invalidasi cache berita desa ini agar refetch otomatis saat job selesai
+        void queryClient.invalidateQueries({ queryKey: ["berita", iddesa] });
+        onSelesai();
+      },
+    });
+  }
+
+  if (!isAdmin) {
+    return (
+      <p className="mt-4 text-micro text-muted">
+        Belum ada berita untuk desa ini. Hanya admin yang dapat mencari berita.
+      </p>
+    );
+  }
+
+  return (
+    <div className="mt-4">
+      <p className="text-body-md text-muted">Belum ada berita untuk desa ini.</p>
+
+      {!sudahDimulai && (
+        <button
+          type="button"
+          disabled={sedangKirim}
+          aria-busy={sedangKirim || undefined}
+          onClick={handleCariBerita}
+          className={`mt-3 inline-flex h-10 items-center gap-2 rounded-full bg-primary px-[18px] text-button-md text-white shadow-xs hover:bg-primary-active disabled:opacity-40 disabled:pointer-events-none transition-all ${FOCUS_RING}`}
+        >
+          <Newspaper aria-hidden="true" size={15} strokeWidth={1.5} />
+          {sedangKirim ? "Mencari…" : "Cari Berita"}
+        </button>
+      )}
+
+      {sudahDimulai && !galat && (
+        <p className="mt-3 flex items-center gap-1.5 text-micro font-medium text-positive">
+          <span className="size-1.5 shrink-0 rounded-full bg-positive" aria-hidden="true" />
+          Pencarian dimulai. Muat ulang dalam beberapa saat untuk melihat hasilnya.
+        </p>
+      )}
+
+      {galat && (
+        <div role="alert" className="mt-3">
+          <p className="flex items-center gap-1.5 text-micro font-medium text-critical">
+            <span className="size-1.5 shrink-0 rounded-full bg-critical" aria-hidden="true" />
+            {galat.status === 409
+              ? "Penyegaran lain sedang berjalan. Silakan tunggu sebentar."
+              : pesanGalat(galat).pesan}
+          </p>
+          {galat.status !== 409 && (
+            <button
+              type="button"
+              onClick={handleCariBerita}
+              className={`mt-2 inline-flex h-9 items-center gap-1.5 rounded-full bg-float px-[18px] text-button-md text-ink ${FOCUS_RING}`}
+            >
+              <RotateCcw aria-hidden="true" size={14} strokeWidth={1.5} />
+              Coba lagi
+            </button>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
