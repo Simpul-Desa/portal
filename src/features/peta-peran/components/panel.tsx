@@ -2,7 +2,7 @@
 
 import { EmptyState } from "@/shared/components/empty-state";
 import { pesanGalat } from "@/lib/api/galat-ui";
-import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
+import { BlokGalat, KeadaanKosong, KerangkaMuatPrimer } from "@/shared/components/blok-keadaan";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { pilihKeadaan } from "@/shared/components/keadaan";
 import { usePusat } from "@/shared/hooks/queries-wilayah";
@@ -19,8 +19,6 @@ import { MatriksPetaPeran } from "./matriks-peta-peran";
 import { RingkasanKabupaten, RingkasanZonaProvinsi } from "./ringkasan-kab";
 
 type WilayahState = ReturnType<typeof useWilayahParams>;
-
-const JUMLAH_KERANGKA = 3;
 
 export function PetaPeranPanel({ wilayah }: { wilayah: WilayahState }) {
   const { prov, kab, desa, zona, pilihKab, pilihZona, pilihDesa } = wilayah;
@@ -72,7 +70,7 @@ export function PetaPeranPanel({ wilayah }: { wilayah: WilayahState }) {
       )}
 
       {/* State Muat & Galat Primer */}
-      {keadaanPrimer === "muat" && <KerangkaMuat baris={JUMLAH_KERANGKA} />}
+      {keadaanPrimer === "muat" && <KerangkaMuatPrimer />}
 
       {keadaanPrimer === "tertunda" && (
         <section className="rounded-card bg-surface p-5">
@@ -104,7 +102,7 @@ export function PetaPeranPanel({ wilayah }: { wilayah: WilayahState }) {
           {/* 4. Di Tingkat Desa: Matriks Hilang, Fokus ke Desa */}
           {desa ? (
             <>
-              {keadaanDetail === "muat" && <KerangkaMuat baris={2} />}
+              {keadaanDetail === "muat" && <KerangkaMuatPrimer />}
               {keadaanDetail === "tertunda" && (
                 <p className="px-1 py-2 text-micro text-muted">Sambungan terputus.</p>
               )}

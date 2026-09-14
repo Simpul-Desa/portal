@@ -9,7 +9,7 @@
  * `"use client"`.
  */
 
-import { RotateCcw } from "lucide-react";
+import { Loader2, RotateCcw } from "lucide-react";
 
 import type { GalatApi } from "@/lib/api/client";
 import { pesanGalat } from "@/lib/api/galat-ui";
@@ -27,13 +27,59 @@ type KerangkaMuatProps = {
  * spinner. Tiap blok `aria-hidden` karena kerangkanya sendiri tidak membawa
  * informasi; pengumuman "sedang memuat" adalah tugas `role="status"` di
  * pemanggil, bukan tugas komponen ini.
+ *
+ * `bg-inset` + `border-line` (bukan `bg-surface` polos): blok ini dirender
+ * langsung di atas `canvas` panel, dan `surface`/`canvas` berjarak ~3%
+ * lightness di tema terang — cukup dekat sehingga `animate-pulse` (yang
+ * hanya menggoyang opacity) nyaris tidak kelihatan, terbaca sebagai panel
+ * kosong/macet, bukan sedang memuat. Border memberi tepi kotak yang selalu
+ * kelihatan terlepas dari seberapa dekat kedua warna itu di tema manapun.
  */
 export function KerangkaMuat({ tinggi = "h-24", baris = 2 }: KerangkaMuatProps) {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: baris }, (_, i) => (
-        <div key={i} aria-hidden="true" className={`${tinggi} animate-pulse rounded-card bg-surface`} />
+        <div
+          key={i}
+          aria-hidden="true"
+          className={`${tinggi} animate-pulse rounded-card border border-line bg-inset`}
+        />
       ))}
+    </div>
+  );
+}
+
+type KerangkaMuatPrimerProps = {
+  /**
+   * Bawaan `false` (kartu sendiri, `bg-surface`). Set `true` saat komponen
+   * ini dipasang DI DALAM seksi yang sudah punya kartu sendiri (mis. Berita
+   * Desa di Kartu Ekonomi) — supaya tidak bertumpuk kartu `bg-surface` di
+   * atas kartu `bg-surface` lain, yang balik menutupi diri sendiri seperti
+   * temuan kontras `KerangkaMuat` sebelumnya.
+   */
+  tanpaKartu?: boolean;
+};
+
+/**
+ * Kerangka muat primer — spinner dan pesan, dipakai untuk keadaan `muat`
+ * pada pembukaan lensa (peta peran, kartu ekonomi, jalur ekonomi, desa
+ * kembar, citra potensi) maupun sub-seksi bermuat sendiri di dalamnya
+ * (detail desa, banding, kolom peringkat, Berita Desa). Pengecualian sadar
+ * atas "shape not words, no spinner": kerangka blok polos di titik-titik ini
+ * terbukti nyaris tak beda dari latar di sekelilingnya, jadi butuh sinyal
+ * yang lebih tegas.
+ */
+export function KerangkaMuatPrimer({ tanpaKartu = false }: KerangkaMuatPrimerProps) {
+  return (
+    <div
+      className={
+        tanpaKartu
+          ? "flex flex-col items-center justify-center gap-3 py-6 text-center"
+          : "flex flex-col items-center justify-center gap-3 rounded-card bg-surface px-5 py-10 text-center"
+      }
+    >
+      <Loader2 aria-hidden="true" size={20} strokeWidth={1.5} className="animate-spin text-primary" />
+      <p className="text-body-md text-muted">Memuat data, tunggu beberapa saat.</p>
     </div>
   );
 }

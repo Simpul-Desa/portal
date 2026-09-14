@@ -15,7 +15,7 @@ import { useEffect, useMemo } from "react";
 import { MapPin } from "lucide-react";
 
 import { pesanGalat } from "@/lib/api/galat-ui";
-import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
+import { BlokGalat, KeadaanKosong, KerangkaMuatPrimer } from "@/shared/components/blok-keadaan";
 import { EmptyState } from "@/shared/components/empty-state";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { pilihKeadaan } from "@/shared/components/keadaan";
@@ -28,8 +28,6 @@ import { DaftarDesaSel } from "./daftar-desa-sel";
 import { DaftarSel } from "./daftar-sel";
 
 type WilayahState = ReturnType<typeof useWilayahParams>;
-
-const JUMLAH_KERANGKA = 3;
 
 export function CitraPotensiPanel({ wilayah }: { wilayah: WilayahState }) {
   const {
@@ -125,7 +123,7 @@ export function CitraPotensiPanel({ wilayah }: { wilayah: WilayahState }) {
       <div className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-4 items-start">
         {/* Kolom 1: List Komoditas yang ada */}
         <div className="min-w-0 space-y-4">
-          {keadaanDaftar === "muat" && <KerangkaMuat baris={JUMLAH_KERANGKA} />}
+          {keadaanDaftar === "muat" && <KerangkaMuatPrimer />}
 
           {keadaanDaftar === "tertunda" && (
             <section className="rounded-card bg-surface p-5">
@@ -217,7 +215,7 @@ export function CitraPotensiPanel({ wilayah }: { wilayah: WilayahState }) {
           ) : (
             /* Kabupaten dan komoditas sudah dipilih -> Tampilkan peringkat desa */
             <>
-              {keadaanSel === "muat" && <KerangkaMuat baris={4} />}
+              {keadaanSel === "muat" && <KerangkaMuatPrimer />}
 
               {keadaanSel === "tertunda" && (
                 <section className="py-6 text-center">

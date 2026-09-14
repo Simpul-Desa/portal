@@ -6,7 +6,7 @@ import { useKartu } from "@/features/kartu/hooks/queries";
 import type { KartuDesa } from "@/features/kartu/types";
 import type { GalatApi } from "@/lib/api/client";
 import { pesanGalat } from "@/lib/api/galat-ui";
-import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
+import { BlokGalat, KeadaanKosong, KerangkaMuatPrimer } from "@/shared/components/blok-keadaan";
 import { EmptyState } from "@/shared/components/empty-state";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { pilihKeadaan } from "@/shared/components/keadaan";
@@ -17,8 +17,6 @@ import { BandingKembar } from "./banding-kembar";
 import { KartuKomparasiAtas } from "./kartu-komparasi-atas";
 
 type WilayahState = ReturnType<typeof useWilayahParams>;
-
-const JUMLAH_KERANGKA = 3;
 
 export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
   const { kab, desa, kembar, pilihKembar, bukaTujuan } = wilayah;
@@ -41,7 +39,7 @@ export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
   });
 
   if (keadaanKembar === "muat") {
-    return <KerangkaMuat baris={JUMLAH_KERANGKA} />;
+    return <KerangkaMuatPrimer />;
   }
 
   if (keadaanKembar === "tertunda") {
@@ -129,7 +127,7 @@ export function DesaKembarPanel({ wilayah }: { wilayah: WilayahState }) {
       {/* 3. Detail perbandingan di bawah card perbandingan */}
       {kembar ? (
         <>
-          {keadaanBanding === "muat" && <KerangkaMuat baris={2} />}
+          {keadaanBanding === "muat" && <KerangkaMuatPrimer />}
           {keadaanBanding === "tertunda" && (
             <p className="px-1 py-2 text-label text-muted">Sambungan terputus.</p>
           )}

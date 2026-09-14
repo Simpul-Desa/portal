@@ -4,7 +4,7 @@ import { bisa } from "@/core/akses";
 import { useSesi } from "@/core/sesi";
 import { SeksiBerita } from "@/features/berita/components/seksi-berita";
 import { pesanGalat } from "@/lib/api/galat-ui";
-import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
+import { BlokGalat, KeadaanKosong, KerangkaMuatPrimer } from "@/shared/components/blok-keadaan";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { pilihKeadaan } from "@/shared/components/keadaan";
 import { useCitraDaftar } from "@/features/citra-potensi/hooks/queries";
@@ -28,8 +28,6 @@ type KartuPanelProps = {
     "prov" | "kab" | "desa" | "pilihProv" | "pilihKab" | "reset" | "gantiLensa" | "bukaTujuan"
   >;
 };
-
-const JUMLAH_KERANGKA = 4;
 
 /**
  * Orkestrator lensa Kartu Ekonomi Desa:
@@ -71,7 +69,7 @@ export function KartuPanel({ wilayah }: KartuPanelProps) {
         {kalimatStatus}
       </p>
 
-      {keadaan === "muat" && <KerangkaMuat baris={JUMLAH_KERANGKA} />}
+      {keadaan === "muat" && <KerangkaMuatPrimer />}
 
       {keadaan === "tertunda" && (
         <section className="rounded-card bg-surface p-5">

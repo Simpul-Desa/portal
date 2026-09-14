@@ -21,7 +21,7 @@ import { Newspaper, RotateCcw } from "lucide-react";
 import { useSesi } from "@/core/sesi";
 import { useSegarkanBerita } from "@/features/admin/hooks/use-aksi-admin";
 import { pesanGalat } from "@/lib/api/galat-ui";
-import { KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
+import { KeadaanKosong, KerangkaMuatPrimer } from "@/shared/components/blok-keadaan";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { pilihKeadaan } from "@/shared/components/keadaan";
 import { formatAngka } from "@/shared/format";
@@ -68,7 +68,7 @@ export function SeksiBerita({ iddesa }: { iddesa: string }) {
 
       {keadaan === "muat" && (
         <div className="mt-4">
-          <KerangkaMuat tinggi="h-16" baris={2} />
+          <KerangkaMuatPrimer tanpaKartu />
         </div>
       )}
 

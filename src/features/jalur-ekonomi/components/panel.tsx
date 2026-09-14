@@ -12,7 +12,7 @@
 import type { GalatApi } from "@/lib/api/client";
 import { pesanGalat } from "@/lib/api/galat-ui";
 import { VARIAN_DEFAULT, type Varian } from "@/lib/url-state";
-import { BlokGalat, KeadaanKosong, KerangkaMuat } from "@/shared/components/blok-keadaan";
+import { BlokGalat, KeadaanKosong, KerangkaMuatPrimer } from "@/shared/components/blok-keadaan";
 import { FOCUS_RING } from "@/shared/components/focus-ring";
 import { pilihKeadaan } from "@/shared/components/keadaan";
 import { formatAngka } from "@/shared/format";
@@ -27,8 +27,6 @@ import { ParameterVarian } from "./parameter-varian";
 import { PilihVarian } from "./pilih-varian";
 
 type WilayahState = ReturnType<typeof useWilayahParams>;
-
-const JUMLAH_KERANGKA = 2;
 
 type BadanJalurEkonomiProps = {
   varian: Varian;
@@ -69,7 +67,7 @@ function BadanJalurEkonomi({
     isError: primer.isError,
   });
 
-  if (keadaanPrimer === "muat") return <KerangkaMuat baris={JUMLAH_KERANGKA} />;
+  if (keadaanPrimer === "muat") return <KerangkaMuatPrimer />;
 
   if (keadaanPrimer === "tertunda") {
     return (
@@ -137,7 +135,7 @@ function BadanJalurEkonomi({
       />
 
       {/* 3. Detail Jalur Terpilih: List Desa Poros dan List Desa Sejalur dengan Highlight Warna */}
-      {jalurAktif && isLoadingJalur && <KerangkaMuat baris={2} />}
+      {jalurAktif && isLoadingJalur && <KerangkaMuatPrimer />}
       {jalurAktif && keadaanJalurAktif === "tertunda" && (
         <KeadaanKosong kalimat="Sambungan sedang terputus, jadi detail jalur belum bisa dimuat." />
       )}
