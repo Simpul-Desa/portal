@@ -52,6 +52,9 @@ import {
 } from "react";
 
 import { peranEfektif, type Peran } from "@/core/akses";
+
+/** Sama dengan TTL `_CACHE_PERAN` di `api/src/auth/service.py:41` — cache klien tidak pernah "lebih segar" dari backend. */
+const STALE_TIME_PERAN_MS = 5 * 60 * 1000;
 import {
   DURASI_TIDAK_AKTIF_MS,
   hapusCatatanAktivitas,
@@ -146,7 +149,7 @@ export function SesiProvider({ children }: { children: ReactNode }) {
     queryKey: ["profil", "saya"],
     queryFn: async () => (await profilSaya()).data,
     enabled: Boolean(sesi),
-    staleTime: Number.POSITIVE_INFINITY,
+    staleTime: STALE_TIME_PERAN_MS,
     retry: false,
   });
 
